@@ -230,6 +230,7 @@ export function PipelineWorkspace({
   const [clientId, setClientId] = useState(initialClientId);
   const [campaignId, setCampaignId] = useState(initialCampaignId);
   const [categoryFilter, setCategoryFilter] = useState("");
+  const [whatsappFilter, setWhatsappFilter] = useState<"" | WhatsAppStatus>("");
   const [search, setSearch] = useState("");
   const [selectedLeadId, setSelectedLeadId] = useState(initialLeads[0]?.id ?? "");
   const [timelineEvent, setTimelineEvent] = useState("Sent message");
@@ -291,9 +292,20 @@ export function PipelineWorkspace({
         return (!clientId || lead.clientId === clientId)
           && (!campaignId || lead.campaignId === campaignId)
           && (!categoryFilter || lead.niche === categoryFilter)
+          && (!whatsappFilter || lead.whatsappStatus === whatsappFilter)
           && (!search || haystack.includes(search.toLowerCase()));
       }),
-    [leads, clientId, campaignId, categoryFilter, search]
+    [leads, clientId, campaignId, categoryFilter, whatsappFilter, search]
+  );
+
+  const pipelineSummary = useMemo(
+    () => ({
+      all: visibleLeads.length,
+      hasWhatsApp: visibleLeads.filter((lead) => lead.whatsappStatus === "yes").length,
+      noWhatsApp: visibleLeads.filter((lead) => lead.whatsappStatus === "no").length,
+      unknown: visibleLeads.filter((lead) => lead.whatsappStatus === "unknown").length
+    }),
+    [visibleLeads]
   );
 
   const selectedLead = selectedLeadId
@@ -538,6 +550,20 @@ export function PipelineWorkspace({
             value={search}
             onChange={(event) => setSearch(event.target.value)}
           />
+        </div>
+        <div className="pipeline-summary-chips">
+          <button className={`pipeline-summary-chip ${!whatsappFilter ? "active muted" : "muted"}`} type="button" onClick={() => setWhatsappFilter("")}>
+            All Leads · {pipelineSummary.all}
+          </button>
+          <button className={`pipeline-summary-chip success ${whatsappFilter === "yes" ? "active" : ""}`} type="button" onClick={() => setWhatsappFilter("yes")}>
+            Has WhatsApp · {pipelineSummary.hasWhatsApp}
+          </button>
+          <button className={`pipeline-summary-chip danger ${whatsappFilter === "no" ? "active" : ""}`} type="button" onClick={() => setWhatsappFilter("no")}>
+            No WhatsApp · {pipelineSummary.noWhatsApp}
+          </button>
+          <button className={`pipeline-summary-chip warning ${whatsappFilter === "unknown" ? "active" : ""}`} type="button" onClick={() => setWhatsappFilter("unknown")}>
+            Unknown · {pipelineSummary.unknown}
+          </button>
         </div>
         <div className="inline-stat">
           <strong>{visibleLeads.length}</strong>

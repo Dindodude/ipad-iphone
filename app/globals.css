@@ -608,6 +608,17 @@ main {
   gap: 12px;
 }
 
+.pipeline-loading-shell {
+  min-height: 180px;
+}
+
+.pipeline-loading-block {
+  min-height: 42px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.04);
+}
+
 .mobile-pipeline-console {
   padding: 12px;
   border-radius: 0 0 18px 18px;

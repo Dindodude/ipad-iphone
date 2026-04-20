@@ -234,6 +234,7 @@ export function PipelineWorkspace({
   const [search, setSearch] = useState("");
   const [selectedLeadId, setSelectedLeadId] = useState(initialLeads[0]?.id ?? "");
   const [isMobileLayout, setIsMobileLayout] = useState(false);
+  const [hasMounted, setHasMounted] = useState(false);
   const [timelineEvent, setTimelineEvent] = useState("Sent message");
   const [memoryDraft, setMemoryDraft] = useState("");
   const [clearArmed, setClearArmed] = useState(false);
@@ -270,6 +271,10 @@ export function PipelineWorkspace({
   }, []);
 
   useEffect(() => {
+    setHasMounted(true);
+  }, []);
+
+  useEffect(() => {
     if (typeof window === "undefined") return undefined;
 
     const media = window.matchMedia("(max-width: 820px)");
@@ -284,6 +289,30 @@ export function PipelineWorkspace({
     media.addListener(sync);
     return () => media.removeListener(sync);
   }, []);
+
+  if (!hasMounted) {
+    return (
+      <div className="stack pipeline-shell mobile-pipeline-shell">
+        <section className="card pipeline-console mobile-pipeline-console pipeline-loading-shell">
+          <div className="mobile-pipeline-toolbar">
+            <div className="mobile-pipeline-tabs">
+              <span className="mobile-brand">LeadOS</span>
+              <span className="mobile-nav-pill active">Pipeline</span>
+              <span className="mobile-nav-pill">Analytics</span>
+              <span className="mobile-nav-pill">Scripts</span>
+            </div>
+          </div>
+          <div className="mobile-filters-row">
+            <div className="control-input pipeline-loading-block" />
+            <div className="control-input pipeline-loading-block" />
+          </div>
+          <div className="pipeline-summary-chips mobile-summary-chips">
+            <span className="pipeline-summary-chip muted">Loading leads</span>
+          </div>
+        </section>
+      </div>
+    );
+  }
 
   const filteredCampaigns = useMemo(
     () => campaigns.filter((campaign) => !clientId || campaign.clientId === clientId),

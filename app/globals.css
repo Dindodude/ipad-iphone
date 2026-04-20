@@ -619,7 +619,7 @@ main {
 }
 
 .mobile-pipeline-shell {
-  gap: 12px;
+  gap: 8px;
 }
 
 .pipeline-loading-shell {
@@ -634,20 +634,20 @@ main {
 }
 
 .mobile-pipeline-console {
-  padding: 12px;
-  border-radius: 0 0 18px 18px;
+  padding: 8px;
+  border-radius: 0 0 14px 14px;
 }
 
 .mobile-pipeline-toolbar {
   display: grid;
-  gap: 10px;
+  gap: 6px;
 }
 
 .mobile-pipeline-tabs,
 .mobile-pipeline-actions,
 .mobile-filters-row {
   display: flex;
-  gap: 10px;
+  gap: 6px;
   align-items: center;
 }
 
@@ -666,21 +666,22 @@ main {
 .mobile-brand {
   flex: 0 0 auto;
   color: var(--accent);
-  font-size: 0.98rem;
+  font-size: 0.76rem;
   font-weight: 900;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
 }
 
 .mobile-nav-pill,
 .mobile-icon-button {
   flex: 0 0 auto;
-  min-height: 38px;
-  padding: 0 14px;
-  border-radius: 14px;
+  min-height: 28px;
+  padding: 0 10px;
+  border-radius: 10px;
   border: 1px solid rgba(255, 255, 255, 0.08);
   background: rgba(255, 255, 255, 0.04);
   color: var(--muted-strong);
   font-weight: 700;
+  font-size: 0.68rem;
 }
 
 .mobile-nav-pill.active {
@@ -709,12 +710,12 @@ main {
 .mobile-stage-scroll {
   display: grid;
   grid-auto-flow: column;
-  grid-auto-columns: minmax(286px, 286px);
-  gap: 12px;
+  grid-auto-columns: minmax(116px, 116px);
+  gap: 6px;
   width: 100%;
   max-width: 100%;
   overflow-x: auto;
-  padding: 0 6px 8px 2px;
+  padding: 0 2px 6px 0;
   scroll-snap-type: x proximity;
   overscroll-behavior-x: contain;
 }
@@ -725,7 +726,7 @@ main {
 
 .mobile-stage-column {
   display: grid;
-  gap: 10px;
+  gap: 6px;
   align-content: start;
   scroll-snap-align: start;
 }
@@ -734,35 +735,65 @@ main {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 10px;
-  padding: 12px 14px;
-  border-radius: 18px;
+  gap: 6px;
+  padding: 8px 8px;
+  border-radius: 12px;
   background: rgba(255, 255, 255, 0.035);
   border: 1px solid rgba(255, 255, 255, 0.06);
-  font-size: 0.9rem;
+  font-size: 0.58rem;
   font-weight: 800;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.04em;
 }
 
 .mobile-stage-stack {
   display: grid;
-  gap: 10px;
+  gap: 6px;
 }
 
 .compact-mobile-card {
-  padding: 14px;
-  gap: 8px;
+  padding: 8px;
+  gap: 5px;
+  border-radius: 12px;
 }
 
 .compact-mobile-card h3 {
-  margin: 2px 0 4px;
-  font-size: 1.05rem;
-  line-height: 1.18;
+  margin: 0 0 2px;
+  font-size: 0.63rem;
+  line-height: 1.2;
 }
 
 .compact-mobile-card .lead-card-sub {
-  font-size: 0.82rem;
-  line-height: 1.38;
+  font-size: 0.5rem;
+  line-height: 1.25;
+}
+
+.compact-mobile-card .lead-card-top,
+.compact-mobile-card .wa-row,
+.compact-mobile-card .button-row {
+  gap: 4px;
+}
+
+.compact-mobile-card .pill,
+.compact-mobile-card .wa-status,
+.compact-mobile-card .lead-score {
+  font-size: 0.45rem;
+  letter-spacing: 0.03em;
+}
+
+.compact-mobile-card .button-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.compact-mobile-card .tiny-button {
+  min-height: 22px;
+  padding: 0 4px;
+  font-size: 0.48rem;
+  border-radius: 8px;
+}
+
+.compact-mobile-card .score-bar {
+  height: 3px;
 }
 
 .compact-empty-state {
@@ -1449,11 +1480,11 @@ li + li {
 
   .sidebar-nav {
     display: flex;
-    gap: 10px;
+    gap: 6px;
     overflow-x: auto;
     overflow-y: hidden;
     padding-bottom: 4px;
-    padding-inline: 2px 18px;
+    padding-inline: 0 10px;
     width: 100%;
     -webkit-overflow-scrolling: touch;
     scroll-snap-type: x proximity;
@@ -1465,10 +1496,12 @@ li + li {
 
   .sidebar-nav a {
     flex: 0 0 auto;
-    min-height: 46px;
-    padding: 12px 16px;
+    min-height: 24px;
+    padding: 0 8px;
     scroll-snap-align: start;
     white-space: nowrap;
+    border-radius: 8px;
+    font-size: 0.58rem;
   }
 
   .text-list.compact-list {
@@ -1490,6 +1523,36 @@ li + li {
 }
 
 @media (max-width: 820px) {
+  body::before {
+    display: none;
+  }
+
+  .card,
+  .sidebar,
+  .copilot-card,
+  .stat,
+  .metric,
+  .feature,
+  .workflow-card,
+  .mini-card,
+  .lead-card,
+  .script-card,
+  .dashboard-card,
+  .text-list-item,
+  .empty-state,
+  .lead-column-header,
+  .pipeline-console {
+    backdrop-filter: none;
+    box-shadow: none;
+  }
+
+  .dashboard-card::after,
+  .feature::after,
+  .lead-card::after,
+  .script-card::after {
+    display: none;
+  }
+
   body {
     padding-bottom: max(18px, env(safe-area-inset-bottom));
   }
@@ -1501,7 +1564,7 @@ li + li {
   .app-shell,
   .marketing-shell {
     width: 100%;
-    padding-inline: 6px;
+    padding-inline: 4px;
   }
 
   .app-content,
@@ -1523,9 +1586,8 @@ li + li {
     position: sticky;
     top: 0;
     z-index: 35;
-    padding: 6px 0 2px;
+    padding: 4px 0 2px;
     background: rgba(11, 17, 20, 0.96);
-    backdrop-filter: blur(16px);
     border: 0;
     box-shadow: none;
   }
@@ -1560,8 +1622,8 @@ li + li {
     position: sticky;
     top: calc(58px + env(safe-area-inset-top));
     z-index: 25;
-    padding: 10px 10px 12px;
-    border-radius: 0 0 16px 16px;
+    padding: 6px 6px 8px;
+    border-radius: 0 0 12px 12px;
   }
 
   .pipeline-workspace-grid {
@@ -1587,9 +1649,10 @@ li + li {
   }
 
   .page-title h1 {
-    margin: 6px 0 10px;
-    font-size: 1.9rem;
+    margin: 2px 0 6px;
+    font-size: 0.88rem;
     overflow-wrap: anywhere;
+    line-height: 1.15;
   }
 
   .page-title,
@@ -1598,7 +1661,7 @@ li + li {
   .mini-card,
   .text-list-item,
   .empty-state {
-    border-radius: 16px;
+    border-radius: 12px;
   }
 
   .dashboard-card,
@@ -1606,7 +1669,7 @@ li + li {
   .text-list-item,
   .empty-state,
   .lead-card {
-    padding: 14px;
+    padding: 8px;
   }
 
   .page-title p,
@@ -1623,7 +1686,7 @@ li + li {
   .toolbar-grid,
   .copilot-grid,
   .add-lead-grid {
-    gap: 12px;
+    gap: 8px;
   }
 
   .script-card .button-row {
@@ -1643,31 +1706,28 @@ li + li {
 
   .pipeline-summary-chip {
     flex: 0 0 auto;
-    min-height: 34px;
-    padding: 0 12px;
-    font-size: 0.88rem;
+    min-height: 20px;
+    padding: 0 7px;
+    font-size: 0.5rem;
   }
 
   .lead-board-seven {
-    grid-template-columns: repeat(7, minmax(260px, 260px));
+    grid-template-columns: repeat(7, minmax(116px, 116px));
     overflow-x: auto;
     overflow-y: hidden;
     max-height: none;
     max-width: 100%;
-    padding-bottom: 10px;
+    padding-bottom: 6px;
     scroll-snap-type: x proximity;
   }
 
   .lead-column {
-    gap: 10px;
+    gap: 6px;
     scroll-snap-align: start;
   }
 
   .lead-column-header {
-    position: sticky;
-    top: 8px;
-    z-index: 2;
-    backdrop-filter: blur(10px);
+    position: static;
   }
 
   .legacy-detail-header {
@@ -1743,34 +1803,34 @@ li + li {
   .button-secondary,
   .ghost-button,
   .tiny-button {
-    min-height: 40px;
-    padding-inline: 12px;
+    min-height: 26px;
+    padding-inline: 8px;
   }
 
   .lead-card {
-    gap: 7px;
-    padding: 12px;
+    gap: 5px;
+    padding: 8px;
   }
 
   .lead-card h3 {
-    margin: 2px 0 4px;
-    font-size: 0.96rem;
+    margin: 0 0 2px;
+    font-size: 0.63rem;
     line-height: 1.16;
   }
 
   .lead-card-sub {
-    font-size: 0.76rem;
-    line-height: 1.32;
+    font-size: 0.5rem;
+    line-height: 1.22;
   }
 
   .score-bar {
-    height: 5px;
+    height: 3px;
   }
 
   .dashboard-card h3,
   .page-title h2,
   .card h2 {
-    font-size: 1.2rem;
+    font-size: 0.76rem;
   }
 
   .meta-row span,
@@ -1779,11 +1839,15 @@ li + li {
   .metric span,
   .stat span,
   .section-head span {
-    font-size: 0.82rem;
+    font-size: 0.52rem;
   }
 }
 
 @media (max-width: 640px) {
+  .mobile-lead-overlay {
+    backdrop-filter: none;
+  }
+
   .hero-copy,
   .hero-panel,
   .card,
@@ -1798,9 +1862,9 @@ li + li {
   }
 
   .sidebar-nav a {
-    min-height: 42px;
-    padding: 9px 12px;
-    font-size: 0.84rem;
+    min-height: 22px;
+    padding: 0 7px;
+    font-size: 0.54rem;
   }
 
   .button-row {
@@ -1852,7 +1916,7 @@ li + li {
 
   .mobile-pipeline-toolbar,
   .mobile-filters-row {
-    gap: 8px;
+    gap: 6px;
   }
 
   .mobile-filters-row {
@@ -1862,42 +1926,42 @@ li + li {
 
   .mobile-nav-pill,
   .mobile-icon-button {
-    min-height: 34px;
-    padding: 0 11px;
-    font-size: 0.82rem;
+    min-height: 24px;
+    padding: 0 7px;
+    font-size: 0.58rem;
   }
 
   .mobile-brand {
-    font-size: 0.9rem;
+    font-size: 0.68rem;
   }
 
   .mobile-stage-scroll {
-    grid-auto-columns: minmax(238px, 238px);
-    gap: 10px;
-    padding: 0 2px 8px 0;
+    grid-auto-columns: minmax(112px, 112px);
+    gap: 6px;
+    padding: 0 0 8px 0;
   }
 
   .mobile-stage-header {
-    padding: 10px 12px;
-    border-radius: 14px;
-    font-size: 0.78rem;
+    padding: 7px 7px;
+    border-radius: 10px;
+    font-size: 0.54rem;
   }
 
   .compact-mobile-card {
-    padding: 11px;
-    gap: 7px;
+    padding: 7px;
+    gap: 4px;
   }
 
   .compact-mobile-card h3 {
-    font-size: 0.92rem;
+    font-size: 0.6rem;
   }
 
   .compact-mobile-card .lead-card-sub {
-    font-size: 0.72rem;
+    font-size: 0.48rem;
   }
 
   .lead-board-seven {
-    grid-template-columns: repeat(7, minmax(238px, 238px));
+    grid-template-columns: repeat(7, minmax(112px, 112px));
     max-width: 100%;
   }
 }

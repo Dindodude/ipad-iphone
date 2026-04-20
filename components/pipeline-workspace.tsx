@@ -713,11 +713,12 @@ export function PipelineWorkspace({
       <div className="stack pipeline-shell mobile-pipeline-shell">
         <section className="card pipeline-console mobile-pipeline-console pipeline-loading-shell">
           <div className="mobile-pipeline-toolbar">
-            <div className="mobile-pipeline-tabs">
+            <div className="mobile-pipeline-header-row">
               <span className="mobile-brand">LeadOS</span>
               <span className="mobile-nav-pill active">Pipeline</span>
-              <span className="mobile-nav-pill">Analytics</span>
-              <span className="mobile-nav-pill">Scripts</span>
+              <span className="mobile-header-spacer" />
+              <span className="mobile-icon-button">Import</span>
+              <span className="mobile-icon-button">Clear</span>
             </div>
           </div>
           <div className="mobile-filters-row">
@@ -744,13 +745,10 @@ export function PipelineWorkspace({
             onChange={importCsvFile}
           />
           <div className="mobile-pipeline-toolbar">
-            <div className="mobile-pipeline-tabs">
+            <div className="mobile-pipeline-header-row">
               <span className="mobile-brand">LeadOS</span>
               <button className="mobile-nav-pill active" type="button">Pipeline</button>
-              <Link className="mobile-nav-pill" href="/app/analytics">Analytics</Link>
-              <Link className="mobile-nav-pill" href="/app/scripts">Scripts</Link>
-            </div>
-            <div className="mobile-pipeline-actions">
+              <span className="mobile-header-spacer" />
               <button className="mobile-icon-button" type="button" onClick={openCsvPicker}>Import</button>
               <button className={`mobile-icon-button ${clearArmed ? "danger" : ""}`} type="button" onClick={beginClearAllLeads}>
                 {clearArmed ? "Confirm" : "Clear"}

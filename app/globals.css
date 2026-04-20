@@ -639,7 +639,7 @@ main {
 }
 
 .mobile-pipeline-shell {
-  gap: 8px;
+  gap: 0;
 }
 
 .pipeline-loading-shell {
@@ -654,7 +654,7 @@ main {
 }
 
 .mobile-pipeline-console {
-  padding: 10px;
+  padding: 6px 10px 10px;
   border-radius: 0 0 12px 12px;
 }
 
@@ -663,12 +663,25 @@ main {
   gap: 6px;
 }
 
+.mobile-pipeline-header-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  width: 100%;
+}
+
 .mobile-pipeline-tabs,
 .mobile-pipeline-actions,
 .mobile-filters-row {
   display: flex;
   gap: 8px;
   align-items: center;
+}
+
+.mobile-header-spacer {
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
 .mobile-pipeline-tabs,
@@ -1646,7 +1659,7 @@ li + li {
     overflow-y: auto;
     overflow-x: hidden;
     overscroll-behavior-y: contain;
-    padding: 10px 6px calc(84px + env(safe-area-inset-bottom));
+    padding: 0 6px calc(84px + env(safe-area-inset-bottom));
     align-content: start;
   }
 

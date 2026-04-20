@@ -233,6 +233,7 @@ export function PipelineWorkspace({
   const [whatsappFilter, setWhatsappFilter] = useState<"" | WhatsAppStatus>("");
   const [search, setSearch] = useState("");
   const [selectedLeadId, setSelectedLeadId] = useState(initialLeads[0]?.id ?? "");
+  const [isMobileLayout, setIsMobileLayout] = useState(false);
   const [timelineEvent, setTimelineEvent] = useState("Sent message");
   const [memoryDraft, setMemoryDraft] = useState("");
   const [clearArmed, setClearArmed] = useState(false);
@@ -266,6 +267,22 @@ export function PipelineWorkspace({
         window.clearTimeout(clearTimerRef.current);
       }
     };
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return undefined;
+
+    const media = window.matchMedia("(max-width: 820px)");
+    const sync = () => setIsMobileLayout(media.matches);
+    sync();
+
+    if (typeof media.addEventListener === "function") {
+      media.addEventListener("change", sync);
+      return () => media.removeEventListener("change", sync);
+    }
+
+    media.addListener(sync);
+    return () => media.removeListener(sync);
   }, []);
 
   const filteredCampaigns = useMemo(
@@ -499,6 +516,288 @@ export function PipelineWorkspace({
     reader.readAsText(file);
   }
 
+  const detailPanel = selectedLead ? (
+    <section className={`card detail-panel legacy-detail-panel ${isMobileLayout ? "mobile-lead-sheet" : ""}`}>
+      <div className="legacy-detail-header">
+        <div>
+          <div className="eyebrow">Lead Detail</div>
+          <h2>{selectedLead.name}</h2>
+        </div>
+        <div className="legacy-detail-header-actions">
+          <Link className="legacy-detail-link" href={`/app/leads/${selectedLead.id}`}>Open full view</Link>
+          <button className="panel-close-btn" type="button" aria-label="Close lead detail" onClick={() => setSelectedLeadId("")}>x</button>
+        </div>
+      </div>
+      <div className="legacy-action-strip">
+        <a className="legacy-action-btn wa" href={buildWhatsAppUrl(selectedLead.phone)} target="_blank" rel="noreferrer">WhatsApp</a>
+        <button className="legacy-action-btn wa-yes" type="button" onClick={() => updateLead(selectedLead.id, { whatsappStatus: "yes" })}>Has WA</button>
+        <button className="legacy-action-btn wa-no" type="button" onClick={() => updateLead(selectedLead.id, { whatsappStatus: "no" })}>No WA</button>
+        <Link className="legacy-action-btn scripts" href="/app/scripts">Scripts</Link>
+        <Link className="legacy-action-btn offer" href="/app/ai">Offer</Link>
+        <Link className="legacy-action-btn prep" href="/app/ai">Prep</Link>
+        <Link className="legacy-action-btn ideas" href="/app/analytics">Ideas</Link>
+        <button className="legacy-action-btn checklist" type="button" onClick={() => appendTimelineEntry(selectedLead, "Ran checklist")}>Checklist</button>
+        <button className="legacy-action-btn lost" type="button" onClick={() => updateLead(selectedLead.id, { leadStage: "Lost" })}>Lost</button>
+        <a className="legacy-action-btn maps" href={buildMapsUrl(selectedLead)} target="_blank" rel="noreferrer">Maps</a>
+      </div>
+
+      <div className="legacy-next-action">
+        <div className="legacy-next-action-icon">Go</div>
+        <div>
+          <strong>{getLegacyActionCard(selectedLead.leadStage, selectedLead.whatsappStatus).title}</strong>
+          <div className="mini-copy">{getLegacyActionCard(selectedLead.leadStage, selectedLead.whatsappStatus).description}</div>
+        </div>
+      </div>
+
+      <div className="legacy-modal-section">
+        <div className="detail-section-label">Momentum - {getMomentumState(selectedLead).label}</div>
+        <div className="legacy-momentum-track">
+          <span className={`legacy-momentum-fill ${getMomentumState(selectedLead).css}`} style={{ width: getMomentumState(selectedLead).width }} />
+        </div>
+      </div>
+
+      <div className="legacy-modal-section">
+        <div className="detail-section-label">Lead Info</div>
+        <div className="legacy-detail-grid">
+          <div className="legacy-detail-field"><div className="legacy-detail-label">Name</div><div className="legacy-detail-value">{selectedLead.name}</div></div>
+          <div className="legacy-detail-field"><div className="legacy-detail-label">Niche</div><div className="legacy-detail-value">{selectedLead.niche || "-"}</div></div>
+          <div className="legacy-detail-field"><div className="legacy-detail-label">Phone</div><div className="legacy-detail-value">{selectedLead.phone || "-"}</div></div>
+          <div className="legacy-detail-field"><div className="legacy-detail-label">City</div><div className="legacy-detail-value">{selectedLead.city || "-"}</div></div>
+          <div className="legacy-detail-field"><div className="legacy-detail-label">WhatsApp</div><div className="legacy-detail-value">{selectedLead.whatsappStatus === "yes" ? "Has WhatsApp" : selectedLead.whatsappStatus === "no" ? "No WhatsApp" : "Unknown"}</div></div>
+          <div className="legacy-detail-field legacy-detail-field-full"><div className="legacy-detail-label">Address</div><div className="legacy-detail-value">{selectedLead.address || "-"}</div></div>
+        </div>
+      </div>
+
+      <div className="legacy-modal-section">
+        <div className="detail-section-label">Status & Priority</div>
+        <div className="legacy-detail-grid">
+          <div>
+            <div className="legacy-detail-label">Status</div>
+            <select className="control-input" value={selectedLead.leadStage} onChange={(event) => updateLead(selectedLead.id, { leadStage: event.target.value as LeadStage })}>
+              {LEAD_STAGE_ORDER.map((stage) => (
+                <option key={stage} value={stage}>{getLegacyStatusLabel(stage)}</option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <div className="legacy-detail-label">Priority</div>
+            <select className="control-input" value={getPriorityDisplay(selectedLead.priority)} onChange={(event) => updateLead(selectedLead.id, { priority: getPriorityValueFromDisplay(event.target.value) })}>
+              <option value="Hot">Hot</option>
+              <option value="Warm">Warm</option>
+              <option value="Cold">Cold</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div className="legacy-modal-section">
+        <div className="detail-section-label">Lead Score</div>
+        <div className="legacy-score-wrap">
+          <div className="legacy-score-header">
+            <strong>{selectedLead.score}/100</strong>
+            <span className={`legacy-score-state ${getMomentumState(selectedLead).css}`}>{getMomentumState(selectedLead).label}</span>
+          </div>
+          <div className="legacy-score-list">
+            {getScoreChecklist(selectedLead).map((item) => (
+              <label key={item.label} className={`legacy-score-item ${item.checked ? "checked" : ""}`}>
+                <input type="checkbox" checked={item.checked} readOnly />
+                <span>{item.label}</span>
+              </label>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div className="legacy-modal-section">
+        <div className="detail-section-label">AI Copilot</div>
+        <div className="text-list">
+          <div className="text-list-item"><strong>AI Summary</strong><br />{selectedLead.aiSummary}</div>
+          <div className="text-list-item"><strong>AI Next Action</strong><br />{selectedLead.aiNextAction}</div>
+        </div>
+        <div className="button-row">
+          <button className="ghost-button blue" type="button" onClick={() => updateLead(selectedLead.id, { leadStage: "Contacted" })}>Mark Contacted</button>
+          <button className="ghost-button purple" type="button" onClick={() => updateLead(selectedLead.id, { leadStage: "Qualified" })}>Move Qualified</button>
+          <button className="ghost-button red" type="button" onClick={() => resetLead(selectedLead.id)}>Reset Lead</button>
+        </div>
+      </div>
+
+      <div className="legacy-modal-section">
+        <div className="detail-section-label">Follow-Up Date</div>
+        <div className="button-row">
+          <input
+            className="control-input"
+            type="date"
+            value={selectedLead.nextFollowUpAt ? new Date(selectedLead.nextFollowUpAt).toISOString().slice(0, 10) : ""}
+            onChange={(event) => updateLead(selectedLead.id, { nextFollowUpAt: event.target.value ? new Date(`${event.target.value}T12:00:00`).toISOString() : "" })}
+          />
+          <button className="tiny-button" type="button" onClick={() => updateLead(selectedLead.id, { nextFollowUpAt: new Date().toISOString() })}>Today</button>
+          <button className="tiny-button" type="button" onClick={() => updateLead(selectedLead.id, { nextFollowUpAt: new Date(Date.now() + 86400000).toISOString() })}>+1 Day</button>
+        </div>
+      </div>
+
+      <div className="legacy-modal-section">
+        <div className="detail-section-label">Activity Timeline</div>
+        <div className="legacy-timeline-list">
+          {selectedLead.previousMessages.length ? selectedLead.previousMessages.map((message, index) => (
+            <div key={`${selectedLead.id}-message-${index}`} className="legacy-timeline-item">{message}</div>
+          )) : <div className="mini-copy">No messages logged yet.</div>}
+        </div>
+        <div className="button-row">
+          <select className="control-input" value={timelineEvent} onChange={(event) => setTimelineEvent(event.target.value)}>
+            <option value="Sent message">Sent message</option>
+            <option value="Replied">Replied</option>
+            <option value="Followed up">Followed up</option>
+            <option value="Ghosted">Ghosted</option>
+            <option value="Booked call">Booked call</option>
+          </select>
+          <button className="tiny-button" type="button" onClick={() => appendTimelineEntry(selectedLead, timelineEvent)}>Log</button>
+        </div>
+      </div>
+
+      <div className="legacy-modal-section">
+        <div className="detail-section-label">Notes</div>
+        <textarea className="notes-box compact-textarea" value={selectedLead.notes} onChange={(event) => updateLead(selectedLead.id, { notes: event.target.value })} placeholder="Add notes here..." />
+      </div>
+
+      <div className="legacy-modal-section">
+        <div className="detail-section-label">Personalization Memory</div>
+        <div className="button-row">
+          <input className="control-input" placeholder="e.g. Owner name: Mike, has 2 locations..." value={memoryDraft} onChange={(event) => setMemoryDraft(event.target.value)} />
+          <button className="tiny-button" type="button" onClick={() => addMemoryLine(selectedLead)}>+ Add</button>
+        </div>
+      </div>
+    </section>
+  ) : null;
+
+  const renderLeadCard = (lead: LeadWithRelations, stage: LeadStage, compact = false) => (
+    <article
+      key={lead.id}
+      className={`lead-card selectable-card ${selectedLead?.id === lead.id ? "selected-card" : ""} ${compact ? "compact-mobile-card" : ""}`}
+      onClick={() => setSelectedLeadId(lead.id)}
+    >
+      <div className="lead-card-top">
+        <div>
+          <h3>{lead.businessName}</h3>
+          <div className="lead-card-sub">{compact ? lead.niche : lead.client.name}</div>
+        </div>
+        <span className={`pill ${lead.priority === "high" ? "danger" : lead.priority === "medium" ? "info" : "muted"}`}>
+          {getPriorityDisplay(lead.priority)}
+        </span>
+      </div>
+      <div className="lead-card-sub">{compact ? (lead.phone || "No phone") : lead.campaign.name}</div>
+      <div className="wa-row">
+        <span className={`wa-status ${lead.whatsappStatus === "yes" ? "wa-yes" : lead.whatsappStatus === "no" ? "wa-no" : "wa-unknown"}`}>
+          {lead.whatsappStatus === "yes" ? "Has WhatsApp" : lead.whatsappStatus === "no" ? "No WhatsApp" : "WA Unknown"}
+        </span>
+        <span className="lead-score">{lead.score}/100</span>
+      </div>
+      <div className="score-bar"><span style={{ width: `${lead.score}%` }} /></div>
+      <div className="lead-card-sub">{getNextAction(lead.leadStage, lead.whatsappStatus)}</div>
+      <div className="button-row">
+        <a className="tiny-button" href={buildWhatsAppUrl(lead.phone)} target="_blank" rel="noreferrer" onClick={(event) => event.stopPropagation()}>WhatsApp</a>
+        <button className="tiny-button" type="button" onClick={(event) => { event.stopPropagation(); updateLead(lead.id, { whatsappStatus: "yes" }); }}>Has WA</button>
+        {!compact ? (
+          <button className="tiny-button" type="button" onClick={(event) => { event.stopPropagation(); updateLead(lead.id, { leadStage: stage === "Lost" || stage === "Won" ? stage : LEAD_STAGE_ORDER[Math.min(LEAD_STAGE_ORDER.indexOf(stage) + 1, LEAD_STAGE_ORDER.length - 1)] }); }}>Advance</button>
+        ) : null}
+      </div>
+    </article>
+  );
+
+  if (isMobileLayout) {
+    return (
+      <div className="stack pipeline-shell mobile-pipeline-shell">
+        <section className="card pipeline-console mobile-pipeline-console">
+          <input
+            ref={csvInputRef}
+            type="file"
+            accept=".csv"
+            style={{ display: "none" }}
+            onChange={importCsvFile}
+          />
+          <div className="mobile-pipeline-toolbar">
+            <div className="mobile-pipeline-tabs">
+              <span className="mobile-brand">LeadOS</span>
+              <button className="mobile-nav-pill active" type="button">Pipeline</button>
+              <Link className="mobile-nav-pill" href="/app/analytics">Analytics</Link>
+              <Link className="mobile-nav-pill" href="/app/scripts">Scripts</Link>
+            </div>
+            <div className="mobile-pipeline-actions">
+              <button className="mobile-icon-button" type="button" onClick={openCsvPicker}>Import</button>
+              <button className={`mobile-icon-button ${clearArmed ? "danger" : ""}`} type="button" onClick={beginClearAllLeads}>
+                {clearArmed ? "Confirm" : "Clear"}
+              </button>
+            </div>
+          </div>
+          <div className="mobile-filters-row">
+            <select className="control-input" value={campaignId} onChange={(event) => setCampaignId(event.target.value)}>
+              <option value="">All campaigns</option>
+              {filteredCampaigns.map((campaign) => (
+                <option key={campaign.id} value={campaign.id}>{campaign.name}</option>
+              ))}
+            </select>
+            <input
+              className="control-input"
+              placeholder="Search leads..."
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
+            />
+            <select className="control-input" value={categoryFilter} onChange={(event) => setCategoryFilter(event.target.value)}>
+              <option value="">All categories</option>
+              {availableCategories.map((category) => (
+                <option key={category} value={category}>{category}</option>
+              ))}
+            </select>
+          </div>
+          <div className="pipeline-summary-chips mobile-summary-chips">
+            <button className={`pipeline-summary-chip ${!whatsappFilter ? "active muted" : "muted"}`} type="button" onClick={() => setWhatsappFilter("")}>
+              All Leads · {pipelineSummary.all}
+            </button>
+            <button className={`pipeline-summary-chip success ${whatsappFilter === "yes" ? "active" : ""}`} type="button" onClick={() => setWhatsappFilter("yes")}>
+              Has WhatsApp · {pipelineSummary.hasWhatsApp}
+            </button>
+            <button className={`pipeline-summary-chip danger ${whatsappFilter === "no" ? "active" : ""}`} type="button" onClick={() => setWhatsappFilter("no")}>
+              No WhatsApp · {pipelineSummary.noWhatsApp}
+            </button>
+            <button className={`pipeline-summary-chip warning ${whatsappFilter === "unknown" ? "active" : ""}`} type="button" onClick={() => setWhatsappFilter("unknown")}>
+              Unknown · {pipelineSummary.unknown}
+            </button>
+          </div>
+        </section>
+
+        <section className="mobile-stage-area">
+          <div className="mobile-stage-scroll">
+            {LEAD_STAGE_ORDER.map((stage) => {
+              const stageLeads = visibleLeads.filter((lead) => lead.leadStage === stage);
+              return (
+                <section key={stage} className="mobile-stage-column">
+                  <div className="mobile-stage-header">
+                    <span>{getLegacyStatusLabel(stage).toUpperCase()}</span>
+                    <strong>{stageLeads.length}</strong>
+                  </div>
+                  <div className="mobile-stage-stack">
+                    {stageLeads.length === 0 ? (
+                      <div className="empty-state compact-empty-state"><div className="mini-copy">No leads</div></div>
+                    ) : (
+                      stageLeads.map((lead) => renderLeadCard(lead, stage, true))
+                    )}
+                  </div>
+                </section>
+              );
+            })}
+          </div>
+        </section>
+
+        {selectedLead ? (
+          <div className="mobile-lead-overlay" onClick={() => setSelectedLeadId("")}>
+            <div className="mobile-lead-sheet-wrap" onClick={(event) => event.stopPropagation()}>
+              {detailPanel}
+            </div>
+          </div>
+        ) : null}
+      </div>
+    );
+  }
+
   return (
     <div className="stack pipeline-shell">
       <section className="card page-title pipeline-console">
@@ -597,37 +896,7 @@ export function PipelineWorkspace({
                     {stageLeads.length === 0 ? (
                       <div className="empty-state"><div className="mini-copy">No leads here yet.</div></div>
                     ) : (
-                      stageLeads.map((lead) => (
-                        <article
-                          key={lead.id}
-                          className={`lead-card selectable-card ${selectedLead?.id === lead.id ? "selected-card" : ""}`}
-                          onClick={() => setSelectedLeadId(lead.id)}
-                        >
-                          <div className="lead-card-top">
-                            <div>
-                              <h3>{lead.businessName}</h3>
-                              <div className="lead-card-sub">{lead.client.name}</div>
-                            </div>
-                            <span className={`pill ${lead.priority === "high" ? "danger" : lead.priority === "medium" ? "info" : "muted"}`}>
-                              {lead.priority}
-                            </span>
-                          </div>
-                          <div className="lead-card-sub">{lead.campaign.name}</div>
-                          <div className="wa-row">
-                            <span className={`wa-status ${lead.whatsappStatus === "yes" ? "wa-yes" : lead.whatsappStatus === "no" ? "wa-no" : "wa-unknown"}`}>
-                              {lead.whatsappStatus === "yes" ? "Has WhatsApp" : lead.whatsappStatus === "no" ? "No WhatsApp" : "WA Unknown"}
-                            </span>
-                            <span className="lead-score">{lead.score}/100</span>
-                          </div>
-                          <div className="score-bar"><span style={{ width: `${lead.score}%` }} /></div>
-                          <div className="lead-card-sub">{getNextAction(lead.leadStage, lead.whatsappStatus)}</div>
-                          <div className="button-row">
-                            <a className="tiny-button" href={buildWhatsAppUrl(lead.phone)} target="_blank" rel="noreferrer">WhatsApp</a>
-                            <button className="tiny-button" type="button" onClick={(event) => { event.stopPropagation(); updateLead(lead.id, { whatsappStatus: "yes" }); }}>Has WA</button>
-                            <button className="tiny-button" type="button" onClick={(event) => { event.stopPropagation(); updateLead(lead.id, { leadStage: stage === "Lost" || stage === "Won" ? stage : LEAD_STAGE_ORDER[Math.min(LEAD_STAGE_ORDER.indexOf(stage) + 1, LEAD_STAGE_ORDER.length - 1)] }); }}>Advance</button>
-                          </div>
-                        </article>
-                      ))
+                      stageLeads.map((lead) => renderLeadCard(lead, stage))
                     )}
                   </section>
                 );
@@ -637,160 +906,7 @@ export function PipelineWorkspace({
         </div>
 
         <aside className="stack">
-          {selectedLead ? (
-            <>
-              <section className="card detail-panel legacy-detail-panel">
-                <div className="legacy-detail-header">
-                  <div>
-                    <div className="eyebrow">Lead Detail</div>
-                    <h2>{selectedLead.name}</h2>
-                  </div>
-                  <div className="legacy-detail-header-actions">
-                    <Link className="legacy-detail-link" href={`/app/leads/${selectedLead.id}`}>Open full view</Link>
-                    <button className="panel-close-btn" type="button" aria-label="Close lead detail" onClick={() => setSelectedLeadId("")}>x</button>
-                  </div>
-                </div>
-                <div className="legacy-action-strip">
-                  <a className="legacy-action-btn wa" href={buildWhatsAppUrl(selectedLead.phone)} target="_blank" rel="noreferrer">WhatsApp</a>
-                  <button className="legacy-action-btn wa-yes" type="button" onClick={() => updateLead(selectedLead.id, { whatsappStatus: "yes" })}>Has WA</button>
-                  <button className="legacy-action-btn wa-no" type="button" onClick={() => updateLead(selectedLead.id, { whatsappStatus: "no" })}>No WA</button>
-                  <Link className="legacy-action-btn scripts" href="/app/scripts">Scripts</Link>
-                  <Link className="legacy-action-btn offer" href="/app/ai">Offer</Link>
-                  <Link className="legacy-action-btn prep" href="/app/ai">Prep</Link>
-                  <Link className="legacy-action-btn ideas" href="/app/analytics">Ideas</Link>
-                  <button className="legacy-action-btn checklist" type="button" onClick={() => appendTimelineEntry(selectedLead, "Ran checklist")}>Checklist</button>
-                  <button className="legacy-action-btn lost" type="button" onClick={() => updateLead(selectedLead.id, { leadStage: "Lost" })}>Lost</button>
-                  <a className="legacy-action-btn maps" href={buildMapsUrl(selectedLead)} target="_blank" rel="noreferrer">Maps</a>
-                </div>
-
-                <div className="legacy-next-action">
-                  <div className="legacy-next-action-icon">Go</div>
-                  <div>
-                    <strong>{getLegacyActionCard(selectedLead.leadStage, selectedLead.whatsappStatus).title}</strong>
-                    <div className="mini-copy">{getLegacyActionCard(selectedLead.leadStage, selectedLead.whatsappStatus).description}</div>
-                  </div>
-                </div>
-
-                <div className="legacy-modal-section">
-                  <div className="detail-section-label">Momentum - {getMomentumState(selectedLead).label}</div>
-                  <div className="legacy-momentum-track">
-                    <span className={`legacy-momentum-fill ${getMomentumState(selectedLead).css}`} style={{ width: getMomentumState(selectedLead).width }} />
-                  </div>
-                </div>
-
-                <div className="legacy-modal-section">
-                  <div className="detail-section-label">Lead Info</div>
-                  <div className="legacy-detail-grid">
-                    <div className="legacy-detail-field"><div className="legacy-detail-label">Name</div><div className="legacy-detail-value">{selectedLead.name}</div></div>
-                    <div className="legacy-detail-field"><div className="legacy-detail-label">Niche</div><div className="legacy-detail-value">{selectedLead.niche || "-"}</div></div>
-                    <div className="legacy-detail-field"><div className="legacy-detail-label">Phone</div><div className="legacy-detail-value">{selectedLead.phone || "-"}</div></div>
-                    <div className="legacy-detail-field"><div className="legacy-detail-label">City</div><div className="legacy-detail-value">{selectedLead.city || "-"}</div></div>
-                    <div className="legacy-detail-field"><div className="legacy-detail-label">WhatsApp</div><div className="legacy-detail-value">{selectedLead.whatsappStatus === "yes" ? "Has WhatsApp" : selectedLead.whatsappStatus === "no" ? "No WhatsApp" : "Unknown"}</div></div>
-                    <div className="legacy-detail-field legacy-detail-field-full"><div className="legacy-detail-label">Address</div><div className="legacy-detail-value">{selectedLead.address || "-"}</div></div>
-                  </div>
-                </div>
-
-                <div className="legacy-modal-section">
-                  <div className="detail-section-label">Status & Priority</div>
-                  <div className="legacy-detail-grid">
-                    <div>
-                      <div className="legacy-detail-label">Status</div>
-                      <select className="control-input" value={selectedLead.leadStage} onChange={(event) => updateLead(selectedLead.id, { leadStage: event.target.value as LeadStage })}>
-                        {LEAD_STAGE_ORDER.map((stage) => (
-                          <option key={stage} value={stage}>{getLegacyStatusLabel(stage)}</option>
-                        ))}
-                      </select>
-                    </div>
-                    <div>
-                      <div className="legacy-detail-label">Priority</div>
-                      <select className="control-input" value={getPriorityDisplay(selectedLead.priority)} onChange={(event) => updateLead(selectedLead.id, { priority: getPriorityValueFromDisplay(event.target.value) })}>
-                        <option value="Hot">Hot</option>
-                        <option value="Warm">Warm</option>
-                        <option value="Cold">Cold</option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="legacy-modal-section">
-                  <div className="detail-section-label">Lead Score</div>
-                  <div className="legacy-score-wrap">
-                    <div className="legacy-score-header">
-                      <strong>{selectedLead.score}/100</strong>
-                      <span className={`legacy-score-state ${getMomentumState(selectedLead).css}`}>{getMomentumState(selectedLead).label}</span>
-                    </div>
-                    <div className="legacy-score-list">
-                      {getScoreChecklist(selectedLead).map((item) => (
-                        <label key={item.label} className={`legacy-score-item ${item.checked ? "checked" : ""}`}>
-                          <input type="checkbox" checked={item.checked} readOnly />
-                          <span>{item.label}</span>
-                        </label>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="legacy-modal-section">
-                  <div className="detail-section-label">AI Copilot</div>
-                  <div className="text-list">
-                    <div className="text-list-item"><strong>AI Summary</strong><br />{selectedLead.aiSummary}</div>
-                    <div className="text-list-item"><strong>AI Next Action</strong><br />{selectedLead.aiNextAction}</div>
-                  </div>
-                  <div className="button-row">
-                    <button className="ghost-button blue" type="button" onClick={() => updateLead(selectedLead.id, { leadStage: "Contacted" })}>Mark Contacted</button>
-                    <button className="ghost-button purple" type="button" onClick={() => updateLead(selectedLead.id, { leadStage: "Qualified" })}>Move Qualified</button>
-                    <button className="ghost-button red" type="button" onClick={() => resetLead(selectedLead.id)}>Reset Lead</button>
-                  </div>
-                </div>
-
-                <div className="legacy-modal-section">
-                  <div className="detail-section-label">Follow-Up Date</div>
-                  <div className="button-row">
-                    <input
-                      className="control-input"
-                      type="date"
-                      value={selectedLead.nextFollowUpAt ? new Date(selectedLead.nextFollowUpAt).toISOString().slice(0, 10) : ""}
-                      onChange={(event) => updateLead(selectedLead.id, { nextFollowUpAt: event.target.value ? new Date(`${event.target.value}T12:00:00`).toISOString() : "" })}
-                    />
-                    <button className="tiny-button" type="button" onClick={() => updateLead(selectedLead.id, { nextFollowUpAt: new Date().toISOString() })}>Today</button>
-                    <button className="tiny-button" type="button" onClick={() => updateLead(selectedLead.id, { nextFollowUpAt: new Date(Date.now() + 86400000).toISOString() })}>+1 Day</button>
-                  </div>
-                </div>
-
-                <div className="legacy-modal-section">
-                  <div className="detail-section-label">Activity Timeline</div>
-                  <div className="legacy-timeline-list">
-                    {selectedLead.previousMessages.length ? selectedLead.previousMessages.map((message, index) => (
-                      <div key={`${selectedLead.id}-message-${index}`} className="legacy-timeline-item">{message}</div>
-                    )) : <div className="mini-copy">No messages logged yet.</div>}
-                  </div>
-                  <div className="button-row">
-                    <select className="control-input" value={timelineEvent} onChange={(event) => setTimelineEvent(event.target.value)}>
-                      <option value="Sent message">Sent message</option>
-                      <option value="Replied">Replied</option>
-                      <option value="Followed up">Followed up</option>
-                      <option value="Ghosted">Ghosted</option>
-                      <option value="Booked call">Booked call</option>
-                    </select>
-                    <button className="tiny-button" type="button" onClick={() => appendTimelineEntry(selectedLead, timelineEvent)}>Log</button>
-                  </div>
-                </div>
-
-                <div className="legacy-modal-section">
-                  <div className="detail-section-label">Notes</div>
-                  <textarea className="notes-box compact-textarea" value={selectedLead.notes} onChange={(event) => updateLead(selectedLead.id, { notes: event.target.value })} placeholder="Add notes here..." />
-                </div>
-
-                <div className="legacy-modal-section">
-                  <div className="detail-section-label">Personalization Memory</div>
-                  <div className="button-row">
-                    <input className="control-input" placeholder="e.g. Owner name: Mike, has 2 locations..." value={memoryDraft} onChange={(event) => setMemoryDraft(event.target.value)} />
-                    <button className="tiny-button" type="button" onClick={() => addMemoryLine(selectedLead)}>+ Add</button>
-                  </div>
-                </div>
-              </section>
-            </>
-          ) : null}
+          {detailPanel}
         </aside>
       </section>
     </div>

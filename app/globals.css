@@ -604,6 +604,160 @@ main {
   color: var(--muted-strong);
 }
 
+.mobile-pipeline-shell {
+  gap: 12px;
+}
+
+.mobile-pipeline-console {
+  padding: 12px;
+  border-radius: 0 0 18px 18px;
+}
+
+.mobile-pipeline-toolbar {
+  display: grid;
+  gap: 10px;
+}
+
+.mobile-pipeline-tabs,
+.mobile-pipeline-actions,
+.mobile-filters-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.mobile-pipeline-tabs,
+.mobile-summary-chips {
+  overflow-x: auto;
+  flex-wrap: nowrap;
+  padding-bottom: 4px;
+}
+
+.mobile-pipeline-tabs::-webkit-scrollbar,
+.mobile-summary-chips::-webkit-scrollbar {
+  display: none;
+}
+
+.mobile-brand {
+  flex: 0 0 auto;
+  color: var(--accent);
+  font-size: 0.98rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+}
+
+.mobile-nav-pill,
+.mobile-icon-button {
+  flex: 0 0 auto;
+  min-height: 38px;
+  padding: 0 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--muted-strong);
+  font-weight: 700;
+}
+
+.mobile-nav-pill.active {
+  background: rgba(197, 255, 73, 0.16);
+  border-color: rgba(197, 255, 73, 0.24);
+  color: var(--accent);
+}
+
+.mobile-icon-button.danger {
+  color: var(--red);
+  border-color: rgba(255, 112, 134, 0.24);
+}
+
+.mobile-filters-row .control-input {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.mobile-stage-area {
+  min-height: 0;
+}
+
+.mobile-stage-scroll {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(286px, 286px);
+  gap: 12px;
+  overflow-x: auto;
+  padding: 0 6px 8px 2px;
+  scroll-snap-type: x proximity;
+}
+
+.mobile-stage-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.mobile-stage-column {
+  display: grid;
+  gap: 10px;
+  align-content: start;
+  scroll-snap-align: start;
+}
+
+.mobile-stage-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  font-size: 0.9rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.mobile-stage-stack {
+  display: grid;
+  gap: 10px;
+}
+
+.compact-mobile-card {
+  padding: 14px;
+  gap: 8px;
+}
+
+.compact-mobile-card h3 {
+  margin: 2px 0 4px;
+  font-size: 1.05rem;
+  line-height: 1.18;
+}
+
+.compact-mobile-card .lead-card-sub {
+  font-size: 0.82rem;
+  line-height: 1.38;
+}
+
+.compact-empty-state {
+  padding: 14px;
+}
+
+.mobile-lead-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 95;
+  background: rgba(2, 4, 5, 0.58);
+  backdrop-filter: blur(8px);
+}
+
+.mobile-lead-sheet-wrap {
+  position: absolute;
+  inset: auto 0 0 0;
+  max-height: 88svh;
+  overflow: auto;
+  padding: 0 8px calc(8px + env(safe-area-inset-bottom));
+}
+
+.mobile-lead-sheet {
+  border-radius: 24px 24px 0 0;
+}
+
 .pipeline-shell {
   min-height: 100%;
 }

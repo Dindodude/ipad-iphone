@@ -232,7 +232,7 @@ export function PipelineWorkspace({
   const [categoryFilter, setCategoryFilter] = useState("");
   const [whatsappFilter, setWhatsappFilter] = useState<"" | WhatsAppStatus>("");
   const [search, setSearch] = useState("");
-  const [selectedLeadId, setSelectedLeadId] = useState(initialLeads[0]?.id ?? "");
+  const [selectedLeadId, setSelectedLeadId] = useState("");
   const [isMobileLayout, setIsMobileLayout] = useState(false);
   const [hasMounted, setHasMounted] = useState(false);
   const [timelineEvent, setTimelineEvent] = useState("Sent message");

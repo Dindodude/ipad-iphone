@@ -290,6 +290,10 @@ main {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
+.dashboard-grid > * {
+  min-width: 0;
+}
+
 .stats-grid.four-grid {
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }
@@ -347,6 +351,13 @@ main {
 .text-list-item,
 .empty-state {
   padding: 18px;
+}
+
+.dashboard-card {
+  display: grid;
+  width: 100%;
+  min-width: 0;
+  align-self: stretch;
 }
 
 .dashboard-card::after,

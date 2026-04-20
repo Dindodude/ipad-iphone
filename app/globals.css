@@ -1448,7 +1448,9 @@ li + li {
     display: flex;
     gap: 10px;
     overflow-x: auto;
+    overflow-y: hidden;
     padding-bottom: 4px;
+    padding-inline: 2px 10px;
     scroll-snap-type: x proximity;
   }
 
@@ -1486,6 +1488,10 @@ li + li {
     padding-bottom: max(18px, env(safe-area-inset-bottom));
   }
 
+  html {
+    font-size: 15px;
+  }
+
   .app-shell,
   .marketing-shell {
     width: 100%;
@@ -1494,15 +1500,15 @@ li + li {
 
   .hero h1,
   .page-title h1 {
-    font-size: clamp(2.3rem, 11vw, 4rem);
-    line-height: 0.95;
+    font-size: clamp(1.9rem, 8.4vw, 3rem);
+    line-height: 0.98;
   }
 
   .sidebar {
     position: sticky;
     top: 0;
     z-index: 35;
-    padding: 10px 0 2px;
+    padding: 6px 0 2px;
     background: rgba(11, 17, 20, 0.96);
     backdrop-filter: blur(16px);
     border: 0;
@@ -1539,8 +1545,8 @@ li + li {
     position: sticky;
     top: calc(58px + env(safe-area-inset-top));
     z-index: 25;
-    padding: 12px 12px 14px;
-    border-radius: 0 0 18px 18px;
+    padding: 10px 10px 12px;
+    border-radius: 0 0 16px 16px;
   }
 
   .pipeline-workspace-grid {
@@ -1567,13 +1573,41 @@ li + li {
 
   .page-title h1 {
     margin: 6px 0 10px;
-    font-size: 2.15rem;
+    font-size: 1.9rem;
+  }
+
+  .page-title,
+  .dashboard-card,
+  .card,
+  .mini-card,
+  .text-list-item,
+  .empty-state {
+    border-radius: 16px;
+  }
+
+  .dashboard-card,
+  .mini-card,
+  .text-list-item,
+  .empty-state,
+  .lead-card {
+    padding: 14px;
   }
 
   .page-title p,
   .csv-import-panel,
   .inline-stat {
     display: none;
+  }
+
+  .dashboard-grid,
+  .stats-grid,
+  .feature-strip,
+  .script-grid,
+  .mini-grid,
+  .toolbar-grid,
+  .copilot-grid,
+  .add-lead-grid {
+    gap: 12px;
   }
 
   .pipeline-summary-chips {
@@ -1589,13 +1623,13 @@ li + li {
 
   .pipeline-summary-chip {
     flex: 0 0 auto;
-    min-height: 38px;
-    padding: 0 14px;
-    font-size: 0.95rem;
+    min-height: 34px;
+    padding: 0 12px;
+    font-size: 0.88rem;
   }
 
   .lead-board-seven {
-    grid-template-columns: repeat(7, minmax(300px, 300px));
+    grid-template-columns: repeat(7, minmax(260px, 260px));
     overflow-x: auto;
     overflow-y: hidden;
     max-height: none;
@@ -1626,7 +1660,7 @@ li + li {
   }
 
   .legacy-detail-header h2 {
-    font-size: 1.55rem;
+    font-size: 1.35rem;
   }
 
   .legacy-action-strip {
@@ -1634,9 +1668,9 @@ li + li {
   }
 
   .legacy-action-btn {
-    min-height: 40px;
-    padding: 0 11px;
-    font-size: 0.8rem;
+    min-height: 36px;
+    padding: 0 10px;
+    font-size: 0.76rem;
   }
 
   .legacy-detail-grid,
@@ -1689,27 +1723,43 @@ li + li {
   .button-secondary,
   .ghost-button,
   .tiny-button {
-    min-height: 44px;
+    min-height: 40px;
+    padding-inline: 12px;
   }
 
   .lead-card {
-    gap: 8px;
-    padding: 14px;
+    gap: 7px;
+    padding: 12px;
   }
 
   .lead-card h3 {
     margin: 2px 0 4px;
-    font-size: 1.05rem;
-    line-height: 1.18;
+    font-size: 0.96rem;
+    line-height: 1.16;
   }
 
   .lead-card-sub {
-    font-size: 0.82rem;
-    line-height: 1.38;
+    font-size: 0.76rem;
+    line-height: 1.32;
   }
 
   .score-bar {
     height: 5px;
+  }
+
+  .dashboard-card h3,
+  .page-title h2,
+  .card h2 {
+    font-size: 1.2rem;
+  }
+
+  .meta-row span,
+  .mini-copy,
+  .endpoint-label,
+  .metric span,
+  .stat span,
+  .section-head span {
+    font-size: 0.82rem;
   }
 }
 
@@ -1758,7 +1808,7 @@ li + li {
 
   .pipeline-console {
     top: calc(52px + env(safe-area-inset-top));
-    padding: 10px 10px 12px;
+    padding: 8px 8px 10px;
   }
 
   .toolbar-actions .ghost-button,
@@ -1767,8 +1817,54 @@ li + li {
     flex: 1 1 100%;
   }
 
+  .mobile-pipeline-toolbar,
+  .mobile-filters-row {
+    gap: 8px;
+  }
+
+  .mobile-filters-row {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .mobile-nav-pill,
+  .mobile-icon-button {
+    min-height: 34px;
+    padding: 0 11px;
+    font-size: 0.82rem;
+  }
+
+  .mobile-brand {
+    font-size: 0.9rem;
+  }
+
+  .mobile-stage-scroll {
+    grid-auto-columns: minmax(238px, 238px);
+    gap: 10px;
+    padding: 0 2px 8px 0;
+  }
+
+  .mobile-stage-header {
+    padding: 10px 12px;
+    border-radius: 14px;
+    font-size: 0.78rem;
+  }
+
+  .compact-mobile-card {
+    padding: 11px;
+    gap: 7px;
+  }
+
+  .compact-mobile-card h3 {
+    font-size: 0.92rem;
+  }
+
+  .compact-mobile-card .lead-card-sub {
+    font-size: 0.72rem;
+  }
+
   .lead-board-seven {
-    grid-template-columns: repeat(7, minmax(286px, 286px));
+    grid-template-columns: repeat(7, minmax(238px, 238px));
     max-width: 100%;
   }
 }

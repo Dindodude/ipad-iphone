@@ -1517,11 +1517,14 @@ li + li {
   .sidebar-nav {
     display: flex;
     gap: 6px;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
     overflow-x: auto;
     overflow-y: hidden;
     padding-bottom: 4px;
     padding-inline: 0 10px;
-    width: 100%;
+    box-sizing: border-box;
     -webkit-overflow-scrolling: touch;
     scroll-snap-type: x proximity;
   }
@@ -1532,12 +1535,15 @@ li + li {
 
   .sidebar-nav a {
     flex: 0 0 auto;
+    flex-shrink: 0;
     min-height: 26px;
+    min-width: 0;
     padding: 0 9px;
     scroll-snap-align: start;
     white-space: nowrap;
     border-radius: 8px;
     font-size: 0.64rem;
+    box-sizing: border-box;
   }
 
   .text-list.compact-list {
@@ -1652,6 +1658,10 @@ li + li {
   .surface-grid {
     justify-items: stretch;
     align-items: stretch;
+  }
+
+  .app-content:has(.mobile-pipeline-shell) {
+    padding-top: 0;
   }
 
   .app-content {

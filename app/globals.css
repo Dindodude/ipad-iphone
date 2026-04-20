@@ -561,6 +561,21 @@ main {
   border: 1px solid rgba(255, 255, 255, 0.07);
 }
 
+.pipeline-shell {
+  min-height: 100%;
+}
+
+.pipeline-console {
+  position: relative;
+  z-index: 4;
+}
+
+.pipeline-main-stack,
+.pipeline-workspace-grid,
+.pipeline-board-card {
+  min-height: 0;
+}
+
 .copilot-prompt {
   min-height: 180px;
 }
@@ -1093,6 +1108,10 @@ li + li {
   .workspace-grid > aside.stack {
     order: -1;
   }
+
+  .pipeline-workspace-grid > aside.stack {
+    order: 0;
+  }
 }
 
 @media (max-width: 960px) {
@@ -1247,7 +1266,12 @@ li + li {
   }
 
   .sidebar {
+    position: sticky;
+    top: 0;
+    z-index: 35;
     padding: 12px;
+    background: rgba(11, 17, 20, 0.92);
+    backdrop-filter: blur(16px);
   }
 
   .sidebar-label {
@@ -1270,6 +1294,31 @@ li + li {
     grid-template-columns: 1fr;
   }
 
+  .pipeline-shell {
+    grid-template-rows: auto minmax(0, 1fr);
+    min-height: calc(100svh - 8px);
+  }
+
+  .pipeline-console {
+    position: sticky;
+    top: calc(12px + env(safe-area-inset-top));
+    z-index: 25;
+  }
+
+  .pipeline-workspace-grid {
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .pipeline-main-stack {
+    min-height: 0;
+  }
+
+  .pipeline-board-card {
+    min-height: 0;
+    overflow: hidden;
+  }
+
   .control-input,
   .notes-box,
   select,
@@ -1280,7 +1329,10 @@ li + li {
 
   .lead-board-seven {
     grid-template-columns: 1fr;
-    overflow: visible;
+    overflow-x: visible;
+    overflow-y: auto;
+    max-height: calc(100svh - 340px);
+    padding-right: 2px;
   }
 
   .lead-column {

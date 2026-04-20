@@ -488,8 +488,8 @@ export function PipelineWorkspace({
   }
 
   return (
-    <div className="stack">
-      <section className="card page-title">
+    <div className="stack pipeline-shell">
+      <section className="card page-title pipeline-console">
         <div className="eyebrow">Pipeline</div>
         <h1>{title}</h1>
         <p>{description}</p>
@@ -549,9 +549,9 @@ export function PipelineWorkspace({
         </div>
       </section>
 
-      <section className="workspace-grid">
-        <div className="stack">
-          <section className="card">
+      <section className="workspace-grid pipeline-workspace-grid">
+        <div className="stack pipeline-main-stack">
+          <section className="card pipeline-board-card">
             <div className="section-head">
               <div>
                 <div className="eyebrow">Stage board</div>
@@ -559,7 +559,7 @@ export function PipelineWorkspace({
               </div>
               <span>WhatsApp-first, stage-aware, campaign-aware</span>
             </div>
-            <div className="lead-board lead-board-seven">
+            <div className="lead-board lead-board-seven pipeline-board-scroll">
               {LEAD_STAGE_ORDER.map((stage) => {
                 const stageLeads = visibleLeads.filter((lead) => lead.leadStage === stage);
                 return (

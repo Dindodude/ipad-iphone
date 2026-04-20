@@ -1665,12 +1665,28 @@ li + li {
     top: 0;
     z-index: 35;
     width: 100%;
+    max-width: 100vw;
+    min-width: 0;
     margin: 0;
     padding: max(6px, env(safe-area-inset-top)) 0 4px;
     background: rgba(11, 17, 20, 0.96);
     border: 0;
     box-shadow: none;
     border-radius: 0;
+    overflow: hidden;
+  }
+
+  .sidebar-section {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  .sidebar-nav {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
   }
 
   .brand,

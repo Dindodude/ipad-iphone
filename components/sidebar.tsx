@@ -9,11 +9,11 @@ const navItems = [
   { href: "/app/campaigns", label: "Campaigns" },
   { href: "/app/pipeline", label: "Pipeline" },
   { href: "/app/scripts", label: "Scripts" },
-  { href: "/app/ai", label: "AI Assistant" },
-  { href: "/app/forms", label: "Instant Forms" },
+  { href: "/app/ai", label: "AI" },
+  { href: "/app/forms", label: "Forms" },
   { href: "/app/analytics", label: "Analytics" },
   { href: "/app/settings", label: "Settings" },
-  { href: "/app/legacy", label: "Legacy LeadOS" }
+  { href: "/app/legacy", label: "Legacy" }
 ];
 
 export function Sidebar() {

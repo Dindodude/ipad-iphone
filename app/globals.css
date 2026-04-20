@@ -30,6 +30,9 @@
 
 html {
   scroll-behavior: smooth;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 html,
@@ -37,6 +40,9 @@ body {
   margin: 0;
   padding: 0;
   min-height: 100%;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
   background:
     radial-gradient(circle at top left, rgba(197, 255, 73, 0.12), transparent 25%),
     radial-gradient(circle at 86% 4%, rgba(105, 176, 255, 0.1), transparent 18%),
@@ -72,11 +78,15 @@ textarea {
 
 main {
   min-height: 100vh;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 .marketing-shell,
 .app-shell {
   width: min(1600px, calc(100% - 28px));
+  max-width: 100%;
   margin: 0 auto;
 }
 
@@ -381,6 +391,8 @@ main {
 .stack {
   display: grid;
   gap: 18px;
+  min-width: 0;
+  max-width: 100%;
 }
 
 .sidebar {
@@ -483,6 +495,8 @@ main {
   display: grid;
   grid-template-columns: minmax(0, 1.5fr) 360px;
   gap: 18px;
+  min-width: 0;
+  max-width: 100%;
 }
 
 .workspace-grid.wide-main {
@@ -687,6 +701,9 @@ main {
 
 .mobile-stage-area {
   min-height: 0;
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 .mobile-stage-scroll {
@@ -694,9 +711,12 @@ main {
   grid-auto-flow: column;
   grid-auto-columns: minmax(286px, 286px);
   gap: 12px;
+  width: 100%;
+  max-width: 100%;
   overflow-x: auto;
   padding: 0 6px 8px 2px;
   scroll-snap-type: x proximity;
+  overscroll-behavior-x: contain;
 }
 
 .mobile-stage-scroll::-webkit-scrollbar {
@@ -771,17 +791,23 @@ main {
 
 .pipeline-shell {
   min-height: 100%;
+  min-width: 0;
+  max-width: 100%;
 }
 
 .pipeline-console {
   position: relative;
   z-index: 4;
+  min-width: 0;
+  max-width: 100%;
 }
 
 .pipeline-main-stack,
 .pipeline-workspace-grid,
 .pipeline-board-card {
   min-height: 0;
+  min-width: 0;
+  max-width: 100%;
 }
 
 .copilot-prompt {
@@ -1147,6 +1173,8 @@ main {
   grid-template-columns: repeat(7, minmax(220px, 1fr));
   overflow-x: auto;
   padding-bottom: 6px;
+  max-width: 100%;
+  overscroll-behavior-x: contain;
 }
 
 .lead-column {
@@ -1460,7 +1488,8 @@ li + li {
 
   .app-shell,
   .marketing-shell {
-    width: min(100%, calc(100% - 12px));
+    width: 100%;
+    padding-inline: 6px;
   }
 
   .hero h1,
@@ -1570,6 +1599,7 @@ li + li {
     overflow-x: auto;
     overflow-y: hidden;
     max-height: none;
+    max-width: 100%;
     padding-bottom: 10px;
     scroll-snap-type: x proximity;
   }
@@ -1739,5 +1769,6 @@ li + li {
 
   .lead-board-seven {
     grid-template-columns: repeat(7, minmax(286px, 286px));
+    max-width: 100%;
   }
 }

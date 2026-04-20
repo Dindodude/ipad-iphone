@@ -8,7 +8,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
 
   return (
     <AppStateProvider initialSnapshot={initialSnapshot}>
-      <main>
+      <main className="app-main">
         <div className="app-shell app-layout">
           <Sidebar />
           <div className="app-content">{children}</div>

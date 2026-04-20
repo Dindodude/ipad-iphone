@@ -290,30 +290,6 @@ export function PipelineWorkspace({
     return () => media.removeListener(sync);
   }, []);
 
-  if (!hasMounted) {
-    return (
-      <div className="stack pipeline-shell mobile-pipeline-shell">
-        <section className="card pipeline-console mobile-pipeline-console pipeline-loading-shell">
-          <div className="mobile-pipeline-toolbar">
-            <div className="mobile-pipeline-tabs">
-              <span className="mobile-brand">LeadOS</span>
-              <span className="mobile-nav-pill active">Pipeline</span>
-              <span className="mobile-nav-pill">Analytics</span>
-              <span className="mobile-nav-pill">Scripts</span>
-            </div>
-          </div>
-          <div className="mobile-filters-row">
-            <div className="control-input pipeline-loading-block" />
-            <div className="control-input pipeline-loading-block" />
-          </div>
-          <div className="pipeline-summary-chips mobile-summary-chips">
-            <span className="pipeline-summary-chip muted">Loading leads</span>
-          </div>
-        </section>
-      </div>
-    );
-  }
-
   const filteredCampaigns = useMemo(
     () => campaigns.filter((campaign) => !clientId || campaign.clientId === clientId),
     [campaigns, clientId]
@@ -731,6 +707,30 @@ export function PipelineWorkspace({
       </div>
     </article>
   );
+
+  if (!hasMounted) {
+    return (
+      <div className="stack pipeline-shell mobile-pipeline-shell">
+        <section className="card pipeline-console mobile-pipeline-console pipeline-loading-shell">
+          <div className="mobile-pipeline-toolbar">
+            <div className="mobile-pipeline-tabs">
+              <span className="mobile-brand">LeadOS</span>
+              <span className="mobile-nav-pill active">Pipeline</span>
+              <span className="mobile-nav-pill">Analytics</span>
+              <span className="mobile-nav-pill">Scripts</span>
+            </div>
+          </div>
+          <div className="mobile-filters-row">
+            <div className="control-input pipeline-loading-block" />
+            <div className="control-input pipeline-loading-block" />
+          </div>
+          <div className="pipeline-summary-chips mobile-summary-chips">
+            <span className="pipeline-summary-chip muted">Loading leads</span>
+          </div>
+        </section>
+      </div>
+    );
+  }
 
   if (isMobileLayout) {
     return (

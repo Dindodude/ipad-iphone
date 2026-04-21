@@ -268,22 +268,15 @@ function getLeadScripts(lead: LeadWithRelations) {
 }
 
 function getPreviewCards(lead: LeadWithRelations, scripts: Script[]) {
-  const primaryScript = scripts[0]?.content
-    ?? `Hey ${lead.businessName}, I put together a quick idea to help you bring in more ${lead.niche.toLowerCase()} bookings${lead.city ? ` in ${lead.city}` : ""}. Want me to send it here?`;
-
   return {
     offer: [
       {
-        title: "Ready-to-send offer",
-        body: `Hey ${lead.businessName}, I put together a simple offer for you: we help ${lead.niche.toLowerCase()} businesses${lead.city ? ` in ${lead.city}` : ""} turn more conversations into booked work by tightening the first reply, follow-up flow, and WhatsApp response process. If you want, I can map out the exact version I'd use for ${lead.businessName} and show you how it would look.`
+        title: "Offer angle",
+        body: `Position ${lead.businessName} around a simple result: more ${lead.niche.toLowerCase()} conversations turning into booked work for ${lead.city || "local"} prospects.`
       },
       {
-        title: "Offer draft",
-        body: `${lead.businessName} offer: a cleaner first-touch message, a follow-up sequence for missed replies, and a WhatsApp-first booking flow built around ${lead.campaign.name}. The goal is simple: more ${lead.niche.toLowerCase()} inquiries turning into real booked work without adding extra admin.`
-      },
-      {
-        title: "Message version",
-        body: primaryScript
+        title: "Proof to mention",
+        body: `Use one concrete proof point, then tie it back to ${lead.campaign.name} so the message feels built for this lead instead of generic outreach.`
       }
     ],
     prep: [

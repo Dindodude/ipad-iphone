@@ -4237,12 +4237,14 @@ li + li {
   }
 
   .zentrixa-hero-shell {
-    padding-top: 0;
+    padding-top: 8px;
     padding-bottom: 18px;
   }
 
   .zentrixa-nav {
     gap: 10px;
+    padding-top: 8px;
+    padding-bottom: 10px;
     padding-inline: 12px;
     margin-inline: -12px;
   }
@@ -4258,13 +4260,13 @@ li + li {
   }
 
   .zentrixa-brandmark {
-    min-height: 40px;
+    min-height: 32px;
   }
 
   .zentrixa-brand-image-icon {
-    width: 36px;
-    height: 36px;
-    max-width: 36px;
+    width: 28px;
+    height: 28px;
+    max-width: 28px;
   }
 
   .zentrixa-nav-cta .zentrixa-button {
@@ -4275,11 +4277,12 @@ li + li {
   }
 
   .zentrixa-hero {
-    gap: 14px;
+    gap: 16px;
+    padding-top: 8px;
   }
 
   .zentrixa-hero-card {
-    padding: 16px 16px 15px;
+    padding: 18px 16px 15px;
     border-radius: 22px;
     background:
       radial-gradient(circle at 88% 12%, rgba(117, 94, 255, 0.24), transparent 30%),
@@ -4289,7 +4292,7 @@ li + li {
   }
 
   .zentrixa-hero-copy {
-    gap: 8px;
+    gap: 9px;
   }
 
   .zentrixa-hero-copy h1 {
@@ -4531,22 +4534,16 @@ li + li {
   }
 
   .zentrixa-nav {
+    padding-top: 7px;
+    padding-bottom: 9px;
     padding-inline: 10px;
     margin-inline: -10px;
   }
 
-  .zentrixa-brand-image {
-    max-width: 122px;
-  }
-
-  .zentrixa-brandimage-full {
-    display: none;
-  }
-
   .zentrixa-brand-image-icon {
-    width: 32px;
-    height: 32px;
-    max-width: 32px;
+    width: 24px;
+    height: 24px;
+    max-width: 24px;
   }
 
   .zentrixa-nav-cta .zentrixa-button {
@@ -4556,7 +4553,7 @@ li + li {
   }
 
   .zentrixa-hero-card {
-    padding: 15px 14px 14px;
+    padding: 17px 14px 14px;
   }
 
   .zentrixa-hero-copy h1 {

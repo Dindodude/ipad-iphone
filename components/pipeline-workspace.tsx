@@ -701,9 +701,11 @@ export function PipelineWorkspace({
       </div>
       <div className="lead-card-sub">{compact ? (lead.phone || "No phone") : lead.campaign.name}</div>
       <div className="wa-row">
-        <span className={`wa-status ${lead.whatsappStatus === "yes" ? "wa-yes" : lead.whatsappStatus === "no" ? "wa-no" : "wa-unknown"}`}>
-          {lead.whatsappStatus === "yes" ? "Has WhatsApp" : lead.whatsappStatus === "no" ? "No WhatsApp" : "WA Unknown"}
-        </span>
+        <span
+          className={`wa-status-dot ${lead.whatsappStatus === "yes" ? "wa-yes" : lead.whatsappStatus === "no" ? "wa-no" : "wa-unknown"}`}
+          aria-label={lead.whatsappStatus === "yes" ? "Has WhatsApp" : lead.whatsappStatus === "no" ? "No WhatsApp" : "WhatsApp unknown"}
+          title={lead.whatsappStatus === "yes" ? "Has WhatsApp" : lead.whatsappStatus === "no" ? "No WhatsApp" : "WhatsApp unknown"}
+        />
         <span className="lead-score">{lead.score}/100</span>
       </div>
       <div className="score-bar"><span style={{ width: `${lead.score}%` }} /></div>
@@ -812,11 +814,15 @@ export function PipelineWorkspace({
                     <strong>{stageLeads.length}</strong>
                   </div>
                   <div className="mobile-stage-stack">
-                    {stageLeads.length === 0 ? (
-                      <div className="empty-state compact-empty-state"><div className="mini-copy">No leads</div></div>
-                    ) : (
-                      stageLeads.map((lead) => renderLeadCard(lead, stage, true))
-                    )}
+                      {stageLeads.length === 0 ? (
+                        <div className="empty-state compact-empty-state">
+                          <div className="empty-state-icon" aria-hidden="true">+</div>
+                          <strong>No leads yet</strong>
+                          <div className="mini-copy">Import a CSV or add leads manually</div>
+                        </div>
+                      ) : (
+                        stageLeads.map((lead) => renderLeadCard(lead, stage, true))
+                      )}
                   </div>
                 </section>
               );
@@ -930,11 +936,15 @@ export function PipelineWorkspace({
                       <div className="lead-column-title">{stage}</div>
                       <span>{stageLeads.length}</span>
                     </div>
-                    {stageLeads.length === 0 ? (
-                      <div className="empty-state"><div className="mini-copy">No leads here yet.</div></div>
-                    ) : (
-                      stageLeads.map((lead) => renderLeadCard(lead, stage))
-                    )}
+                      {stageLeads.length === 0 ? (
+                        <div className="empty-state">
+                          <div className="empty-state-icon" aria-hidden="true">+</div>
+                          <strong>No leads yet</strong>
+                          <div className="mini-copy">Import a CSV or add leads manually</div>
+                        </div>
+                      ) : (
+                        stageLeads.map((lead) => renderLeadCard(lead, stage))
+                      )}
                   </section>
                 );
               })}

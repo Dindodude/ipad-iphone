@@ -16,6 +16,13 @@ const solutions = [
   { title: "Growth", text: "Scale what works." }
 ];
 
+const growthBullets = [
+  "Website built to convert",
+  "Lead capture system",
+  "Fast follow-up setup",
+  "Ongoing growth and optimization"
+];
+
 const whyZentrixa = [
   "Done-for-you setup",
   "Built to convert",
@@ -85,11 +92,10 @@ export default function HomePage() {
         <header className="zentrixa-nav">
           <Link href="/" className="zentrixa-brandmark" aria-label="Zentrixa home">
             <ZentrixaLogo variant="full" className="zentrixa-brand-image zentrixa-brand-image-full" priority />
-            <ZentrixaLogo variant="icon" className="zentrixa-brand-image zentrixa-brand-image-icon" priority />
           </Link>
           <div className="zentrixa-nav-actions zentrixa-nav-cta">
-            <a href="tel:9055809902" className="zentrixa-button ghost zentrixa-nav-primary">Call Now</a>
-            <a href="#contact" className="zentrixa-button subtle zentrixa-nav-secondary">Get Started</a>
+            <a href="#contact" className="zentrixa-button primary zentrixa-nav-primary">Get More Customers</a>
+            <a href="tel:9055809902" className="zentrixa-button subtle zentrixa-nav-secondary">Call Us</a>
           </div>
         </header>
 
@@ -101,18 +107,24 @@ export default function HomePage() {
               <span>That Helps Local Businesses{" "}</span>
               <span>Get More Customers.</span>
             </h1>
-            <p>
-              Zentrixa handles the website, lead capture, and follow-up structure for you.
-              You stay focused on your business. We handle the system behind the growth.
-            </p>
-            <div className="zentrixa-hero-actions">
-              <a href="tel:9055809902" className="zentrixa-button primary">Call Now</a>
-              <a href="#contact" className="zentrixa-button secondary">Get More Customers</a>
+            <p>We handle everything that brings you customers.</p>
+            <div className="zentrixa-growth-points">
+              {growthBullets.map((item) => (
+                <div key={item} className="zentrixa-growth-point">
+                  <span className="zentrixa-check-dot" />
+                  <span>{item}</span>
+                </div>
+              ))}
             </div>
-            <div className="zentrixa-hero-trust compact">
-              <span>We handle everything</span>
-              <span>Built for real results</span>
-              <span>Fast setup</span>
+            <div className="zentrixa-hero-actions">
+              <a href="#contact" className="zentrixa-button primary">Get More Customers</a>
+              <a href="tel:9055809902" className="zentrixa-button secondary">Call Us</a>
+              <a href="#contact" className="zentrixa-button subtle">Book a Call</a>
+            </div>
+            <div className="zentrixa-hero-microcopy">
+              <span>We handle everything.</span>
+              <span>Setup in days, not months.</span>
+              <span>No tech skills needed.</span>
             </div>
           </div>
 

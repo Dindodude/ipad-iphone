@@ -3033,10 +3033,6 @@ li + li {
   max-width: 100%;
 }
 
-.zentrixa-brand-image-icon {
-  display: none;
-}
-
 .zentrixa-nav-actions,
 .zentrixa-hero-actions {
   display: flex;
@@ -3065,10 +3061,10 @@ li + li {
 }
 
 .zentrixa-button.primary {
-  background: #f0f4f6;
+  background: linear-gradient(135deg, #ffffff, #d8d2ff 54%, #b6cbff 100%);
   color: #050709;
-  border-color: rgba(255, 255, 255, 0.8);
-  box-shadow: 0 16px 40px rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.88);
+  box-shadow: 0 18px 44px rgba(255, 255, 255, 0.1), 0 0 34px rgba(117, 94, 255, 0.22);
 }
 
 .zentrixa-button.secondary,
@@ -3080,6 +3076,11 @@ li + li {
 .zentrixa-button.subtle {
   border-color: rgba(255, 255, 255, 0.08);
   color: rgba(240, 244, 246, 0.76);
+}
+
+.zentrixa-button.secondary {
+  border-color: rgba(255, 255, 255, 0.16);
+  color: #f0f4f6;
 }
 
 .zentrixa-hero {
@@ -3146,11 +3147,49 @@ li + li {
   line-height: 1.7;
 }
 
+.zentrixa-growth-points {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.zentrixa-growth-point {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.035);
+  color: rgba(240, 244, 246, 0.9);
+  font-size: 0.92rem;
+  line-height: 1.35;
+}
+
+.zentrixa-growth-point .zentrixa-check-dot {
+  flex: 0 0 auto;
+}
+
 .zentrixa-hero-trust {
   display: flex;
   gap: 12px;
   flex-wrap: wrap;
   margin-top: 24px;
+}
+
+.zentrixa-hero-microcopy {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.zentrixa-hero-microcopy span {
+  color: rgba(240, 244, 246, 0.76);
+  font-size: 0.84rem;
+  line-height: 1.4;
 }
 
 .zentrixa-hero-trust span,
@@ -4076,6 +4115,10 @@ li + li {
   border-color: rgba(255, 255, 255, 0.1);
 }
 
+.zentrixa-nav-cta .zentrixa-nav-primary {
+  min-width: 0;
+}
+
 .zentrixa-surface-card,
 .zentrixa-process-card,
 .zentrixa-pricing-card,
@@ -4137,18 +4180,16 @@ li + li {
 
   .zentrixa-brandmark {
     min-width: 0;
-    min-height: 40px;
+    min-height: 30px;
   }
 
   .zentrixa-brand-image-full {
-    display: none;
+    display: block;
+    max-width: 112px;
   }
 
   .zentrixa-brand-image-icon {
-    display: block;
-    width: 40px;
-    height: 40px;
-    max-width: 40px;
+    display: none;
   }
 
   .zentrixa-nav-cta {
@@ -4171,9 +4212,10 @@ li + li {
   }
 
   .zentrixa-nav-cta .zentrixa-nav-primary {
-    background: linear-gradient(135deg, #ffffff, #ece9ff);
+    background: linear-gradient(135deg, #ffffff, #dcd6ff 55%, #c7dbff 100%);
     color: #090910;
-    border-color: rgba(255, 255, 255, 0.75);
+    border-color: rgba(255, 255, 255, 0.78);
+    box-shadow: 0 12px 28px rgba(255, 255, 255, 0.08), 0 0 24px rgba(117, 94, 255, 0.18);
   }
 
   .zentrixa-nav-cta .zentrixa-nav-secondary {
@@ -4263,10 +4305,8 @@ li + li {
     min-height: 32px;
   }
 
-  .zentrixa-brand-image-icon {
-    width: 28px;
-    height: 28px;
-    max-width: 28px;
+  .zentrixa-brand-image-full {
+    max-width: 100px;
   }
 
   .zentrixa-nav-cta .zentrixa-button {
@@ -4323,17 +4363,25 @@ li + li {
     min-height: 44px;
   }
 
-  .zentrixa-hero-trust.compact {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 7px;
-    margin-top: 2px;
+  .zentrixa-growth-points {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    margin-top: 14px;
   }
 
-  .zentrixa-hero-trust.compact span {
-    padding: 7px 9px;
-    font-size: 0.72rem;
-    background: rgba(255, 255, 255, 0.04);
+  .zentrixa-growth-point {
+    min-height: 0;
+    padding: 10px 12px;
+    font-size: 0.84rem;
+  }
+
+  .zentrixa-hero-microcopy {
+    gap: 6px 10px;
+    margin-top: 10px;
+  }
+
+  .zentrixa-hero-microcopy span {
+    font-size: 0.76rem;
   }
 
   .zentrixa-system-card {
@@ -4540,10 +4588,8 @@ li + li {
     margin-inline: -10px;
   }
 
-  .zentrixa-brand-image-icon {
-    width: 24px;
-    height: 24px;
-    max-width: 24px;
+  .zentrixa-brand-image-full {
+    max-width: 88px;
   }
 
   .zentrixa-nav-cta .zentrixa-button {
@@ -4562,6 +4608,10 @@ li + li {
 
   .zentrixa-hero-copy p {
     font-size: 0.9rem;
+  }
+
+  .zentrixa-hero-microcopy span {
+    font-size: 0.72rem;
   }
 
   .zentrixa-section {

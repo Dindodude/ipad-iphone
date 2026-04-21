@@ -1,9 +1,9 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { ZentrixaLogo } from "@/components/zentrixa-logo";
 
 export function ZentrixaLoginForm({ next = "/app" }: { next?: string }) {
   const router = useRouter();
@@ -41,7 +41,7 @@ export function ZentrixaLoginForm({ next = "/app" }: { next?: string }) {
     <main className="auth-shell">
       <div className="auth-panel">
         <Link href="/" className="auth-brand">
-          <Image src="/branding/zentrixa-logo.png" alt="Zentrixa" width={310} height={100} className="auth-logo" priority />
+          <ZentrixaLogo variant="full" className="auth-logo" priority />
         </Link>
         <div className="auth-copy">
           <span className="auth-eyebrow">Private Access</span>
@@ -63,8 +63,9 @@ export function ZentrixaLoginForm({ next = "/app" }: { next?: string }) {
           </button>
         </form>
         <div className="auth-footer">
-          <a href="tel:9055809902">Call 905-580-9902</a>
-          <a href="mailto:idreesrah0@gmail.com">idreesrah0@gmail.com</a>
+          <a href="tel:9055809902">Call Us</a>
+          <Link href="/#contact">Email Us</Link>
+          <Link href="/#contact">Book With Us</Link>
         </div>
       </div>
     </main>

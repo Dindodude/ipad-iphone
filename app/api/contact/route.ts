@@ -4,11 +4,9 @@ import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 
 const contactSchema = z.object({
   name: z.string().trim().min(1, "Name is required."),
-  email: z.string().trim().email("Valid email is required."),
   phone: z.string().trim().min(1, "Phone number is required."),
-  website: z.string().trim().optional(),
-  instagram: z.string().trim().optional(),
-  message: z.string().trim().optional()
+  business: z.string().trim().min(1, "Tell us what your business is."),
+  help: z.string().trim().optional()
 });
 
 export async function POST(request: Request) {
@@ -22,7 +20,12 @@ export async function POST(request: Request) {
 
   const supabase = createSupabaseAdminClient();
   const submission = {
-    ...parsed.data,
+    name: parsed.data.name,
+    email: "",
+    phone: parsed.data.phone,
+    website: "",
+    instagram: "",
+    message: `Business: ${parsed.data.business}${parsed.data.help ? `\nNeed help with: ${parsed.data.help}` : ""}`,
     source: "zentrixa-public-site"
   };
 

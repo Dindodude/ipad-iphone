@@ -3473,3 +3473,235 @@ li + li {
     grid-template-columns: 1fr;
   }
 }
+
+.zentrixa-logo-fallback {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #f0f4f6;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.zentrixa-logo-fallback.icon {
+  width: 82px;
+  height: 82px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+  font-size: 2rem;
+  letter-spacing: -0.05em;
+}
+
+.zentrixa-logo-fallback.full {
+  min-height: 52px;
+  font-size: 1.2rem;
+}
+
+.zentrixa-brand-image {
+  max-width: min(320px, 100%);
+}
+
+.zentrixa-hero-shell {
+  padding-bottom: 56px;
+}
+
+.zentrixa-nav {
+  padding-bottom: 28px;
+}
+
+.zentrixa-hero {
+  gap: 22px;
+}
+
+.zentrixa-hero-copy,
+.zentrixa-hero-panel,
+.zentrixa-surface-card,
+.zentrixa-process-card,
+.zentrixa-split-card,
+.zentrixa-form-card,
+.zentrixa-contact-card,
+.auth-panel,
+.zentrixa-pricing-card,
+.zentrixa-founder-card {
+  backdrop-filter: blur(18px);
+}
+
+.zentrixa-hero-panel.premium,
+.zentrixa-cta-band.premium,
+.zentrixa-founder-card {
+  background: linear-gradient(180deg, rgba(14, 14, 14, 0.94), rgba(9, 9, 9, 0.98));
+}
+
+.zentrixa-hero-visual-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.zentrixa-visual-label,
+.zentrixa-visual-status {
+  color: rgba(240, 244, 246, 0.7);
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.zentrixa-panel-grid.compact,
+.zentrixa-card-grid.compact {
+  gap: 12px;
+}
+
+.zentrixa-stat-card.dense,
+.zentrixa-surface-card.dense,
+.zentrixa-process-card,
+.zentrixa-contact-card.compact,
+.zentrixa-pricing-card,
+.zentrixa-founder-card {
+  padding: 20px;
+}
+
+.zentrixa-stat-card.dense {
+  min-height: 132px;
+}
+
+.zentrixa-surface-card.dense h3,
+.zentrixa-process-card h3,
+.zentrixa-pricing-card h3 {
+  font-size: 1.04rem;
+}
+
+.why-card {
+  display: grid;
+  gap: 12px;
+  align-content: start;
+}
+
+.pricing-grid {
+  align-items: stretch;
+}
+
+.zentrixa-pricing-card {
+  display: grid;
+  gap: 18px;
+  border-radius: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(12, 12, 12, 0.94);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.34), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.zentrixa-pricing-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.16);
+}
+
+.zentrixa-pricing-card.highlighted {
+  border-color: rgba(255, 255, 255, 0.22);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(14, 14, 14, 0.96));
+}
+
+.zentrixa-pricing-head {
+  display: grid;
+  gap: 8px;
+}
+
+.zentrixa-pricing-head strong {
+  font-size: 1.7rem;
+  line-height: 1;
+  letter-spacing: -0.05em;
+}
+
+.zentrixa-pricing-points {
+  display: grid;
+  gap: 10px;
+}
+
+.zentrixa-limited-note {
+  margin-top: 16px;
+  color: rgba(240, 244, 246, 0.74);
+  text-align: center;
+}
+
+.zentrixa-founder-card {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1fr);
+  gap: 20px;
+  border-radius: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.zentrixa-founder-card p {
+  margin: 0;
+  color: rgba(240, 244, 246, 0.76);
+  line-height: 1.75;
+}
+
+.zentrixa-form-card.compact {
+  padding: 20px;
+  gap: 14px;
+}
+
+.zentrixa-form-grid.compact {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.zentrixa-contact-card.compact {
+  gap: 16px;
+}
+
+.zentrixa-contact-icon {
+  width: 72px;
+  height: 72px;
+}
+
+.zentrixa-nav-actions.stacked {
+  display: grid;
+  grid-template-columns: 1fr;
+  width: 100%;
+}
+
+.zentrixa-footer {
+  padding: 0 0 28px;
+}
+
+.zentrixa-footer-inner {
+  width: min(1200px, calc(100% - 40px));
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  color: rgba(240, 244, 246, 0.62);
+  font-size: 0.92rem;
+}
+
+@media (max-width: 1024px) {
+  .zentrixa-founder-card {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .zentrixa-form-grid.compact,
+  .zentrixa-footer-inner {
+    grid-template-columns: 1fr;
+    display: grid;
+  }
+
+  .zentrixa-footer-inner {
+    width: min(100%, calc(100% - 24px));
+  }
+
+  .zentrixa-brand-image {
+    max-width: 240px;
+  }
+
+  .zentrixa-nav-actions.stacked {
+    gap: 10px;
+  }
+}

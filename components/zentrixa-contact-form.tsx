@@ -4,20 +4,16 @@ import { useState } from "react";
 
 type FormState = {
   name: string;
-  email: string;
   phone: string;
-  website: string;
-  instagram: string;
-  message: string;
+  business: string;
+  help: string;
 };
 
 const EMPTY_FORM: FormState = {
   name: "",
-  email: "",
   phone: "",
-  website: "",
-  instagram: "",
-  message: ""
+  business: "",
+  help: ""
 };
 
 export function ZentrixaContactForm() {
@@ -60,35 +56,25 @@ export function ZentrixaContactForm() {
   }
 
   return (
-    <form className="zentrixa-form-card" onSubmit={handleSubmit}>
-      <div className="zentrixa-form-grid">
+    <form className="zentrixa-form-card compact" onSubmit={handleSubmit}>
+      <div className="zentrixa-form-grid compact">
         <label className="zentrixa-field">
           <span>Name</span>
           <input required value={form.name} onChange={(event) => setField("name", event.target.value)} />
         </label>
         <label className="zentrixa-field">
-          <span>Email</span>
-          <input required type="email" value={form.email} onChange={(event) => setField("email", event.target.value)} />
-        </label>
-      </div>
-      <div className="zentrixa-form-grid">
-        <label className="zentrixa-field">
-          <span>Phone Number</span>
+          <span>Phone</span>
           <input required value={form.phone} onChange={(event) => setField("phone", event.target.value)} />
         </label>
-        <label className="zentrixa-field">
-          <span>Website</span>
-          <input value={form.website} onChange={(event) => setField("website", event.target.value)} />
-        </label>
       </div>
-      <div className="zentrixa-form-grid">
+      <div className="zentrixa-form-grid compact">
         <label className="zentrixa-field">
-          <span>Instagram</span>
-          <input value={form.instagram} onChange={(event) => setField("instagram", event.target.value)} />
+          <span>What’s your business?</span>
+          <input required value={form.business} onChange={(event) => setField("business", event.target.value)} />
         </label>
         <label className="zentrixa-field">
-          <span>Message</span>
-          <textarea rows={4} value={form.message} onChange={(event) => setField("message", event.target.value)} />
+          <span>What do you need help with?</span>
+          <textarea rows={4} value={form.help} onChange={(event) => setField("help", event.target.value)} />
         </label>
       </div>
       {error ? <div className="zentrixa-form-message error">{error}</div> : null}

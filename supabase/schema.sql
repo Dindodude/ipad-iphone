@@ -154,3 +154,15 @@ on public.campaigns (client_id, lower(name));
 alter table public.leads
   add column if not exists client_id uuid references public.clients(id) on delete cascade,
   add column if not exists campaign_id uuid references public.campaigns(id) on delete cascade;
+
+create table if not exists public.contact_submissions (
+  id uuid primary key default gen_random_uuid(),
+  name text not null,
+  email text not null,
+  phone text not null,
+  website text default '',
+  instagram text default '',
+  message text default '',
+  source text default 'zentrixa-public-site',
+  created_at timestamptz not null default now()
+);

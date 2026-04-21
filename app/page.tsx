@@ -1,36 +1,61 @@
-import Image from "next/image";
 import Link from "next/link";
 import { ZentrixaContactForm } from "@/components/zentrixa-contact-form";
+import { ZentrixaLogo } from "@/components/zentrixa-logo";
 
 const painPoints = [
-  "You’re losing customers because your website doesn’t convert.",
-  "People message once, then disappear because nobody follows up properly.",
-  "Marketing money gets wasted because the system behind it is weak.",
-  "You’re too busy running the business to build and manage all the tech."
+  "Your website looks fine, but it is not turning visitors into paying customers.",
+  "Leads come in, but weak follow-up means too many of them disappear.",
+  "You are spending money on marketing without a system that actually converts it.",
+  "You do not have time to manage tech, websites, forms, and follow-up on top of the business."
 ];
 
 const solutions = [
-  "We build your website for conversions, not just looks.",
-  "We set up lead capture so interested people actually become real opportunities.",
-  "We handle the follow-up system so leads don’t go cold.",
-  "We optimize the whole flow so more clicks turn into calls and customers."
+  "We build the website, lead capture, and follow-up flow for you.",
+  "We create a system that helps turn attention into real incoming customers.",
+  "We make the experience simple, fast, and built around conversion.",
+  "We handle the moving parts so you can stay focused on running the business."
 ];
 
-const differentiators = [
-  "Done-for-you from start to finish",
-  "No tech skills needed on your side",
-  "Fast setup with direct support",
-  "Built around results, not fluff"
+const whyZentrixa = [
+  "Done-for-you setup from start to finish",
+  "Built to convert, not just look good",
+  "Fast turnaround in days, not months",
+  "No technical skills needed on your side",
+  "Direct communication with us, not a giant team",
+  "Focused on real business results"
 ];
 
-const testimonials = [
+const pricing = [
   {
-    quote: "They made the whole thing simple. We didn’t have to figure out websites, follow-up, or marketing on our own.",
-    author: "Local service business owner"
+    title: "Website Setup",
+    price: "Starting at $299",
+    highlight: false,
+    points: [
+      "Custom website design",
+      "Mobile optimized",
+      "Lead capture setup",
+      "Built to convert visitors into customers"
+    ]
   },
   {
-    quote: "What I liked most was how direct everything felt. No tech overwhelm, just a clear system to bring in customers.",
-    author: "Ontario business client"
+    title: "Monthly Content & Growth",
+    price: "From $79/month",
+    highlight: true,
+    points: [
+      "Content creation",
+      "Ongoing updates",
+      "Performance-focused improvements"
+    ]
+  },
+  {
+    title: "Content + Ads Management",
+    price: "From $150/month",
+    highlight: false,
+    points: [
+      "Content creation",
+      "Ad campaign setup & management",
+      "Optimization for better results"
+    ]
   }
 ];
 
@@ -40,50 +65,55 @@ export default function HomePage() {
       <section className="zentrixa-hero-shell">
         <header className="zentrixa-nav">
           <Link href="/" className="zentrixa-brandmark" aria-label="Zentrixa home">
-            <Image src="/branding/zentrixa-logo.png" alt="Zentrixa - We Build. You Grow." width={320} height={104} priority />
+            <ZentrixaLogo variant="full" className="zentrixa-brand-image" priority />
           </Link>
           <div className="zentrixa-nav-actions">
-            <a href="tel:9055809902" className="zentrixa-button ghost">Call Now</a>
-            <Link href="/login" className="zentrixa-button subtle">Team Login</Link>
+            <a href="tel:9055809902" className="zentrixa-button ghost">Call Us</a>
+            <a href="#contact" className="zentrixa-button subtle">Email Us</a>
+            <a href="#contact" className="zentrixa-button subtle">Book With Us</a>
           </div>
         </header>
 
         <div className="zentrixa-hero">
           <div className="zentrixa-hero-copy">
             <span className="zentrixa-eyebrow">Done-For-You Growth</span>
-            <h1>We Don’t Just Build Websites. We Bring You Customers.</h1>
+            <h1>We Build the Sales System That Helps Local Businesses Get More Customers.</h1>
             <p>
-              Zentrixa handles everything: your website, lead capture, marketing, follow-up, and conversion flow.
-              You stay focused on your business. We handle the system that brings in more customers.
+              Zentrixa handles the website, lead capture, marketing structure, and follow-up system for you.
+              No tech headaches. No complicated setup. Just a cleaner path from visitor to customer.
             </p>
             <div className="zentrixa-hero-actions">
               <a href="tel:9055809902" className="zentrixa-button primary">Call Now</a>
               <a href="#contact" className="zentrixa-button secondary">Get More Customers</a>
             </div>
             <div className="zentrixa-hero-trust">
-              <span>We respond fast</span>
-              <span>We work directly with you</span>
-              <span>No tech skills needed</span>
+              <span>We handle everything</span>
+              <span>Built for local business results</span>
+              <span>Fast setup and direct support</span>
             </div>
           </div>
 
-          <div className="zentrixa-hero-panel">
-            <div className="zentrixa-panel-grid">
-              <article className="zentrixa-stat-card">
-                <strong>Websites</strong>
-                <span>Built to convert, not sit there.</span>
+          <div className="zentrixa-hero-panel premium">
+            <div className="zentrixa-hero-visual-top">
+              <div className="zentrixa-visual-label">System Snapshot</div>
+              <div className="zentrixa-visual-status">Built for calls, leads, and follow-up</div>
+            </div>
+            <div className="zentrixa-panel-grid compact">
+              <article className="zentrixa-stat-card dense">
+                <strong>Website</strong>
+                <span>Designed to convert visitors instead of just looking nice.</span>
               </article>
-              <article className="zentrixa-stat-card">
-                <strong>Lead Capture</strong>
-                <span>Every inquiry has a clear next step.</span>
+              <article className="zentrixa-stat-card dense">
+                <strong>Capture</strong>
+                <span>Simple forms and clear calls-to-action that bring people in.</span>
               </article>
-              <article className="zentrixa-stat-card">
+              <article className="zentrixa-stat-card dense">
                 <strong>Follow-Up</strong>
-                <span>No more lost leads from slow replies.</span>
+                <span>No more losing warm leads because nobody got back to them fast enough.</span>
               </article>
-              <article className="zentrixa-stat-card">
+              <article className="zentrixa-stat-card dense">
                 <strong>Growth</strong>
-                <span>We build. You grow.</span>
+                <span>A complete done-for-you system built around getting you more customers.</span>
               </article>
             </div>
           </div>
@@ -93,11 +123,11 @@ export default function HomePage() {
       <section className="zentrixa-section zentrixa-problem">
         <div className="zentrixa-section-head">
           <span className="zentrixa-eyebrow">The Problem</span>
-          <h2>Good businesses lose customers every day because the system behind them is weak.</h2>
+          <h2>Too many businesses lose customers because the system behind the business is broken.</h2>
         </div>
-        <div className="zentrixa-card-grid four">
+        <div className="zentrixa-card-grid four compact">
           {painPoints.map((item) => (
-            <article key={item} className="zentrixa-surface-card">
+            <article key={item} className="zentrixa-surface-card dense">
               <h3>{item}</h3>
             </article>
           ))}
@@ -107,11 +137,11 @@ export default function HomePage() {
       <section className="zentrixa-section">
         <div className="zentrixa-section-head">
           <span className="zentrixa-eyebrow">The Solution</span>
-          <h2>We handle the whole system so your business can keep moving.</h2>
+          <h2>We build the system. You stay focused on running the business.</h2>
         </div>
-        <div className="zentrixa-card-grid two">
+        <div className="zentrixa-card-grid two compact">
           {solutions.map((item) => (
-            <article key={item} className="zentrixa-surface-card">
+            <article key={item} className="zentrixa-surface-card dense">
               <h3>{item}</h3>
             </article>
           ))}
@@ -119,96 +149,128 @@ export default function HomePage() {
       </section>
 
       <section className="zentrixa-section">
-        <div className="zentrixa-split-card">
-          <div>
-            <span className="zentrixa-eyebrow">Why Zentrixa</span>
-            <h2>You don’t need more software. You need a team that handles it for you.</h2>
-            <p>
-              Zentrixa is a service, not a tool. We build what needs to be built, set up what needs to be set up,
-              and help make sure the leads coming in have a real chance to become paying customers.
-            </p>
-          </div>
-          <div className="zentrixa-checklist">
-            {differentiators.map((item) => (
-              <div key={item} className="zentrixa-check-row">
-                <span className="zentrixa-check-dot" />
-                <span>{item}</span>
-              </div>
-            ))}
-          </div>
+        <div className="zentrixa-section-head">
+          <span className="zentrixa-eyebrow">Why Zentrixa</span>
+          <h2>Done-for-you help built for speed, clarity, and real results.</h2>
+        </div>
+        <div className="zentrixa-card-grid three compact">
+          {whyZentrixa.map((item) => (
+            <article key={item} className="zentrixa-surface-card why-card">
+              <span className="zentrixa-check-dot" />
+              <h3>{item}</h3>
+            </article>
+          ))}
         </div>
       </section>
 
       <section className="zentrixa-section">
         <div className="zentrixa-section-head">
           <span className="zentrixa-eyebrow">How It Works</span>
-          <h2>Simple, fast, and built around results.</h2>
+          <h2>Simple timelines. Clear execution. Built to move fast.</h2>
         </div>
-        <div className="zentrixa-card-grid three">
+        <div className="zentrixa-card-grid three compact">
           <article className="zentrixa-process-card">
             <span className="zentrixa-step">01</span>
-            <h3>We build your system</h3>
-            <p>Website, lead capture, messaging, and follow-up flow all handled for you.</p>
+            <h3>Setup & strategy</h3>
+            <p>1-2 days. We map out the offer, structure, and system around your business.</p>
           </article>
           <article className="zentrixa-process-card">
             <span className="zentrixa-step">02</span>
-            <h3>We bring in leads</h3>
-            <p>We help create the structure that turns attention into real incoming opportunities.</p>
+            <h3>Build & launch</h3>
+            <p>5-7 days. We build the site, capture flow, and launch-ready experience.</p>
           </article>
           <article className="zentrixa-process-card">
             <span className="zentrixa-step">03</span>
-            <h3>We help you convert them</h3>
-            <p>With better follow-up, better messaging, and a cleaner customer journey from start to sale.</p>
+            <h3>Capture & grow</h3>
+            <p>Ongoing. We keep improving the system so more attention turns into customers.</p>
           </article>
         </div>
       </section>
 
       <section className="zentrixa-section">
         <div className="zentrixa-section-head">
-          <span className="zentrixa-eyebrow">Trust</span>
-          <h2>Real support. Fast responses. Clear communication.</h2>
+          <span className="zentrixa-eyebrow">Pricing</span>
+          <h2>Simple pricing. Built for results.</h2>
         </div>
-        <div className="zentrixa-card-grid two">
-          {testimonials.map((item) => (
-            <article key={item.quote} className="zentrixa-surface-card testimonial">
-              <p>“{item.quote}”</p>
-              <strong>{item.author}</strong>
+        <div className="zentrixa-card-grid three compact pricing-grid">
+          {pricing.map((item) => (
+            <article key={item.title} className={`zentrixa-pricing-card${item.highlight ? " highlighted" : ""}`}>
+              <div className="zentrixa-pricing-head">
+                <span className="zentrixa-eyebrow">Package</span>
+                <h3>{item.title}</h3>
+                <strong>{item.price}</strong>
+              </div>
+              <div className="zentrixa-pricing-points">
+                {item.points.map((point) => (
+                  <div key={point} className="zentrixa-check-row">
+                    <span className="zentrixa-check-dot" />
+                    <span>{point}</span>
+                  </div>
+                ))}
+              </div>
             </article>
           ))}
         </div>
+        <div className="zentrixa-limited-note">Limited spots available for new clients.</div>
       </section>
 
-      <section className="zentrixa-section zentrixa-cta-band">
+      <section className="zentrixa-section">
+        <div className="zentrixa-founder-card">
+          <div>
+            <span className="zentrixa-eyebrow">Founder Trust</span>
+            <h2>Work directly with the founder.</h2>
+          </div>
+          <p>
+            Founded by Idrees. Zentrixa stays hands-on, direct, and focused on helping local businesses get more customers without making the process complicated.
+          </p>
+        </div>
+      </section>
+
+      <section className="zentrixa-section zentrixa-cta-band premium">
         <div>
           <span className="zentrixa-eyebrow">Ready To Start</span>
-          <h2>Let us handle everything. You focus on your business.</h2>
-          <p>Call now and let’s build the system that brings you more customers.</p>
+          <h2>Let us handle everything. Just call and get started.</h2>
+          <p>You focus on the business. We build the system that helps bring in more customers.</p>
         </div>
-        <a href="tel:9055809902" className="zentrixa-button primary">Call 905-580-9902</a>
+        <div className="zentrixa-nav-actions">
+          <a href="tel:9055809902" className="zentrixa-button primary">Call Us</a>
+          <a href="#contact" className="zentrixa-button secondary">Book With Us</a>
+        </div>
       </section>
 
       <section id="contact" className="zentrixa-section">
         <div className="zentrixa-section-head">
           <span className="zentrixa-eyebrow">Contact</span>
-          <h2>Tell us about your business and let’s get you more customers.</h2>
+          <h2>Tell us about your business and let us build the system around it.</h2>
         </div>
         <div className="zentrixa-contact-layout">
           <ZentrixaContactForm />
-          <aside className="zentrixa-contact-card">
-            <Image src="/branding/zentrixa-icon.png" alt="Zentrixa icon" width={82} height={82} />
+          <aside className="zentrixa-contact-card compact">
+            <ZentrixaLogo variant="icon" className="zentrixa-contact-icon" />
             <div className="zentrixa-contact-stack">
               <a href="tel:9055809902">905-580-9902</a>
-              <a href="mailto:idreesrah0@gmail.com">idreesrah0@gmail.com</a>
               <span>Ontario, Canada</span>
             </div>
             <div className="zentrixa-mini-points">
               <span>We respond fast.</span>
               <span>We work directly with you.</span>
-              <span>We handle the tech so you don’t have to.</span>
+              <span>We keep the process simple and focused on results.</span>
+            </div>
+            <div className="zentrixa-nav-actions stacked">
+              <a href="tel:9055809902" className="zentrixa-button ghost">Call Us</a>
+              <a href="#contact" className="zentrixa-button subtle">Email Us</a>
+              <a href="#contact" className="zentrixa-button subtle">Book With Us</a>
             </div>
           </aside>
         </div>
       </section>
+
+      <footer className="zentrixa-footer">
+        <div className="zentrixa-footer-inner">
+          <span>© Zentrixa</span>
+          <Link href="/login">Login</Link>
+        </div>
+      </footer>
     </main>
   );
 }

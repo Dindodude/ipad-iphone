@@ -1342,11 +1342,13 @@ a,
 }
 
 .mobile-lead-sheet-wrap {
-  position: absolute;
+  position: fixed;
   inset: auto 0 0 0;
   max-height: 88svh;
-  overflow: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
   padding: 0 8px calc(8px + env(safe-area-inset-bottom));
+  z-index: 96;
 }
 
 .mobile-lead-sheet {

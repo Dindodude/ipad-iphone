@@ -4164,3 +4164,352 @@ li + li {
     align-items: flex-start;
   }
 }
+
+@media (max-width: 720px) {
+  .zentrixa-site::before {
+    opacity: 0.18;
+    background-size: 36px 36px;
+  }
+
+  .zentrixa-hero-shell {
+    padding-top: 14px;
+    padding-bottom: 18px;
+  }
+
+  .zentrixa-nav {
+    position: relative;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
+    padding: 0 0 10px;
+  }
+
+  .zentrixa-nav::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(117, 94, 255, 0.34), transparent);
+  }
+
+  .zentrixa-brandmark {
+    display: inline-flex;
+    align-items: center;
+    min-height: 0;
+  }
+
+  .zentrixa-brand-image {
+    max-width: 144px;
+  }
+
+  .zentrixa-nav-cta {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .zentrixa-nav-cta .zentrixa-nav-primary {
+    grid-column: 1 / -1;
+  }
+
+  .zentrixa-nav-cta .zentrixa-button {
+    min-height: 42px;
+    padding: 0 14px;
+    font-size: 0.82rem;
+    letter-spacing: 0.01em;
+  }
+
+  .zentrixa-nav-cta .zentrixa-nav-primary {
+    background: linear-gradient(135deg, #ffffff, #d9d4ff);
+    color: #090910;
+    box-shadow: 0 14px 34px rgba(255, 255, 255, 0.12), 0 0 30px rgba(117, 94, 255, 0.18);
+  }
+
+  .zentrixa-nav-cta .zentrixa-nav-secondary {
+    background: rgba(255, 255, 255, 0.04);
+    border-color: rgba(255, 255, 255, 0.08);
+    color: rgba(240, 244, 246, 0.84);
+  }
+
+  .zentrixa-hero-grid {
+    gap: 14px;
+  }
+
+  .zentrixa-hero-card {
+    padding: 18px 16px 16px;
+    border-radius: 22px;
+    background:
+      radial-gradient(circle at 88% 12%, rgba(117, 94, 255, 0.24), transparent 30%),
+      radial-gradient(circle at 8% 100%, rgba(91, 194, 255, 0.14), transparent 34%),
+      linear-gradient(180deg, rgba(13, 13, 18, 0.98), rgba(8, 8, 12, 0.98));
+    box-shadow: 0 18px 42px rgba(0, 0, 0, 0.34), 0 0 32px rgba(117, 94, 255, 0.08);
+  }
+
+  .zentrixa-hero-copy {
+    gap: 10px;
+  }
+
+  .zentrixa-hero-copy h1 {
+    font-size: clamp(2rem, 9.6vw, 2.8rem);
+    line-height: 0.96;
+    letter-spacing: -0.05em;
+    margin-top: 2px;
+  }
+
+  .zentrixa-hero-copy h1 span {
+    display: block;
+  }
+
+  .zentrixa-hero-copy p {
+    max-width: 31ch;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin-top: 2px;
+  }
+
+  .zentrixa-hero-actions {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    margin-top: 2px;
+  }
+
+  .zentrixa-hero-actions .zentrixa-button {
+    min-height: 44px;
+  }
+
+  .zentrixa-hero-trust.compact {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    margin-top: 2px;
+  }
+
+  .zentrixa-hero-trust.compact span {
+    padding: 7px 9px;
+    font-size: 0.72rem;
+    background: rgba(255, 255, 255, 0.04);
+  }
+
+  .zentrixa-system-card {
+    padding: 16px;
+    border-radius: 20px;
+    background:
+      radial-gradient(circle at top left, rgba(90, 114, 255, 0.2), transparent 32%),
+      linear-gradient(180deg, rgba(10, 11, 16, 0.98), rgba(8, 8, 12, 0.98));
+  }
+
+  .zentrixa-system-head {
+    gap: 4px;
+  }
+
+  .zentrixa-system-head strong {
+    font-size: 1.02rem;
+  }
+
+  .zentrixa-flow-stack {
+    gap: 10px;
+  }
+
+  .zentrixa-flow-item {
+    padding: 11px;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.035);
+  }
+
+  .zentrixa-flow-badge {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    font-size: 0.86rem;
+  }
+
+  .zentrixa-flow-copy strong {
+    font-size: 0.92rem;
+  }
+
+  .zentrixa-flow-copy span {
+    font-size: 0.8rem;
+    line-height: 1.35;
+  }
+
+  .zentrixa-section {
+    padding-bottom: 34px;
+  }
+
+  .zentrixa-section-head.compact {
+    margin-bottom: 12px;
+  }
+
+  .zentrixa-section h2 {
+    font-size: clamp(1.5rem, 7vw, 2rem);
+    line-height: 1.02;
+  }
+
+  .zentrixa-tight-grid {
+    gap: 10px;
+  }
+
+  .zentrixa-section-problem .zentrixa-tight-grid {
+    gap: 8px;
+  }
+
+  .zentrixa-section-problem .zentrixa-problem-card {
+    grid-template-columns: 10px minmax(0, 1fr);
+    align-items: center;
+    gap: 10px;
+    padding: 14px 14px 14px 12px;
+    border-radius: 16px;
+    background: linear-gradient(90deg, rgba(117, 94, 255, 0.08), rgba(255, 255, 255, 0.02));
+  }
+
+  .zentrixa-section-problem .zentrixa-problem-card h3 {
+    font-size: 0.94rem;
+    line-height: 1.35;
+  }
+
+  .zentrixa-section-why {
+    position: relative;
+  }
+
+  .zentrixa-section-why::before {
+    content: "";
+    position: absolute;
+    inset: 30px 0 24px;
+    border-radius: 28px;
+    background:
+      radial-gradient(circle at top right, rgba(91, 194, 255, 0.1), transparent 28%),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.018), rgba(255, 255, 255, 0.01));
+    pointer-events: none;
+  }
+
+  .zentrixa-section-why .zentrixa-tight-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    position: relative;
+  }
+
+  .zentrixa-section-why .why-card {
+    min-height: 0;
+    padding: 14px 12px;
+    border-radius: 16px;
+  }
+
+  .zentrixa-section-why .why-card h3 {
+    font-size: 0.88rem;
+    line-height: 1.3;
+  }
+
+  .zentrixa-section-process .zentrixa-tight-grid {
+    gap: 12px;
+  }
+
+  .zentrixa-section-process .zentrixa-process-card {
+    position: relative;
+    padding: 15px 14px 15px 16px;
+    border-radius: 18px;
+    overflow: hidden;
+  }
+
+  .zentrixa-section-process .zentrixa-process-card::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 14px;
+    bottom: 14px;
+    width: 3px;
+    border-radius: 999px;
+    background: linear-gradient(180deg, rgba(117, 94, 255, 0.95), rgba(91, 194, 255, 0.5));
+  }
+
+  .zentrixa-mid-cta,
+  .zentrixa-cta-tight {
+    padding: 18px 16px;
+    border-radius: 22px;
+    gap: 14px;
+  }
+
+  .zentrixa-mid-cta p,
+  .zentrixa-cta-band p {
+    font-size: 0.92rem;
+  }
+
+  .zentrixa-mid-cta .zentrixa-nav-actions,
+  .zentrixa-cta-band .zentrixa-nav-actions {
+    width: 100%;
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .zentrixa-mid-cta .zentrixa-button,
+  .zentrixa-cta-band .zentrixa-button {
+    min-height: 44px;
+  }
+
+  .zentrixa-pricing-card,
+  .zentrixa-process-tight,
+  .zentrixa-problem-card,
+  .why-card,
+  .zentrixa-form-card.compact,
+  .zentrixa-contact-card.compact {
+    padding: 15px 14px;
+  }
+
+  .zentrixa-pricing-head strong {
+    font-size: 1.4rem;
+  }
+
+  .zentrixa-guarantee-line {
+    margin-top: 10px;
+    font-size: 0.88rem;
+    line-height: 1.45;
+  }
+
+  .zentrixa-founder-tight {
+    padding: 16px 14px;
+    background:
+      linear-gradient(180deg, rgba(12, 12, 16, 0.98), rgba(9, 9, 12, 0.98)),
+      radial-gradient(circle at top right, rgba(117, 94, 255, 0.12), transparent 28%);
+  }
+
+  .zentrixa-founder-badge {
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+  }
+
+  .zentrixa-contact-layout.zentrixa-contact-tight {
+    gap: 12px;
+  }
+}
+
+@media (max-width: 420px) {
+  .zentrixa-public-wrap {
+    padding-inline: 10px;
+  }
+
+  .zentrixa-brand-image {
+    max-width: 126px;
+  }
+
+  .zentrixa-nav-cta .zentrixa-button {
+    min-height: 40px;
+    font-size: 0.78rem;
+    padding-inline: 12px;
+  }
+
+  .zentrixa-hero-card {
+    padding: 16px 14px 14px;
+  }
+
+  .zentrixa-hero-copy h1 {
+    font-size: clamp(1.84rem, 9vw, 2.28rem);
+  }
+
+  .zentrixa-hero-copy p {
+    font-size: 0.9rem;
+  }
+
+  .zentrixa-section {
+    padding-bottom: 30px;
+  }
+}

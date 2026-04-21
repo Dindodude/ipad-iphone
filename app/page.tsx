@@ -87,16 +87,20 @@ export default function HomePage() {
             <ZentrixaLogo variant="full" className="zentrixa-brand-image" priority />
           </Link>
           <div className="zentrixa-nav-actions zentrixa-nav-cta">
-            <a href="tel:9055809902" className="zentrixa-button ghost">Call Us</a>
-            <a href="#contact" className="zentrixa-button subtle">Email Us</a>
-            <a href="#contact" className="zentrixa-button subtle">Book With Us</a>
+            <a href="tel:9055809902" className="zentrixa-button ghost zentrixa-nav-primary">Call Us</a>
+            <a href="#contact" className="zentrixa-button subtle zentrixa-nav-secondary">Email Us</a>
+            <a href="#contact" className="zentrixa-button subtle zentrixa-nav-secondary">Book With Us</a>
           </div>
         </header>
 
         <section className="zentrixa-hero zentrixa-hero-grid">
           <div className="zentrixa-hero-copy zentrixa-hero-card">
             <span className="zentrixa-eyebrow">Done-For-You Growth</span>
-            <h1>We Build the Sales System That Helps Local Businesses Get More Customers.</h1>
+            <h1>
+              <span>We Build the Sales System</span>
+              <span>That Helps Local Businesses</span>
+              <span>Get More Customers.</span>
+            </h1>
             <p>
               Zentrixa handles the website, lead capture, and follow-up structure for you.
               You stay focused on your business. We handle the system behind the growth.
@@ -133,7 +137,7 @@ export default function HomePage() {
         </section>
       </section>
 
-      <section className="zentrixa-section zentrixa-public-wrap">
+      <section className="zentrixa-section zentrixa-public-wrap zentrixa-section-problem">
         <div className="zentrixa-section-head compact">
           <span className="zentrixa-eyebrow">The Problem</span>
           <h2>Too many businesses lose customers because the system behind them is weak.</h2>
@@ -148,7 +152,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="zentrixa-section zentrixa-public-wrap">
+      <section className="zentrixa-section zentrixa-public-wrap zentrixa-section-why">
         <div className="zentrixa-section-head compact">
           <span className="zentrixa-eyebrow">Why Zentrixa</span>
           <h2>Done-for-you support built for speed, clarity, and conversion.</h2>
@@ -177,7 +181,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="zentrixa-section zentrixa-public-wrap">
+      <section className="zentrixa-section zentrixa-public-wrap zentrixa-section-process">
         <div className="zentrixa-section-head compact">
           <span className="zentrixa-eyebrow">How It Works</span>
           <h2>Clear steps. Fast delivery. Ongoing growth.</h2>
@@ -196,7 +200,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="zentrixa-section zentrixa-public-wrap">
+      <section className="zentrixa-section zentrixa-public-wrap zentrixa-section-pricing">
         <div className="zentrixa-section-head compact">
           <span className="zentrixa-eyebrow">Pricing</span>
           <h2>Simple pricing. Built for results.</h2>
@@ -229,8 +233,8 @@ export default function HomePage() {
           <div className="zentrixa-founder-intro">
             <div className="zentrixa-founder-badge">ID</div>
             <div>
-            <span className="zentrixa-eyebrow">Founded by Idrees</span>
-            <h2>Work directly with the founder.</h2>
+              <span className="zentrixa-eyebrow">Founded by Idrees</span>
+              <h2>Work directly with the founder.</h2>
             </div>
           </div>
           <p>
@@ -282,7 +286,7 @@ export default function HomePage() {
 
       <footer className="zentrixa-footer">
         <div className="zentrixa-footer-inner">
-          <span>© Zentrixa</span>
+          <span>&copy; Zentrixa</span>
           <Link href="/login">Login</Link>
         </div>
       </footer>

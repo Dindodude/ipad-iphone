@@ -1,9 +1,10 @@
 "use client";
 
-import Link from "next/link";
+import { createPortal } from "react-dom";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { mockScripts } from "@/lib/mock-data";
 import { LEAD_STAGE_ORDER } from "@/lib/types";
-import type { Campaign, Client, LeadStage, LeadWithRelations, WhatsAppStatus } from "@/lib/types";
+import type { Campaign, Client, LeadStage, LeadWithRelations, Script, WhatsAppStatus } from "@/lib/types";
 
 function getNextAction(stage: LeadStage, whatsappStatus: WhatsAppStatus) {
   if (whatsappStatus === "unknown") return "Check WhatsApp first";
@@ -23,7 +24,9 @@ function buildWhatsAppUrl(phone: string) {
 }
 
 function buildMapsUrl(lead: LeadWithRelations) {
-  const query = encodeURIComponent(lead.address || `${lead.businessName} ${lead.city}`.trim());
+  const query = encodeURIComponent(
+    [lead.businessName, lead.address, lead.city].filter(Boolean).join(", ")
+  );
   return query ? `https://www.google.com/maps/search/?api=1&query=${query}` : "#";
 }
 
@@ -49,6 +52,16 @@ function getMomentumState(lead: LeadWithRelations) {
 function getLegacyStatusLabel(stage: LeadStage) {
   if (stage === "New") return "Not Contacted";
   return stage;
+}
+
+function getStageTone(stage: LeadStage) {
+  if (stage === "Won") return "won";
+  if (stage === "Lost") return "lost";
+  if (stage === "Interested") return "interested";
+  if (stage === "Qualified") return "qualified";
+  if (stage === "Contacted") return "contacted";
+  if (stage === "Replied") return "replied";
+  return "new";
 }
 
 function getLegacyActionCard(stage: LeadStage, whatsappStatus: WhatsAppStatus) {
@@ -207,6 +220,88 @@ function looksLikePhone(value: string) {
   return digits.length >= 10;
 }
 
+type LeadPreviewMode = "scripts" | "offer" | "prep" | "ideas";
+
+function personalizeScriptContent(content: string, lead: LeadWithRelations) {
+  return content
+    .replace(/\{businessName\}/g, lead.businessName || lead.name)
+    .replace(/\{name\}/g, lead.name)
+    .replace(/\{city\}/g, lead.city || "your area");
+}
+
+function getLeadScripts(lead: LeadWithRelations) {
+  const rankedMatches = mockScripts
+    .filter((script) => script.type !== "ai-generated")
+    .map((script) => {
+      let score = 0;
+      if (script.id === lead.campaign.defaultScriptId) score += 100;
+      if (script.campaignId === lead.campaignId) score += 60;
+      if (script.clientId === lead.clientId) score += 35;
+      if (script.category && script.category.toLowerCase() === lead.niche.toLowerCase()) score += 20;
+      return { script, score };
+    })
+    .filter((entry) => entry.score > 0)
+    .sort((a, b) => b.score - a.score);
+
+  const matches = rankedMatches.slice(0, 4).map(({ script }) => ({
+    ...script,
+    content: personalizeScriptContent(script.content, lead)
+  }));
+
+  if (matches.length > 0) {
+    return matches;
+  }
+
+  const fallbackScript: Script = {
+    id: `lead-preview-${lead.id}`,
+    clientId: lead.clientId,
+    campaignId: lead.campaignId,
+    title: `${lead.niche} First Touch`,
+    type: "first-touch",
+    category: lead.niche,
+    content: `Hey ${lead.businessName}, I noticed you're in ${lead.niche.toLowerCase()}${lead.city ? ` in ${lead.city}` : ""}. I put together a quick idea to help you turn more local inquiries into booked work without adding extra admin. Want me to send it here?`,
+    createdAt: lead.createdAt,
+    updatedAt: lead.updatedAt
+  };
+
+  return [fallbackScript];
+}
+
+function getPreviewCards(lead: LeadWithRelations, scripts: Script[]) {
+  return {
+    offer: [
+      {
+        title: "Offer angle",
+        body: `Position ${lead.businessName} around a simple result: more ${lead.niche.toLowerCase()} conversations turning into booked work for ${lead.city || "local"} prospects.`
+      },
+      {
+        title: "Proof to mention",
+        body: `Use one concrete proof point, then tie it back to ${lead.campaign.name} so the message feels built for this lead instead of generic outreach.`
+      }
+    ],
+    prep: [
+      {
+        title: "Before you reach out",
+        body: `Check WhatsApp, skim the notes, and mention ${lead.city || "their area"} or ${lead.niche.toLowerCase()} context in the opening line.`
+      },
+      {
+        title: "Best next move",
+        body: `${getLegacyActionCard(lead.leadStage, lead.whatsappStatus).description}`
+      }
+    ],
+    ideas: [
+      {
+        title: "Lead-specific idea",
+        body: `This lead sits in ${lead.leadStage}. Pair a ${scripts[0]?.type ?? "first-touch"} style message with one short niche-specific proof point.`
+      },
+      {
+        title: "Follow-up concept",
+        body: `If ${lead.businessName} does not reply, follow with a tighter angle focused on ${lead.campaign.source.toLowerCase()} intent and a low-friction next step.`
+      }
+    ]
+  };
+}
+
 export function PipelineWorkspace({
   clients,
   campaigns,
@@ -237,6 +332,7 @@ export function PipelineWorkspace({
   const [hasMounted, setHasMounted] = useState(false);
   const [timelineEvent, setTimelineEvent] = useState("Sent message");
   const [memoryDraft, setMemoryDraft] = useState("");
+  const [activePreview, setActivePreview] = useState<LeadPreviewMode>("scripts");
   const [clearArmed, setClearArmed] = useState(false);
   const baselineRef = useRef<Record<string, LeadWithRelations>>(
     Object.fromEntries(
@@ -333,6 +429,20 @@ export function PipelineWorkspace({
   const selectedLead = selectedLeadId
     ? visibleLeads.find((lead) => lead.id === selectedLeadId) ?? null
     : null;
+
+  const leadScripts = useMemo(
+    () => (selectedLead ? getLeadScripts(selectedLead) : []),
+    [selectedLead]
+  );
+
+  const previewCards = useMemo(
+    () => (selectedLead ? getPreviewCards(selectedLead, leadScripts) : { offer: [], prep: [], ideas: [] }),
+    [selectedLead, leadScripts]
+  );
+
+  useEffect(() => {
+    setActivePreview("scripts");
+  }, [selectedLeadId]);
 
   function updateLead(leadId: string, patch: Partial<LeadWithRelations>) {
     setLeads((current) => {
@@ -529,7 +639,9 @@ export function PipelineWorkspace({
           <h2>{selectedLead.name}</h2>
         </div>
         <div className="legacy-detail-header-actions">
-          <Link className="legacy-detail-link" href={`/app/leads/${selectedLead.id}`}>Open full view</Link>
+          <span className="legacy-detail-link preview-mode-label">
+            {activePreview === "scripts" ? "Scripts preview" : activePreview === "offer" ? "Offer preview" : activePreview === "prep" ? "Prep preview" : "Ideas preview"}
+          </span>
           <button className="panel-close-btn" type="button" aria-label="Close lead detail" onClick={() => setSelectedLeadId("")}>x</button>
         </div>
       </div>
@@ -537,13 +649,48 @@ export function PipelineWorkspace({
         <a className="legacy-action-btn wa" href={buildWhatsAppUrl(selectedLead.phone)} target="_blank" rel="noreferrer">WhatsApp</a>
         <button className="legacy-action-btn wa-yes" type="button" onClick={() => updateLead(selectedLead.id, { whatsappStatus: "yes" })}>Has WA</button>
         <button className="legacy-action-btn wa-no" type="button" onClick={() => updateLead(selectedLead.id, { whatsappStatus: "no" })}>No WA</button>
-        <Link className="legacy-action-btn scripts" href="/app/scripts">Scripts</Link>
-        <Link className="legacy-action-btn offer" href="/app/ai">Offer</Link>
-        <Link className="legacy-action-btn prep" href="/app/ai">Prep</Link>
-        <Link className="legacy-action-btn ideas" href="/app/analytics">Ideas</Link>
+        <button className={`legacy-action-btn scripts ${activePreview === "scripts" ? "is-active" : ""}`} type="button" onClick={() => setActivePreview("scripts")}>Scripts</button>
+        <button className={`legacy-action-btn offer ${activePreview === "offer" ? "is-active" : ""}`} type="button" onClick={() => setActivePreview("offer")}>Offer</button>
+        <button className={`legacy-action-btn prep ${activePreview === "prep" ? "is-active" : ""}`} type="button" onClick={() => setActivePreview("prep")}>Prep</button>
+        <button className={`legacy-action-btn ideas ${activePreview === "ideas" ? "is-active" : ""}`} type="button" onClick={() => setActivePreview("ideas")}>Ideas</button>
         <button className="legacy-action-btn checklist" type="button" onClick={() => appendTimelineEntry(selectedLead, "Ran checklist")}>Checklist</button>
         <button className="legacy-action-btn lost" type="button" onClick={() => updateLead(selectedLead.id, { leadStage: "Lost" })}>Lost</button>
         <a className="legacy-action-btn maps" href={buildMapsUrl(selectedLead)} target="_blank" rel="noreferrer">Maps</a>
+      </div>
+
+      <div className="legacy-modal-section lead-preview-section">
+        <div className="detail-section-label">
+          {activePreview === "scripts" ? "Lead Scripts" : activePreview === "offer" ? "Offer Preview" : activePreview === "prep" ? "Prep Preview" : "Ideas Preview"}
+        </div>
+        {activePreview === "scripts" ? (
+          <div className="lead-preview-list">
+            {leadScripts.length ? leadScripts.map((script) => (
+              <article key={script.id} className="text-list-item lead-preview-card">
+                <div className="lead-preview-head">
+                  <strong>{script.title}</strong>
+                  <span className="card-chip">{script.type}</span>
+                </div>
+                <div className="mini-copy">{script.category}</div>
+                <p>{script.content}</p>
+              </article>
+            )) : (
+              <div className="empty-state compact-empty-state">
+                <div className="empty-state-icon" aria-hidden="true">+</div>
+                <strong>No scripts matched</strong>
+                <div className="mini-copy">This lead does not have a matching campaign or client script yet.</div>
+              </div>
+            )}
+          </div>
+        ) : (
+          <div className="lead-preview-list">
+            {previewCards[activePreview].map((item) => (
+              <article key={item.title} className="text-list-item lead-preview-card">
+                <strong>{item.title}</strong>
+                <p>{item.body}</p>
+              </article>
+            ))}
+          </div>
+        )}
       </div>
 
       <div className="legacy-next-action">
@@ -674,6 +821,17 @@ export function PipelineWorkspace({
     </section>
   ) : null;
 
+  const mobileDetailPortal = selectedLead && typeof document !== "undefined"
+    ? createPortal(
+        <div className="mobile-lead-overlay" onClick={() => setSelectedLeadId("")}>
+          <div className="mobile-lead-sheet-wrap" onClick={(event) => event.stopPropagation()}>
+            {detailPanel}
+          </div>
+        </div>,
+        document.body
+      )
+    : null;
+
   const renderLeadCard = (lead: LeadWithRelations, stage: LeadStage, compact = false) => (
     <article
       key={lead.id}
@@ -691,18 +849,20 @@ export function PipelineWorkspace({
       </div>
       <div className="lead-card-sub">{compact ? (lead.phone || "No phone") : lead.campaign.name}</div>
       <div className="wa-row">
-        <span className={`wa-status ${lead.whatsappStatus === "yes" ? "wa-yes" : lead.whatsappStatus === "no" ? "wa-no" : "wa-unknown"}`}>
-          {lead.whatsappStatus === "yes" ? "Has WhatsApp" : lead.whatsappStatus === "no" ? "No WhatsApp" : "WA Unknown"}
-        </span>
+        <span
+          className={`wa-status-dot ${lead.whatsappStatus === "yes" ? "wa-yes" : lead.whatsappStatus === "no" ? "wa-no" : "wa-unknown"}`}
+          aria-label={lead.whatsappStatus === "yes" ? "Has WhatsApp" : lead.whatsappStatus === "no" ? "No WhatsApp" : "WhatsApp unknown"}
+          title={lead.whatsappStatus === "yes" ? "Has WhatsApp" : lead.whatsappStatus === "no" ? "No WhatsApp" : "WhatsApp unknown"}
+        />
         <span className="lead-score">{lead.score}/100</span>
       </div>
       <div className="score-bar"><span style={{ width: `${lead.score}%` }} /></div>
       <div className="lead-card-sub">{getNextAction(lead.leadStage, lead.whatsappStatus)}</div>
       <div className="button-row">
-        <a className="tiny-button" href={buildWhatsAppUrl(lead.phone)} target="_blank" rel="noreferrer" onClick={(event) => event.stopPropagation()}>WhatsApp</a>
-        <button className="tiny-button" type="button" onClick={(event) => { event.stopPropagation(); updateLead(lead.id, { whatsappStatus: "yes" }); }}>Has WA</button>
+        <a className="tiny-button wa-primary" href={buildWhatsAppUrl(lead.phone)} target="_blank" rel="noreferrer" onClick={(event) => event.stopPropagation()}>WhatsApp</a>
+        <button className="tiny-button wa-outline" type="button" onClick={(event) => { event.stopPropagation(); updateLead(lead.id, { whatsappStatus: "yes" }); }}>Has WA</button>
         {!compact ? (
-          <button className="tiny-button" type="button" onClick={(event) => { event.stopPropagation(); updateLead(lead.id, { leadStage: stage === "Lost" || stage === "Won" ? stage : LEAD_STAGE_ORDER[Math.min(LEAD_STAGE_ORDER.indexOf(stage) + 1, LEAD_STAGE_ORDER.length - 1)] }); }}>Advance</button>
+          <button className="tiny-button primary-compact" type="button" onClick={(event) => { event.stopPropagation(); updateLead(lead.id, { leadStage: stage === "Lost" || stage === "Won" ? stage : LEAD_STAGE_ORDER[Math.min(LEAD_STAGE_ORDER.indexOf(stage) + 1, LEAD_STAGE_ORDER.length - 1)] }); }}>Advance</button>
         ) : null}
       </div>
     </article>
@@ -713,11 +873,12 @@ export function PipelineWorkspace({
       <div className="stack pipeline-shell mobile-pipeline-shell">
         <section className="card pipeline-console mobile-pipeline-console pipeline-loading-shell">
           <div className="mobile-pipeline-toolbar">
-            <div className="mobile-pipeline-tabs">
+            <div className="mobile-pipeline-header-row">
               <span className="mobile-brand">LeadOS</span>
               <span className="mobile-nav-pill active">Pipeline</span>
-              <span className="mobile-nav-pill">Analytics</span>
-              <span className="mobile-nav-pill">Scripts</span>
+              <span className="mobile-header-spacer" />
+              <span className="mobile-icon-button">Import</span>
+              <span className="mobile-icon-button">Clear</span>
             </div>
           </div>
           <div className="mobile-filters-row">
@@ -744,13 +905,10 @@ export function PipelineWorkspace({
             onChange={importCsvFile}
           />
           <div className="mobile-pipeline-toolbar">
-            <div className="mobile-pipeline-tabs">
+            <div className="mobile-pipeline-header-row">
               <span className="mobile-brand">LeadOS</span>
               <button className="mobile-nav-pill active" type="button">Pipeline</button>
-              <Link className="mobile-nav-pill" href="/app/analytics">Analytics</Link>
-              <Link className="mobile-nav-pill" href="/app/scripts">Scripts</Link>
-            </div>
-            <div className="mobile-pipeline-actions">
+              <span className="mobile-header-spacer" />
               <button className="mobile-icon-button" type="button" onClick={openCsvPicker}>Import</button>
               <button className={`mobile-icon-button ${clearArmed ? "danger" : ""}`} type="button" onClick={beginClearAllLeads}>
                 {clearArmed ? "Confirm" : "Clear"}
@@ -798,17 +956,21 @@ export function PipelineWorkspace({
             {LEAD_STAGE_ORDER.map((stage) => {
               const stageLeads = visibleLeads.filter((lead) => lead.leadStage === stage);
               return (
-                <section key={stage} className="mobile-stage-column">
-                  <div className="mobile-stage-header">
+                <section key={stage} className={`mobile-stage-column stage-tone-${getStageTone(stage)}`}>
+                  <div className={`mobile-stage-header stage-tone-${getStageTone(stage)}`}>
                     <span>{getLegacyStatusLabel(stage).toUpperCase()}</span>
                     <strong>{stageLeads.length}</strong>
                   </div>
                   <div className="mobile-stage-stack">
-                    {stageLeads.length === 0 ? (
-                      <div className="empty-state compact-empty-state"><div className="mini-copy">No leads</div></div>
-                    ) : (
-                      stageLeads.map((lead) => renderLeadCard(lead, stage, true))
-                    )}
+                      {stageLeads.length === 0 ? (
+                        <div className="empty-state compact-empty-state">
+                          <div className="empty-state-icon" aria-hidden="true">+</div>
+                          <strong>No leads yet</strong>
+                          <div className="mini-copy">Import a CSV or add leads manually</div>
+                        </div>
+                      ) : (
+                        stageLeads.map((lead) => renderLeadCard(lead, stage, true))
+                      )}
                   </div>
                 </section>
               );
@@ -816,13 +978,7 @@ export function PipelineWorkspace({
           </div>
         </section>
 
-        {selectedLead ? (
-          <div className="mobile-lead-overlay" onClick={() => setSelectedLeadId("")}>
-            <div className="mobile-lead-sheet-wrap" onClick={(event) => event.stopPropagation()}>
-              {detailPanel}
-            </div>
-          </div>
-        ) : null}
+        {mobileDetailPortal}
       </div>
     );
   }
@@ -922,11 +1078,15 @@ export function PipelineWorkspace({
                       <div className="lead-column-title">{stage}</div>
                       <span>{stageLeads.length}</span>
                     </div>
-                    {stageLeads.length === 0 ? (
-                      <div className="empty-state"><div className="mini-copy">No leads here yet.</div></div>
-                    ) : (
-                      stageLeads.map((lead) => renderLeadCard(lead, stage))
-                    )}
+                      {stageLeads.length === 0 ? (
+                        <div className="empty-state">
+                          <div className="empty-state-icon" aria-hidden="true">+</div>
+                          <strong>No leads yet</strong>
+                          <div className="mini-copy">Import a CSV or add leads manually</div>
+                        </div>
+                      ) : (
+                        stageLeads.map((lead) => renderLeadCard(lead, stage))
+                      )}
                   </section>
                 );
               })}

@@ -3705,3 +3705,462 @@ li + li {
     gap: 10px;
   }
 }
+
+.zentrixa-site {
+  overflow-x: hidden;
+  position: relative;
+  background:
+    radial-gradient(circle at 12% 0%, rgba(104, 92, 255, 0.18), transparent 24%),
+    radial-gradient(circle at 88% 8%, rgba(66, 182, 255, 0.12), transparent 20%),
+    linear-gradient(180deg, #030305 0%, #05060a 38%, #040408 100%);
+}
+
+.zentrixa-public-wrap {
+  width: min(1180px, 100%);
+  max-width: 100%;
+  padding-inline: 20px;
+  box-sizing: border-box;
+}
+
+.zentrixa-site::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.28;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(circle at center, black 28%, transparent 82%);
+}
+
+.zentrixa-section {
+  padding-bottom: 56px;
+  position: relative;
+}
+
+.zentrixa-section-head.compact {
+  margin-bottom: 16px;
+}
+
+.zentrixa-hero-grid {
+  align-items: start;
+}
+
+.zentrixa-hero-card {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at top right, rgba(96, 92, 255, 0.18), transparent 30%),
+    linear-gradient(180deg, rgba(12, 12, 16, 0.98), rgba(9, 9, 12, 0.98));
+}
+
+.zentrixa-hero-card::before,
+.zentrixa-system-card::after {
+  content: "";
+  position: absolute;
+  inset: -20%;
+  pointer-events: none;
+  background: radial-gradient(circle, rgba(135, 119, 255, 0.18), transparent 42%);
+  filter: blur(42px);
+  animation: zentrixaFloatGlow 9s ease-in-out infinite;
+}
+
+.zentrixa-system-card {
+  position: relative;
+  display: grid;
+  gap: 16px;
+  padding: 22px;
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background:
+    radial-gradient(circle at top left, rgba(90, 114, 255, 0.18), transparent 30%),
+    radial-gradient(circle at bottom right, rgba(160, 65, 255, 0.16), transparent 34%),
+    rgba(10, 10, 14, 0.96);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  overflow: hidden;
+}
+
+.zentrixa-system-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), transparent 42%, rgba(117, 94, 255, 0.08));
+}
+
+.zentrixa-system-card::after {
+  inset: auto -10% -30% 20%;
+  height: 220px;
+  background: radial-gradient(circle, rgba(91, 194, 255, 0.18), transparent 50%);
+  animation-duration: 11s;
+}
+
+.zentrixa-system-head {
+  display: grid;
+  gap: 6px;
+  position: relative;
+  z-index: 1;
+}
+
+.zentrixa-system-head strong {
+  font-size: 1.2rem;
+  letter-spacing: -0.03em;
+}
+
+.zentrixa-flow-stack {
+  position: relative;
+  display: grid;
+  gap: 12px;
+  z-index: 1;
+}
+
+.zentrixa-flow-item {
+  position: relative;
+  display: grid;
+  grid-template-columns: 54px minmax(0, 1fr);
+  gap: 14px;
+  align-items: start;
+  padding: 14px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.zentrixa-flow-badge {
+  width: 54px;
+  height: 54px;
+  display: grid;
+  place-items: center;
+  border-radius: 16px;
+  background: linear-gradient(135deg, rgba(103, 93, 255, 0.92), rgba(82, 190, 255, 0.8));
+  color: #fff;
+  font-size: 0.98rem;
+  font-weight: 800;
+  box-shadow: 0 0 28px rgba(96, 92, 255, 0.24);
+}
+
+.zentrixa-flow-copy {
+  display: grid;
+  gap: 4px;
+}
+
+.zentrixa-flow-copy strong {
+  font-size: 1rem;
+}
+
+.zentrixa-flow-copy span {
+  color: rgba(240, 244, 246, 0.74);
+  line-height: 1.5;
+}
+
+.zentrixa-flow-line {
+  position: absolute;
+  left: 40px;
+  bottom: -14px;
+  width: 2px;
+  height: 14px;
+  background: linear-gradient(180deg, rgba(128, 116, 255, 0.8), rgba(255, 255, 255, 0));
+}
+
+.zentrixa-tight-grid {
+  align-items: start;
+}
+
+.zentrixa-tight-grid > * {
+  height: auto;
+  align-self: start;
+}
+
+.zentrixa-public-wrap > *,
+.zentrixa-tight-grid > *,
+.zentrixa-mid-cta {
+  animation: fadeSlideUp 0.45s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+.zentrixa-problem-card,
+.zentrixa-icon-card,
+.zentrixa-process-tight,
+.zentrixa-pricing-card,
+.zentrixa-founder-tight,
+.zentrixa-contact-tight > * {
+  min-height: 0;
+}
+
+.zentrixa-problem-card {
+  display: grid;
+  gap: 10px;
+  padding: 16px 18px;
+}
+
+.zentrixa-problem-dot,
+.zentrixa-icon-chip {
+  width: 34px;
+  height: 34px;
+  display: inline-grid;
+  place-items: center;
+  border-radius: 12px;
+  background: rgba(117, 94, 255, 0.12);
+  border: 1px solid rgba(117, 94, 255, 0.24);
+  color: #d8d6ff;
+  box-shadow: 0 0 18px rgba(117, 94, 255, 0.18);
+}
+
+.zentrixa-problem-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #7c6cff, #5cc6ff);
+}
+
+.why-card {
+  padding: 16px 18px;
+}
+
+.zentrixa-process-tight {
+  padding: 18px;
+}
+
+.zentrixa-process-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.zentrixa-process-time {
+  padding: 8px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: rgba(240, 244, 246, 0.72);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+.zentrixa-pricing-card {
+  padding: 20px;
+  background:
+    linear-gradient(180deg, rgba(14, 14, 18, 0.98), rgba(10, 10, 13, 0.98));
+}
+
+.zentrixa-pricing-card.highlighted {
+  border-color: rgba(117, 94, 255, 0.36);
+  background:
+    radial-gradient(circle at top right, rgba(117, 94, 255, 0.16), transparent 34%),
+    linear-gradient(180deg, rgba(18, 18, 24, 0.99), rgba(11, 11, 15, 0.99));
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.36), 0 0 40px rgba(117, 94, 255, 0.12);
+}
+
+.zentrixa-founder-tight {
+  padding: 20px 22px;
+}
+
+.zentrixa-founder-intro {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.zentrixa-founder-badge {
+  width: 52px;
+  height: 52px;
+  display: grid;
+  place-items: center;
+  border-radius: 16px;
+  background: linear-gradient(135deg, rgba(117, 94, 255, 0.9), rgba(91, 194, 255, 0.75));
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 800;
+  box-shadow: 0 0 24px rgba(117, 94, 255, 0.22);
+}
+
+.zentrixa-cta-tight {
+  padding: 24px;
+}
+
+.zentrixa-mid-cta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 22px;
+  padding: 26px 28px;
+  border-radius: 26px;
+  border: 1px solid rgba(117, 94, 255, 0.18);
+  background:
+    linear-gradient(135deg, rgba(18, 20, 30, 0.98), rgba(10, 10, 14, 0.98)),
+    radial-gradient(circle at right top, rgba(117, 94, 255, 0.14), transparent 30%);
+  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.38), 0 0 44px rgba(117, 94, 255, 0.08);
+}
+
+.zentrixa-mid-cta h2 {
+  margin: 10px 0 0;
+}
+
+.zentrixa-mid-cta p {
+  margin: 12px 0 0;
+  max-width: 54ch;
+  color: rgba(240, 244, 246, 0.76);
+}
+
+.zentrixa-guarantee-line {
+  margin-top: 14px;
+  text-align: center;
+  color: rgba(240, 244, 246, 0.72);
+}
+
+.zentrixa-contact-tight {
+  align-items: start;
+}
+
+.zentrixa-contact-tight .zentrixa-form-card,
+.zentrixa-contact-tight .zentrixa-contact-card {
+  height: auto;
+}
+
+.zentrixa-form-card.compact {
+  padding: 18px;
+}
+
+.zentrixa-field textarea {
+  min-height: 104px;
+}
+
+.zentrixa-button {
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16);
+}
+
+.zentrixa-button.primary {
+  background: linear-gradient(135deg, #ffffff, #dcd8ff);
+  box-shadow: 0 12px 32px rgba(255, 255, 255, 0.12), 0 0 28px rgba(117, 94, 255, 0.15);
+}
+
+.zentrixa-button.primary:hover {
+  box-shadow: 0 16px 38px rgba(255, 255, 255, 0.12), 0 0 36px rgba(117, 94, 255, 0.22);
+}
+
+.zentrixa-button.secondary,
+.zentrixa-button.ghost,
+.zentrixa-button.subtle {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+}
+
+.zentrixa-button.subtle {
+  color: rgba(240, 244, 246, 0.82);
+}
+
+.zentrixa-button.ghost,
+.zentrixa-button.subtle,
+.zentrixa-button.secondary {
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.zentrixa-surface-card,
+.zentrixa-process-card,
+.zentrixa-pricing-card,
+.zentrixa-founder-card,
+.zentrixa-form-card,
+.zentrixa-contact-card,
+.zentrixa-system-card {
+  transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+}
+
+.zentrixa-surface-card:hover,
+.zentrixa-process-card:hover,
+.zentrixa-pricing-card:hover,
+.zentrixa-contact-card:hover,
+.zentrixa-system-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(117, 94, 255, 0.2);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.34), 0 0 28px rgba(117, 94, 255, 0.08);
+}
+
+@keyframes zentrixaFloatGlow {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translate3d(4%, -3%, 0) scale(1.08);
+    opacity: 0.95;
+  }
+}
+
+@media (max-width: 1024px) {
+  .zentrixa-hero-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .zentrixa-mid-cta {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 720px) {
+  .zentrixa-public-wrap {
+    padding-inline: 12px;
+  }
+
+  .zentrixa-brand-image {
+    max-width: 190px;
+  }
+
+  .zentrixa-nav {
+    gap: 12px;
+    padding-bottom: 18px;
+  }
+
+  .zentrixa-nav-cta,
+  .zentrixa-hero-actions {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .zentrixa-hero-copy {
+    padding: 22px 18px;
+  }
+
+  .zentrixa-hero-copy h1 {
+    font-size: clamp(2.4rem, 12vw, 3.5rem);
+  }
+
+  .zentrixa-hero-trust.compact {
+    gap: 8px;
+  }
+
+  .zentrixa-flow-item {
+    grid-template-columns: 44px minmax(0, 1fr);
+    gap: 12px;
+    padding: 12px;
+  }
+
+  .zentrixa-flow-badge {
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+  }
+
+  .zentrixa-pricing-card,
+  .zentrixa-process-tight,
+  .zentrixa-problem-card,
+  .why-card {
+    padding: 16px;
+  }
+
+  .zentrixa-mid-cta,
+  .zentrixa-cta-tight,
+  .zentrixa-founder-tight {
+    padding: 18px;
+  }
+
+  .zentrixa-founder-intro {
+    align-items: flex-start;
+  }
+}

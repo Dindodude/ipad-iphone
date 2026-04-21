@@ -50,7 +50,7 @@ export function ZentrixaContactForm() {
       return;
     }
 
-    setSuccess(result.message || "Thanks, we’ll be in touch shortly.");
+    setSuccess(result.message || "Thanks, we'll be in touch shortly.");
     setForm(EMPTY_FORM);
     setSubmitting(false);
   }
@@ -69,7 +69,7 @@ export function ZentrixaContactForm() {
       </div>
       <div className="zentrixa-form-grid compact">
         <label className="zentrixa-field">
-          <span>What’s your business?</span>
+          <span>What's your business?</span>
           <input required value={form.business} onChange={(event) => setField("business", event.target.value)} />
         </label>
         <label className="zentrixa-field">

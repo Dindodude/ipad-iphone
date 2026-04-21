@@ -8,8 +8,16 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "LeadOS",
-  description: "LeadOS is a premium WhatsApp-first client acquisition command center for agencies."
+  title: {
+    default: "Zentrixa",
+    template: "%s | Zentrixa"
+  },
+  description: "Zentrixa is a done-for-you growth partner that builds websites, captures leads, and helps businesses convert more customers.",
+  icons: {
+    icon: "/branding/zentrixa-icon.png",
+    shortcut: "/branding/zentrixa-icon.png",
+    apple: "/branding/zentrixa-icon.png"
+  }
 };
 
 export const viewport: Viewport = {

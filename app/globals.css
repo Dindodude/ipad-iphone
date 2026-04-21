@@ -2992,3 +2992,484 @@ li + li {
     justify-content: flex-start;
   }
 }
+
+.zentrixa-site {
+  min-height: 100svh;
+  background:
+    radial-gradient(circle at top left, rgba(255, 255, 255, 0.06), transparent 28%),
+    radial-gradient(circle at 80% 10%, rgba(255, 255, 255, 0.04), transparent 24%),
+    #000;
+  color: #f0f4f6;
+}
+
+.zentrixa-hero-shell,
+.zentrixa-section {
+  width: min(1200px, calc(100% - 40px));
+  margin: 0 auto;
+}
+
+.zentrixa-hero-shell {
+  padding: 24px 0 72px;
+}
+
+.zentrixa-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 12px 0 36px;
+}
+
+.zentrixa-brandmark img,
+.auth-logo {
+  width: auto;
+  height: auto;
+  max-width: 100%;
+}
+
+.zentrixa-nav-actions,
+.zentrixa-hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.zentrixa-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 0 18px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+  color: #f0f4f6;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
+}
+
+.zentrixa-button:hover {
+  transform: translateY(-1px);
+}
+
+.zentrixa-button.primary {
+  background: #f0f4f6;
+  color: #050709;
+  border-color: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 16px 40px rgba(255, 255, 255, 0.08);
+}
+
+.zentrixa-button.secondary,
+.zentrixa-button.ghost,
+.zentrixa-button.subtle {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.zentrixa-button.subtle {
+  border-color: rgba(255, 255, 255, 0.08);
+  color: rgba(240, 244, 246, 0.76);
+}
+
+.zentrixa-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.8fr);
+  gap: 28px;
+  align-items: stretch;
+}
+
+.zentrixa-hero-copy,
+.zentrixa-hero-panel,
+.zentrixa-surface-card,
+.zentrixa-process-card,
+.zentrixa-split-card,
+.zentrixa-form-card,
+.zentrixa-contact-card,
+.auth-panel {
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(10, 10, 10, 0.92);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.zentrixa-hero-copy {
+  padding: clamp(28px, 4vw, 48px);
+}
+
+.zentrixa-eyebrow,
+.auth-eyebrow {
+  display: inline-flex;
+  font-size: 0.74rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(240, 244, 246, 0.62);
+  font-weight: 700;
+}
+
+.zentrixa-hero-copy h1,
+.zentrixa-section h2,
+.auth-copy h1 {
+  margin: 14px 0 0;
+  line-height: 0.95;
+  letter-spacing: -0.05em;
+}
+
+.zentrixa-hero-copy h1 {
+  font-size: clamp(3.4rem, 8vw, 6.6rem);
+  max-width: 10ch;
+}
+
+.zentrixa-hero-copy p,
+.zentrixa-split-card p,
+.auth-copy p {
+  margin: 18px 0 0;
+  max-width: 58ch;
+  color: rgba(240, 244, 246, 0.76);
+  font-size: 1.06rem;
+  line-height: 1.7;
+}
+
+.zentrixa-hero-trust {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 24px;
+}
+
+.zentrixa-hero-trust span,
+.zentrixa-check-row,
+.zentrixa-contact-stack span,
+.zentrixa-mini-points span {
+  color: rgba(240, 244, 246, 0.78);
+}
+
+.zentrixa-hero-trust span {
+  padding: 10px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
+  font-size: 0.88rem;
+}
+
+.zentrixa-hero-panel {
+  padding: 24px;
+}
+
+.zentrixa-panel-grid,
+.zentrixa-card-grid {
+  display: grid;
+  gap: 16px;
+}
+
+.zentrixa-panel-grid {
+  height: 100%;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.zentrixa-stat-card {
+  display: grid;
+  align-content: end;
+  gap: 8px;
+  min-height: 180px;
+  padding: 18px;
+  border-radius: 18px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.zentrixa-stat-card strong,
+.zentrixa-surface-card h3,
+.zentrixa-process-card h3,
+.zentrixa-split-card h2,
+.zentrixa-contact-card a,
+.zentrixa-contact-card span,
+.auth-copy h1 {
+  color: #f0f4f6;
+}
+
+.zentrixa-section {
+  padding: 0 0 72px;
+}
+
+.zentrixa-section-head {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 22px;
+}
+
+.zentrixa-section h2 {
+  font-size: clamp(2rem, 4.8vw, 3.6rem);
+  max-width: 14ch;
+}
+
+.zentrixa-card-grid.four {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.zentrixa-card-grid.three {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.zentrixa-card-grid.two,
+.zentrixa-contact-layout {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.zentrixa-surface-card,
+.zentrixa-process-card,
+.zentrixa-contact-card {
+  padding: 24px;
+}
+
+.zentrixa-surface-card h3,
+.zentrixa-process-card h3 {
+  margin: 0;
+  font-size: 1.15rem;
+  line-height: 1.4;
+}
+
+.zentrixa-surface-card p,
+.zentrixa-process-card p,
+.zentrixa-form-message,
+.zentrixa-mini-points,
+.auth-footer {
+  color: rgba(240, 244, 246, 0.72);
+  line-height: 1.65;
+}
+
+.zentrixa-split-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 0.8fr);
+  gap: 24px;
+  padding: 28px;
+}
+
+.zentrixa-checklist,
+.zentrixa-mini-points,
+.zentrixa-contact-stack {
+  display: grid;
+  gap: 12px;
+}
+
+.zentrixa-check-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.zentrixa-check-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: #f0f4f6;
+  flex: 0 0 auto;
+}
+
+.zentrixa-step {
+  display: inline-flex;
+  margin-bottom: 18px;
+  color: rgba(240, 244, 246, 0.42);
+  font-size: 2.1rem;
+  font-weight: 800;
+  letter-spacing: -0.05em;
+}
+
+.zentrixa-cta-band {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 32px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.zentrixa-cta-band h2 {
+  max-width: 12ch;
+}
+
+.zentrixa-contact-layout {
+  display: grid;
+  gap: 20px;
+}
+
+.zentrixa-form-card {
+  display: grid;
+  gap: 16px;
+  padding: 24px;
+}
+
+.zentrixa-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.zentrixa-field {
+  display: grid;
+  gap: 8px;
+}
+
+.zentrixa-field span {
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: rgba(240, 244, 246, 0.64);
+}
+
+.zentrixa-field input,
+.zentrixa-field textarea,
+.auth-field input {
+  width: 100%;
+  min-height: 52px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.03);
+  color: #f0f4f6;
+}
+
+.zentrixa-field textarea {
+  min-height: 130px;
+  resize: vertical;
+}
+
+.zentrixa-form-message {
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.zentrixa-form-message.success {
+  border-color: rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.zentrixa-form-message.error,
+.auth-message.error {
+  border: 1px solid rgba(255, 100, 100, 0.28);
+  background: rgba(255, 100, 100, 0.08);
+  color: #ffd5d5;
+  padding: 12px 14px;
+  border-radius: 14px;
+}
+
+.zentrixa-contact-card {
+  display: grid;
+  align-content: start;
+  gap: 18px;
+}
+
+.zentrixa-contact-card a {
+  font-size: 1.04rem;
+}
+
+.auth-shell {
+  min-height: 100svh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background:
+    radial-gradient(circle at top center, rgba(255, 255, 255, 0.06), transparent 24%),
+    #000;
+}
+
+.auth-panel {
+  width: min(560px, 100%);
+  display: grid;
+  gap: 22px;
+  padding: clamp(24px, 4vw, 36px);
+}
+
+.auth-brand {
+  display: inline-flex;
+}
+
+.auth-copy {
+  display: grid;
+  gap: 8px;
+}
+
+.auth-form {
+  display: grid;
+  gap: 14px;
+}
+
+.auth-field {
+  display: grid;
+  gap: 8px;
+}
+
+.auth-field span {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: rgba(240, 244, 246, 0.62);
+}
+
+.auth-submit {
+  width: 100%;
+}
+
+.auth-footer {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.testimonial p {
+  margin: 0 0 14px;
+}
+
+@media (max-width: 1024px) {
+  .zentrixa-hero,
+  .zentrixa-split-card,
+  .zentrixa-contact-layout,
+  .zentrixa-card-grid.four,
+  .zentrixa-card-grid.three,
+  .zentrixa-card-grid.two {
+    grid-template-columns: 1fr;
+  }
+
+  .zentrixa-cta-band {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 720px) {
+  .zentrixa-hero-shell,
+  .zentrixa-section {
+    width: min(100%, calc(100% - 24px));
+  }
+
+  .zentrixa-nav,
+  .zentrixa-form-grid {
+    grid-template-columns: 1fr;
+    display: grid;
+  }
+
+  .zentrixa-nav-actions,
+  .zentrixa-hero-actions {
+    width: 100%;
+  }
+
+  .zentrixa-nav-actions > *,
+  .zentrixa-hero-actions > *,
+  .zentrixa-button {
+    width: 100%;
+  }
+
+  .zentrixa-hero-copy h1 {
+    font-size: clamp(2.6rem, 14vw, 4rem);
+  }
+
+  .zentrixa-panel-grid {
+    grid-template-columns: 1fr;
+  }
+}

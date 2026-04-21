@@ -72,8 +72,7 @@ export function AICopilot() {
   return (
     <>
       <button className="ai-chat-trigger" type="button" onClick={() => setOpen(true)}>
-        <span className="ai-chat-full-label">AI Chat</span>
-        <span className="ai-chat-short-label">AI</span>
+        AI Chat
       </button>
 
       {open ? (

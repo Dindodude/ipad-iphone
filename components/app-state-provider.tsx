@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
-import type { AppSnapshot, Campaign, Category, Client, Lead } from "@/lib/types";
+import type { AppSnapshot, Category, Lead } from "@/lib/types";
 
 const STORAGE_KEY = "leados-app-snapshot-v1";
 
@@ -61,10 +61,7 @@ type AppStateContextValue = {
   snapshot: AppSnapshot;
   ready: boolean;
   replaceSnapshot: (next: AppSnapshot) => void;
-  updateSnapshot: (updater: (current: AppSnapshot) => AppSnapshot) => void;
   resetAllInfo: () => void;
-  updateClients: (updater: (current: Client[]) => Client[]) => void;
-  updateCampaigns: (updater: (current: Campaign[]) => Campaign[]) => void;
   updateLeads: (updater: (current: Lead[]) => Lead[]) => void;
   updateCategories: (updater: (current: Category[]) => Category[]) => void;
 };
@@ -103,7 +100,6 @@ export function AppStateProvider({
     snapshot,
     ready,
     replaceSnapshot: (next) => setSnapshot(next),
-    updateSnapshot: (updater) => setSnapshot((current) => updater(current)),
     resetAllInfo: () =>
       setSnapshot({
         clients: [],
@@ -114,16 +110,6 @@ export function AppStateProvider({
         categories: [],
         activityLogs: []
       }),
-    updateClients: (updater) =>
-      setSnapshot((current) => ({
-        ...current,
-        clients: updater(current.clients)
-      })),
-    updateCampaigns: (updater) =>
-      setSnapshot((current) => ({
-        ...current,
-        campaigns: updater(current.campaigns)
-      })),
     updateLeads: (updater) =>
       setSnapshot((current) => ({
         ...current,

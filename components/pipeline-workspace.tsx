@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { createPortal } from "react-dom";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { LEAD_STAGE_ORDER } from "@/lib/types";
 import type { Campaign, Client, LeadStage, LeadWithRelations, WhatsAppStatus } from "@/lib/types";
@@ -684,6 +685,17 @@ export function PipelineWorkspace({
     </section>
   ) : null;
 
+  const mobileDetailPortal = selectedLead && typeof document !== "undefined"
+    ? createPortal(
+        <div className="mobile-lead-overlay" onClick={() => setSelectedLeadId("")}>
+          <div className="mobile-lead-sheet-wrap" onClick={(event) => event.stopPropagation()}>
+            {detailPanel}
+          </div>
+        </div>,
+        document.body
+      )
+    : null;
+
   const renderLeadCard = (lead: LeadWithRelations, stage: LeadStage, compact = false) => (
     <article
       key={lead.id}
@@ -830,13 +842,7 @@ export function PipelineWorkspace({
           </div>
         </section>
 
-        {selectedLead ? (
-          <div className="mobile-lead-overlay" onClick={() => setSelectedLeadId("")}>
-            <div className="mobile-lead-sheet-wrap" onClick={(event) => event.stopPropagation()}>
-              {detailPanel}
-            </div>
-          </div>
-        ) : null}
+        {mobileDetailPortal}
       </div>
     );
   }

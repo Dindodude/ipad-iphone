@@ -1337,8 +1337,7 @@ a,
   position: fixed;
   inset: 0;
   z-index: 95;
-  background: rgba(2, 4, 5, 0.58);
-  backdrop-filter: blur(28px) saturate(180%);
+  background: rgba(2, 4, 5, 0.75);
 }
 
 .mobile-lead-sheet-wrap {
@@ -2760,7 +2759,7 @@ li + li {
 
 @media (max-width: 640px) {
   .mobile-lead-overlay {
-    backdrop-filter: blur(24px) saturate(180%);
+    background: rgba(2, 4, 5, 0.75);
   }
 
   .hero-copy,

@@ -191,8 +191,7 @@ main {
   position: relative;
 }
 
-.card,
-.dashboard-card {
+.card {
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -396,6 +395,11 @@ main {
   min-width: 0;
 }
 
+.dashboard-grid,
+.stats-grid {
+  align-items: stretch;
+}
+
 .stats-grid.four-grid {
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }
@@ -491,9 +495,21 @@ main {
 }
 
 .dashboard-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 12px;
   width: 100%;
   min-width: 0;
+  height: 100%;
   align-self: stretch;
+  text-align: left;
+}
+
+.stat.card,
+.metric.card {
+  justify-content: flex-start;
+  gap: 8px;
 }
 
 .dashboard-card::after,
@@ -575,7 +591,7 @@ main {
 
 .dashboard-card-head {
   display: grid;
-  gap: 10px;
+  gap: 8px;
 }
 
 .dashboard-card-head h3 {
@@ -584,7 +600,7 @@ main {
 
 .dashboard-card-client {
   display: grid;
-  gap: 4px;
+  gap: 6px;
 }
 
 .dashboard-card-client span {
@@ -602,6 +618,7 @@ main {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 10px;
+  align-items: stretch;
 }
 
 .dashboard-stat-pill {
@@ -611,6 +628,7 @@ main {
   border-radius: 14px;
   background: rgba(255, 255, 255, 0.035);
   border: 1px solid rgba(255, 255, 255, 0.1);
+  align-content: start;
 }
 
 .dashboard-stat-pill span {
@@ -2256,6 +2274,35 @@ li + li {
   .copilot-grid,
   .add-lead-grid {
     gap: 12px;
+  }
+
+  .stats-grid,
+  .dashboard-grid {
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    gap: 10px;
+    padding-bottom: 6px;
+    scroll-snap-type: x proximity;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .stats-grid::-webkit-scrollbar,
+  .dashboard-grid::-webkit-scrollbar {
+    display: none;
+  }
+
+  .stats-grid > * {
+    flex: 0 0 160px;
+    min-width: 160px;
+    scroll-snap-align: start;
+  }
+
+  .dashboard-grid > * {
+    flex: 0 0 220px;
+    min-width: 220px;
+    scroll-snap-align: start;
   }
 
   .dashboard-card {

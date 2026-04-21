@@ -117,3 +117,40 @@ with check (
       and dashboards.owner_id = auth.uid()
   )
 );
+
+create table if not exists public.clients (
+  id uuid primary key default gen_random_uuid(),
+  name text not null,
+  niche text not null default '',
+  notes text default '',
+  contact_person text default '',
+  phone text default '',
+  email text default '',
+  status text not null default 'active',
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+create unique index if not exists clients_name_unique_idx
+on public.clients (lower(name));
+
+create table if not exists public.campaigns (
+  id uuid primary key default gen_random_uuid(),
+  client_id uuid not null references public.clients(id) on delete cascade,
+  name text not null,
+  source text not null default 'Other',
+  description text default '',
+  niche_context text default '',
+  default_stage text not null default 'New',
+  default_script_id uuid,
+  status text not null default 'active',
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+create unique index if not exists campaigns_client_name_unique_idx
+on public.campaigns (client_id, lower(name));
+
+alter table public.leads
+  add column if not exists client_id uuid references public.clients(id) on delete cascade,
+  add column if not exists campaign_id uuid references public.campaigns(id) on delete cascade;

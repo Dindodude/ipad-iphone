@@ -51,6 +51,16 @@ function getLegacyStatusLabel(stage: LeadStage) {
   return stage;
 }
 
+function getStageTone(stage: LeadStage) {
+  if (stage === "Won") return "won";
+  if (stage === "Lost") return "lost";
+  if (stage === "Interested") return "interested";
+  if (stage === "Qualified") return "qualified";
+  if (stage === "Contacted") return "contacted";
+  if (stage === "Replied") return "replied";
+  return "new";
+}
+
 function getLegacyActionCard(stage: LeadStage, whatsappStatus: WhatsAppStatus) {
   if (whatsappStatus === "unknown") {
     return {
@@ -699,10 +709,10 @@ export function PipelineWorkspace({
       <div className="score-bar"><span style={{ width: `${lead.score}%` }} /></div>
       <div className="lead-card-sub">{getNextAction(lead.leadStage, lead.whatsappStatus)}</div>
       <div className="button-row">
-        <a className="tiny-button" href={buildWhatsAppUrl(lead.phone)} target="_blank" rel="noreferrer" onClick={(event) => event.stopPropagation()}>WhatsApp</a>
-        <button className="tiny-button" type="button" onClick={(event) => { event.stopPropagation(); updateLead(lead.id, { whatsappStatus: "yes" }); }}>Has WA</button>
+        <a className="tiny-button wa-primary" href={buildWhatsAppUrl(lead.phone)} target="_blank" rel="noreferrer" onClick={(event) => event.stopPropagation()}>WhatsApp</a>
+        <button className="tiny-button wa-outline" type="button" onClick={(event) => { event.stopPropagation(); updateLead(lead.id, { whatsappStatus: "yes" }); }}>Has WA</button>
         {!compact ? (
-          <button className="tiny-button" type="button" onClick={(event) => { event.stopPropagation(); updateLead(lead.id, { leadStage: stage === "Lost" || stage === "Won" ? stage : LEAD_STAGE_ORDER[Math.min(LEAD_STAGE_ORDER.indexOf(stage) + 1, LEAD_STAGE_ORDER.length - 1)] }); }}>Advance</button>
+          <button className="tiny-button primary-compact" type="button" onClick={(event) => { event.stopPropagation(); updateLead(lead.id, { leadStage: stage === "Lost" || stage === "Won" ? stage : LEAD_STAGE_ORDER[Math.min(LEAD_STAGE_ORDER.indexOf(stage) + 1, LEAD_STAGE_ORDER.length - 1)] }); }}>Advance</button>
         ) : null}
       </div>
     </article>
@@ -796,8 +806,8 @@ export function PipelineWorkspace({
             {LEAD_STAGE_ORDER.map((stage) => {
               const stageLeads = visibleLeads.filter((lead) => lead.leadStage === stage);
               return (
-                <section key={stage} className="mobile-stage-column">
-                  <div className="mobile-stage-header">
+                <section key={stage} className={`mobile-stage-column stage-tone-${getStageTone(stage)}`}>
+                  <div className={`mobile-stage-header stage-tone-${getStageTone(stage)}`}>
                     <span>{getLegacyStatusLabel(stage).toUpperCase()}</span>
                     <strong>{stageLeads.length}</strong>
                   </div>

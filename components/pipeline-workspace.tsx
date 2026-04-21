@@ -1,10 +1,10 @@
 "use client";
 
-import Link from "next/link";
 import { createPortal } from "react-dom";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { mockScripts } from "@/lib/mock-data";
 import { LEAD_STAGE_ORDER } from "@/lib/types";
-import type { Campaign, Client, LeadStage, LeadWithRelations, WhatsAppStatus } from "@/lib/types";
+import type { Campaign, Client, LeadStage, LeadWithRelations, Script, WhatsAppStatus } from "@/lib/types";
 
 function getNextAction(stage: LeadStage, whatsappStatus: WhatsAppStatus) {
   if (whatsappStatus === "unknown") return "Check WhatsApp first";
@@ -218,6 +218,64 @@ function looksLikePhone(value: string) {
   return digits.length >= 10;
 }
 
+type LeadPreviewMode = "scripts" | "offer" | "prep" | "ideas";
+
+function personalizeScriptContent(content: string, lead: LeadWithRelations) {
+  return content
+    .replace(/\{businessName\}/g, lead.businessName || lead.name)
+    .replace(/\{name\}/g, lead.name)
+    .replace(/\{city\}/g, lead.city || "your area");
+}
+
+function getLeadScripts(lead: LeadWithRelations) {
+  const matches = mockScripts.filter((script) =>
+    script.campaignId === lead.campaignId
+    || script.clientId === lead.clientId
+    || (!script.clientId && !script.campaignId)
+    || (script.category && script.category.toLowerCase() === lead.niche.toLowerCase())
+  );
+
+  return matches.slice(0, 4).map((script) => ({
+    ...script,
+    content: personalizeScriptContent(script.content, lead)
+  }));
+}
+
+function getPreviewCards(lead: LeadWithRelations, scripts: Script[]) {
+  return {
+    offer: [
+      {
+        title: "Offer angle",
+        body: `Position ${lead.businessName} around a simple result: more ${lead.niche.toLowerCase()} conversations turning into booked work for ${lead.city || "local"} prospects.`
+      },
+      {
+        title: "Proof to mention",
+        body: `Use one concrete proof point, then tie it back to ${lead.campaign.name} so the message feels built for this lead instead of generic outreach.`
+      }
+    ],
+    prep: [
+      {
+        title: "Before you reach out",
+        body: `Check WhatsApp, skim the notes, and mention ${lead.city || "their area"} or ${lead.niche.toLowerCase()} context in the opening line.`
+      },
+      {
+        title: "Best next move",
+        body: `${getLegacyActionCard(lead.leadStage, lead.whatsappStatus).description}`
+      }
+    ],
+    ideas: [
+      {
+        title: "Lead-specific idea",
+        body: `This lead sits in ${lead.leadStage}. Pair a ${scripts[0]?.type ?? "first-touch"} style message with one short niche-specific proof point.`
+      },
+      {
+        title: "Follow-up concept",
+        body: `If ${lead.businessName} does not reply, follow with a tighter angle focused on ${lead.campaign.source.toLowerCase()} intent and a low-friction next step.`
+      }
+    ]
+  };
+}
+
 export function PipelineWorkspace({
   clients,
   campaigns,
@@ -248,6 +306,7 @@ export function PipelineWorkspace({
   const [hasMounted, setHasMounted] = useState(false);
   const [timelineEvent, setTimelineEvent] = useState("Sent message");
   const [memoryDraft, setMemoryDraft] = useState("");
+  const [activePreview, setActivePreview] = useState<LeadPreviewMode>("scripts");
   const [clearArmed, setClearArmed] = useState(false);
   const baselineRef = useRef<Record<string, LeadWithRelations>>(
     Object.fromEntries(
@@ -344,6 +403,20 @@ export function PipelineWorkspace({
   const selectedLead = selectedLeadId
     ? visibleLeads.find((lead) => lead.id === selectedLeadId) ?? null
     : null;
+
+  const leadScripts = useMemo(
+    () => (selectedLead ? getLeadScripts(selectedLead) : []),
+    [selectedLead]
+  );
+
+  const previewCards = useMemo(
+    () => (selectedLead ? getPreviewCards(selectedLead, leadScripts) : { offer: [], prep: [], ideas: [] }),
+    [selectedLead, leadScripts]
+  );
+
+  useEffect(() => {
+    setActivePreview("scripts");
+  }, [selectedLeadId]);
 
   function updateLead(leadId: string, patch: Partial<LeadWithRelations>) {
     setLeads((current) => {
@@ -540,7 +613,9 @@ export function PipelineWorkspace({
           <h2>{selectedLead.name}</h2>
         </div>
         <div className="legacy-detail-header-actions">
-          <Link className="legacy-detail-link" href={`/app/leads/${selectedLead.id}`}>Open full view</Link>
+          <span className="legacy-detail-link preview-mode-label">
+            {activePreview === "scripts" ? "Scripts preview" : activePreview === "offer" ? "Offer preview" : activePreview === "prep" ? "Prep preview" : "Ideas preview"}
+          </span>
           <button className="panel-close-btn" type="button" aria-label="Close lead detail" onClick={() => setSelectedLeadId("")}>x</button>
         </div>
       </div>
@@ -548,13 +623,48 @@ export function PipelineWorkspace({
         <a className="legacy-action-btn wa" href={buildWhatsAppUrl(selectedLead.phone)} target="_blank" rel="noreferrer">WhatsApp</a>
         <button className="legacy-action-btn wa-yes" type="button" onClick={() => updateLead(selectedLead.id, { whatsappStatus: "yes" })}>Has WA</button>
         <button className="legacy-action-btn wa-no" type="button" onClick={() => updateLead(selectedLead.id, { whatsappStatus: "no" })}>No WA</button>
-        <Link className="legacy-action-btn scripts" href="/app/scripts">Scripts</Link>
-        <Link className="legacy-action-btn offer" href="/app/ai">Offer</Link>
-        <Link className="legacy-action-btn prep" href="/app/ai">Prep</Link>
-        <Link className="legacy-action-btn ideas" href="/app/analytics">Ideas</Link>
+        <button className={`legacy-action-btn scripts ${activePreview === "scripts" ? "is-active" : ""}`} type="button" onClick={() => setActivePreview("scripts")}>Scripts</button>
+        <button className={`legacy-action-btn offer ${activePreview === "offer" ? "is-active" : ""}`} type="button" onClick={() => setActivePreview("offer")}>Offer</button>
+        <button className={`legacy-action-btn prep ${activePreview === "prep" ? "is-active" : ""}`} type="button" onClick={() => setActivePreview("prep")}>Prep</button>
+        <button className={`legacy-action-btn ideas ${activePreview === "ideas" ? "is-active" : ""}`} type="button" onClick={() => setActivePreview("ideas")}>Ideas</button>
         <button className="legacy-action-btn checklist" type="button" onClick={() => appendTimelineEntry(selectedLead, "Ran checklist")}>Checklist</button>
         <button className="legacy-action-btn lost" type="button" onClick={() => updateLead(selectedLead.id, { leadStage: "Lost" })}>Lost</button>
         <a className="legacy-action-btn maps" href={buildMapsUrl(selectedLead)} target="_blank" rel="noreferrer">Maps</a>
+      </div>
+
+      <div className="legacy-modal-section lead-preview-section">
+        <div className="detail-section-label">
+          {activePreview === "scripts" ? "Lead Scripts" : activePreview === "offer" ? "Offer Preview" : activePreview === "prep" ? "Prep Preview" : "Ideas Preview"}
+        </div>
+        {activePreview === "scripts" ? (
+          <div className="lead-preview-list">
+            {leadScripts.length ? leadScripts.map((script) => (
+              <article key={script.id} className="text-list-item lead-preview-card">
+                <div className="lead-preview-head">
+                  <strong>{script.title}</strong>
+                  <span className="card-chip">{script.type}</span>
+                </div>
+                <div className="mini-copy">{script.category}</div>
+                <p>{script.content}</p>
+              </article>
+            )) : (
+              <div className="empty-state compact-empty-state">
+                <div className="empty-state-icon" aria-hidden="true">+</div>
+                <strong>No scripts matched</strong>
+                <div className="mini-copy">This lead does not have a matching campaign or client script yet.</div>
+              </div>
+            )}
+          </div>
+        ) : (
+          <div className="lead-preview-list">
+            {previewCards[activePreview].map((item) => (
+              <article key={item.title} className="text-list-item lead-preview-card">
+                <strong>{item.title}</strong>
+                <p>{item.body}</p>
+              </article>
+            ))}
+          </div>
+        )}
       </div>
 
       <div className="legacy-next-action">

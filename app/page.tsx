@@ -87,9 +87,8 @@ export default function HomePage() {
             <ZentrixaLogo variant="full" className="zentrixa-brand-image" priority />
           </Link>
           <div className="zentrixa-nav-actions zentrixa-nav-cta">
-            <a href="tel:9055809902" className="zentrixa-button ghost zentrixa-nav-primary">Call Us</a>
-            <a href="#contact" className="zentrixa-button subtle zentrixa-nav-secondary">Email Us</a>
-            <a href="#contact" className="zentrixa-button subtle zentrixa-nav-secondary">Book With Us</a>
+            <a href="tel:9055809902" className="zentrixa-button ghost zentrixa-nav-primary">Call Now</a>
+            <a href="#contact" className="zentrixa-button subtle zentrixa-nav-secondary">Get Started</a>
           </div>
         </header>
 

@@ -3020,6 +3020,12 @@ li + li {
   padding: 12px 0 36px;
 }
 
+.zentrixa-brandmark {
+  display: inline-flex;
+  align-items: center;
+  flex: 0 0 auto;
+}
+
 .zentrixa-brandmark img,
 .auth-logo {
   width: auto;
@@ -3111,13 +3117,19 @@ li + li {
 .zentrixa-section h2,
 .auth-copy h1 {
   margin: 14px 0 0;
-  line-height: 0.95;
-  letter-spacing: -0.05em;
+  line-height: 1.08;
+  letter-spacing: -0.04em;
+  word-spacing: normal;
+  overflow-wrap: break-word;
 }
 
 .zentrixa-hero-copy h1 {
-  font-size: clamp(3.4rem, 8vw, 6.6rem);
-  max-width: 10ch;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  max-width: 14ch;
+}
+
+.zentrixa-hero-copy h1 span {
+  display: inline;
 }
 
 .zentrixa-hero-copy p,
@@ -4107,16 +4119,56 @@ li + li {
     padding-inline: 12px;
   }
 
-  .zentrixa-brand-image {
-    max-width: 190px;
-  }
-
   .zentrixa-nav {
-    gap: 12px;
-    padding-bottom: 18px;
+    gap: 10px;
+    padding: 10px 0 12px;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(10, 10, 15, 0.9);
+    backdrop-filter: blur(20px) saturate(150%);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.24);
   }
 
-  .zentrixa-nav-cta,
+  .zentrixa-brandmark {
+    min-width: 0;
+  }
+
+  .zentrixa-brand-image {
+    max-width: 150px;
+  }
+
+  .zentrixa-nav-cta {
+    width: auto;
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    flex-wrap: nowrap;
+  }
+
+  .zentrixa-nav-cta .zentrixa-button {
+    width: auto;
+    min-height: 38px;
+    padding: 0 14px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    white-space: nowrap;
+  }
+
+  .zentrixa-nav-cta .zentrixa-nav-primary {
+    background: linear-gradient(135deg, #ffffff, #ece9ff);
+    color: #090910;
+    border-color: rgba(255, 255, 255, 0.75);
+  }
+
+  .zentrixa-nav-cta .zentrixa-nav-secondary {
+    background: rgba(255, 255, 255, 0.03);
+    border-color: rgba(255, 255, 255, 0.14);
+  }
+
   .zentrixa-hero-actions {
     width: 100%;
     display: grid;
@@ -4124,11 +4176,12 @@ li + li {
   }
 
   .zentrixa-hero-copy {
-    padding: 22px 18px;
+    padding: 18px 18px 16px;
   }
 
   .zentrixa-hero-copy h1 {
-    font-size: clamp(2.4rem, 12vw, 3.5rem);
+    font-size: clamp(2.1rem, 9vw, 3rem);
+    line-height: 1.02;
   }
 
   .zentrixa-hero-trust.compact {
@@ -4172,15 +4225,14 @@ li + li {
   }
 
   .zentrixa-hero-shell {
-    padding-top: 14px;
+    padding-top: 0;
     padding-bottom: 18px;
   }
 
   .zentrixa-nav {
-    position: relative;
-    grid-template-columns: minmax(0, 1fr);
     gap: 10px;
-    padding: 0 0 10px;
+    padding-inline: 12px;
+    margin-inline: -12px;
   }
 
   .zentrixa-nav::after {
@@ -4194,49 +4246,26 @@ li + li {
   }
 
   .zentrixa-brandmark {
-    display: inline-flex;
-    align-items: center;
-    min-height: 0;
+    min-height: 36px;
   }
 
   .zentrixa-brand-image {
-    max-width: 144px;
-  }
-
-  .zentrixa-nav-cta {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 8px;
-  }
-
-  .zentrixa-nav-cta .zentrixa-nav-primary {
-    grid-column: 1 / -1;
+    max-width: 132px;
   }
 
   .zentrixa-nav-cta .zentrixa-button {
-    min-height: 42px;
-    padding: 0 14px;
-    font-size: 0.82rem;
+    min-height: 36px;
+    padding: 0 12px;
+    font-size: 0.78rem;
     letter-spacing: 0.01em;
   }
 
-  .zentrixa-nav-cta .zentrixa-nav-primary {
-    background: linear-gradient(135deg, #ffffff, #d9d4ff);
-    color: #090910;
-    box-shadow: 0 14px 34px rgba(255, 255, 255, 0.12), 0 0 30px rgba(117, 94, 255, 0.18);
-  }
-
-  .zentrixa-nav-cta .zentrixa-nav-secondary {
-    background: rgba(255, 255, 255, 0.04);
-    border-color: rgba(255, 255, 255, 0.08);
-    color: rgba(240, 244, 246, 0.84);
-  }
-
-  .zentrixa-hero-grid {
+  .zentrixa-hero {
     gap: 14px;
   }
 
   .zentrixa-hero-card {
-    padding: 18px 16px 16px;
+    padding: 16px 16px 15px;
     border-radius: 22px;
     background:
       radial-gradient(circle at 88% 12%, rgba(117, 94, 255, 0.24), transparent 30%),
@@ -4246,14 +4275,14 @@ li + li {
   }
 
   .zentrixa-hero-copy {
-    gap: 10px;
+    gap: 8px;
   }
 
   .zentrixa-hero-copy h1 {
-    font-size: clamp(2rem, 9.6vw, 2.8rem);
-    line-height: 0.96;
-    letter-spacing: -0.05em;
-    margin-top: 2px;
+    margin-top: 0;
+    font-size: clamp(2rem, 8.4vw, 2.55rem);
+    line-height: 1;
+    letter-spacing: -0.045em;
   }
 
   .zentrixa-hero-copy h1 span {
@@ -4487,22 +4516,27 @@ li + li {
     padding-inline: 10px;
   }
 
+  .zentrixa-nav {
+    padding-inline: 10px;
+    margin-inline: -10px;
+  }
+
   .zentrixa-brand-image {
-    max-width: 126px;
+    max-width: 122px;
   }
 
   .zentrixa-nav-cta .zentrixa-button {
-    min-height: 40px;
-    font-size: 0.78rem;
-    padding-inline: 12px;
+    min-height: 34px;
+    font-size: 0.74rem;
+    padding-inline: 10px;
   }
 
   .zentrixa-hero-card {
-    padding: 16px 14px 14px;
+    padding: 15px 14px 14px;
   }
 
   .zentrixa-hero-copy h1 {
-    font-size: clamp(1.84rem, 9vw, 2.28rem);
+    font-size: clamp(1.8rem, 8vw, 2.18rem);
   }
 
   .zentrixa-hero-copy p {

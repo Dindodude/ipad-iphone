@@ -14,7 +14,14 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/app", request.url));
   }
 
-  if (pathname === "/app" || pathname.startsWith("/app/") || pathname === "/dashboard" || pathname.startsWith("/dashboard/")) {
+  if (
+    pathname === "/app"
+    || pathname.startsWith("/app/")
+    || pathname === "/dashboard"
+    || pathname.startsWith("/dashboard/")
+    || pathname === "/cold-calls"
+    || pathname.startsWith("/cold-calls/")
+  ) {
     if (!authenticated) {
       const loginUrl = new URL("/login", request.url);
       const nextValue = pathname === "/dashboard" ? "/app" : `${pathname}${search}`;
@@ -27,5 +34,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/app/:path*", "/dashboard/:path*", "/login"]
+  matcher: ["/app/:path*", "/dashboard/:path*", "/cold-calls", "/cold-calls/:path*", "/login"]
 };

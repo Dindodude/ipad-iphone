@@ -294,7 +294,11 @@ export default function HomePage() {
       <footer className="zentrixa-footer">
         <div className="zentrixa-footer-inner">
           <span>&copy; Zentrixa</span>
-          <Link href="/login">Login</Link>
+          <div className="zentrixa-footer-links">
+            <Link href="/app">LeadOS</Link>
+            <Link href="/cold-calls">Cold Calls</Link>
+            <Link href="/login">Login</Link>
+          </div>
         </div>
       </footer>
     </main>

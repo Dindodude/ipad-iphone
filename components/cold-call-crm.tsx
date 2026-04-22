@@ -38,6 +38,8 @@ type LeadCard = {
   offerTemplate: OfferTemplate;
 };
 
+type MapsImportFields = Pick<LeadCard, "companyName" | "contactName" | "phoneNumber" | "website" | "industry">;
+
 const STORAGE_KEY = "zentrixa-cold-call-crm-v1";
 const DEFAULT_STATUS: LeadStatus = "In Progress";
 const FILTERS: Array<LeadStatus | "All"> = [
@@ -276,6 +278,12 @@ export function ColdCallCRM() {
   const [activeScriptTab, setActiveScriptTab] = useState<ScriptTab>("script1");
   const [savedStamp, setSavedStamp] = useState("Saved");
   const [sections, setSections] = useState(INITIAL_SECTIONS);
+  const [createMapsUrl, setCreateMapsUrl] = useState("");
+  const [detailMapsUrl, setDetailMapsUrl] = useState("");
+  const [createImportMessage, setCreateImportMessage] = useState("");
+  const [detailImportMessage, setDetailImportMessage] = useState("");
+  const [createImporting, setCreateImporting] = useState(false);
+  const [detailImporting, setDetailImporting] = useState(false);
   const notesRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -345,6 +353,8 @@ export function ColdCallCRM() {
     setSelectedLeadId(created.id);
     setShowCreate(false);
     setDraftLead(createEmptyLead());
+    setCreateMapsUrl("");
+    setCreateImportMessage("");
     setSections(INITIAL_SECTIONS);
     setActiveScriptTab("script1");
   }
@@ -410,6 +420,81 @@ export function ColdCallCRM() {
 
   function toggleSection(section: keyof typeof INITIAL_SECTIONS) {
     setSections((current) => ({ ...current, [section]: !current[section] }));
+  }
+
+  function mergeImportedFields<T extends MapsImportFields>(base: T, incoming: Partial<MapsImportFields>) {
+    return {
+      ...base,
+      companyName: incoming.companyName || base.companyName,
+      contactName: incoming.contactName || base.contactName,
+      phoneNumber: incoming.phoneNumber || base.phoneNumber,
+      website: incoming.website || base.website,
+      industry: incoming.industry || base.industry
+    };
+  }
+
+  async function importMapsLink(target: "create" | "detail") {
+    const url = (target === "create" ? createMapsUrl : detailMapsUrl).trim();
+    if (!url) {
+      if (target === "create") {
+        setCreateImportMessage("Paste a Google Maps link first.");
+      } else {
+        setDetailImportMessage("Paste a Google Maps link first.");
+      }
+      return;
+    }
+
+    if (target === "create") {
+      setCreateImporting(true);
+      setCreateImportMessage("");
+    } else {
+      setDetailImporting(true);
+      setDetailImportMessage("");
+    }
+
+    try {
+      const response = await fetch("/api/maps-import", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ url })
+      });
+
+      const result = await response.json().catch(() => null);
+      if (!response.ok || !result?.ok) {
+        const error = result?.error || "We couldn't import details from that Google Maps link.";
+        if (target === "create") {
+          setCreateImportMessage(error);
+        } else {
+          setDetailImportMessage(error);
+        }
+        return;
+      }
+
+      if (target === "create") {
+        setDraftLead((current) => mergeImportedFields(current, result.fields));
+        setCreateImportMessage(result.message || "Imported Google Maps details.");
+      } else if (selectedLead) {
+        updateLead(selectedLead.id, (lead) => ({
+          ...mergeImportedFields(lead, result.fields),
+          lastModified: nowIso()
+        }));
+        setDetailImportMessage(result.message || "Imported Google Maps details.");
+      }
+    } catch {
+      if (target === "create") {
+        setCreateImportMessage("Import failed. Try again in a moment.");
+      } else {
+        setDetailImportMessage("Import failed. Try again in a moment.");
+      }
+    } finally {
+      if (target === "create") {
+        setCreateImporting(false);
+      } else {
+        setDetailImporting(false);
+      }
+    }
   }
 
   function exec(command: string, value?: string) {
@@ -564,6 +649,29 @@ export function ColdCallCRM() {
                   open={sections.company}
                   onToggle={() => toggleSection("company")}
                 >
+                  <div className={styles.mapsImportCard}>
+                    <div className={styles.mapsImportCopy}>
+                      <strong>Import from Google Maps</strong>
+                      <p>Paste a business Maps link and we'll fill whatever details we can find.</p>
+                    </div>
+                    <div className={styles.mapsImportRow}>
+                      <input
+                        className={styles.mapsImportInput}
+                        placeholder="Paste Google Maps business link"
+                        value={detailMapsUrl}
+                        onChange={(event) => setDetailMapsUrl(event.target.value)}
+                      />
+                      <button
+                        type="button"
+                        className={styles.secondaryAction}
+                        onClick={() => importMapsLink("detail")}
+                        disabled={detailImporting}
+                      >
+                        {detailImporting ? "Importing..." : "Import link"}
+                      </button>
+                    </div>
+                    {detailImportMessage ? <div className={styles.mapsImportMessage}>{detailImportMessage}</div> : null}
+                  </div>
                   <div className={styles.formGrid}>
                     <Field label="Company Name" value={selectedLead.companyName} onChange={(value) => updateSelectedField("companyName", value)} />
                     <Field label="Contact Name" value={selectedLead.contactName} onChange={(value) => updateSelectedField("contactName", value)} />
@@ -727,6 +835,7 @@ export function ColdCallCRM() {
                   <div
                     ref={notesRef}
                     className={styles.notesEditor}
+                    dir="ltr"
                     contentEditable
                     suppressContentEditableWarning
                     onInput={handleNotesInput}
@@ -754,6 +863,29 @@ export function ColdCallCRM() {
               <button type="button" className={styles.closeModal} onClick={() => setShowCreate(false)}>
                 ×
               </button>
+            </div>
+            <div className={styles.mapsImportCard}>
+              <div className={styles.mapsImportCopy}>
+                <strong>Start with a Google Maps link</strong>
+                <p>Paste a Maps business link and we'll prefill the card to its ability.</p>
+              </div>
+              <div className={styles.mapsImportRow}>
+                <input
+                  className={styles.mapsImportInput}
+                  placeholder="Paste Google Maps business link"
+                  value={createMapsUrl}
+                  onChange={(event) => setCreateMapsUrl(event.target.value)}
+                />
+                <button
+                  type="button"
+                  className={styles.secondaryAction}
+                  onClick={() => importMapsLink("create")}
+                  disabled={createImporting}
+                >
+                  {createImporting ? "Importing..." : "Import link"}
+                </button>
+              </div>
+              {createImportMessage ? <div className={styles.mapsImportMessage}>{createImportMessage}</div> : null}
             </div>
             <div className={styles.formGrid}>
               <Field label="Company Name" value={draftLead.companyName} onChange={(value) => setDraftLead((current) => ({ ...current, companyName: value }))} />

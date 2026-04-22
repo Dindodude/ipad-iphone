@@ -277,6 +277,47 @@
   gap: 14px;
 }
 
+.mapsImportCard {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+  border-radius: 18px;
+  border: 1px solid rgba(160, 127, 255, 0.16);
+  background: rgba(140, 92, 255, 0.08);
+}
+
+.mapsImportCopy {
+  display: grid;
+  gap: 4px;
+}
+
+.mapsImportCopy strong {
+  font-size: 0.98rem;
+}
+
+.mapsImportCopy p,
+.mapsImportMessage {
+  margin: 0;
+  line-height: 1.55;
+  color: rgba(245, 247, 255, 0.78);
+}
+
+.mapsImportRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
+}
+
+.mapsImportInput {
+  min-height: 50px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
+  color: #f5f7ff;
+  padding: 12px 14px;
+  font-size: 0.96rem;
+}
+
 .inlineField {
   display: grid;
   gap: 8px;
@@ -463,6 +504,9 @@
   padding: 16px;
   line-height: 1.7;
   outline: none;
+  direction: ltr;
+  text-align: left;
+  unicode-bidi: plaintext;
 }
 
 .notesEditor :global(h1),
@@ -574,6 +618,10 @@
 
   .detailPane {
     padding: 16px;
+  }
+
+  .mapsImportRow {
+    grid-template-columns: 1fr;
   }
 
   .formGrid,

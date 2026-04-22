@@ -3029,7 +3029,7 @@ li + li {
 .zentrixa-brandmark img,
 .auth-logo {
   width: auto;
-  height: 100px;
+  height: auto;
   max-width: 100%;
 }
 

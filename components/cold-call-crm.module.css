@@ -507,7 +507,7 @@
   outline: none;
   direction: ltr;
   text-align: left;
-  unicode-bidi: isolate;
+  unicode-bidi: normal;
   writing-mode: horizontal-tb;
   white-space: pre-wrap;
   word-break: break-word;
@@ -527,8 +527,16 @@
   margin-top: 0;
   direction: ltr;
   text-align: left;
-  unicode-bidi: isolate;
+  unicode-bidi: normal;
   writing-mode: horizontal-tb;
+}
+
+.notesEditor,
+.notesEditor * {
+  direction: ltr;
+  unicode-bidi: normal;
+  writing-mode: horizontal-tb;
+  text-align: left;
 }
 
 .emptyState,

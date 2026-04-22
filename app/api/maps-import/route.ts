@@ -2,10 +2,11 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 
 const requestSchema = z.object({
-  url: z.string().trim().url("Please paste a valid Google Maps link.")
+  url: z.string().trim().min(1, "Please paste a valid Google Maps link.")
 });
 
 const GOOGLE_HOST_PATTERN = /(^|\.)google\.[a-z.]+$/i;
+const GOOGLE_SHORT_HOSTS = new Set(["maps.app.goo.gl", "share.google"]);
 const GOOGLE_MAPS_PATH_PATTERN = /\/maps(\/|$)/i;
 const WEBSITE_BLOCKLIST = [
   "google.com",
@@ -25,7 +26,9 @@ const WEBSITE_BLOCKLIST = [
   "docs.google.com",
   "apis.google.com",
   "ogads-pa.clients6.google.com",
-  "csi.gstatic.com"
+  "csi.gstatic.com",
+  "schema.org",
+  "www.schema.org"
 ];
 
 function decodeEscapes(input: string) {
@@ -60,11 +63,27 @@ function isAllowedWebsite(url: string) {
     if (host.endsWith(".googleapis.com")) return false;
     if (host.endsWith(".ggpht.com")) return false;
     if (host.includes("googleusercontent")) return false;
+    if (parsed.pathname.includes("/maps/api/staticmap")) return false;
     if (/\.(jpg|jpeg|png|gif|webp|svg)$/i.test(parsed.pathname)) return false;
     return true;
   } catch {
     return false;
   }
+}
+
+function extractPlaceNameFromUrl(url: URL) {
+  const segments = url.pathname.split("/").filter(Boolean);
+  const placeIndex = segments.findIndex((segment) => segment.toLowerCase() === "place");
+  const rawSegment = placeIndex >= 0 ? segments[placeIndex + 1] : "";
+  if (!rawSegment) return "";
+
+  const decoded = normalizeWhitespace(decodeURIComponent(rawSegment).replace(/\+/g, " "));
+  if (!decoded) return "";
+
+  return decoded
+    .split("@")[0]
+    .split(",")[0]
+    .trim();
 }
 
 function pickCompanyName(decodedHtml: string) {
@@ -141,16 +160,20 @@ export async function POST(request: Request) {
   }
 
   const inputUrl = parsed.data.url;
+  const normalizedInputUrl = /^https?:\/\//i.test(inputUrl) ? inputUrl : `https://${inputUrl}`;
   let validatedUrl: URL;
 
   try {
-    validatedUrl = new URL(inputUrl);
+    validatedUrl = new URL(normalizedInputUrl);
   } catch {
     return NextResponse.json({ ok: false, error: "Please paste a valid Google Maps link." }, { status: 400 });
   }
 
   const host = validatedUrl.hostname.toLowerCase();
-  if (!GOOGLE_HOST_PATTERN.test(host) || !GOOGLE_MAPS_PATH_PATTERN.test(validatedUrl.pathname)) {
+  const isAcceptedGoogleLink =
+    GOOGLE_SHORT_HOSTS.has(host) || (GOOGLE_HOST_PATTERN.test(host) && GOOGLE_MAPS_PATH_PATTERN.test(validatedUrl.pathname));
+
+  if (!isAcceptedGoogleLink) {
     return NextResponse.json(
       { ok: false, error: "Use a Google Maps business link so we can try to pull the business details." },
       { status: 400 }
@@ -158,10 +181,10 @@ export async function POST(request: Request) {
   }
 
   let html = "";
-  let finalUrl = inputUrl;
+  let finalUrl = normalizedInputUrl;
 
   try {
-    const response = await fetch(inputUrl, {
+    const response = await fetch(normalizedInputUrl, {
       headers: {
         "user-agent":
           "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36",
@@ -188,7 +211,7 @@ export async function POST(request: Request) {
   }
 
   const decodedHtml = decodeEscapes(html);
-  const companyName = pickCompanyName(decodedHtml);
+  const companyName = pickCompanyName(decodedHtml) || extractPlaceNameFromUrl(new URL(finalUrl));
   const phoneNumber = pickPhone(decodedHtml);
   const website = pickWebsite(decodedHtml);
   const industry = pickIndustry(decodedHtml);

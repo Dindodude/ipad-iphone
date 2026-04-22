@@ -836,6 +836,8 @@ export function ColdCallCRM() {
                     ref={notesRef}
                     className={styles.notesEditor}
                     dir="ltr"
+                    lang="en"
+                    spellCheck
                     contentEditable
                     suppressContentEditableWarning
                     onInput={handleNotesInput}

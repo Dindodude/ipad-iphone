@@ -497,6 +497,7 @@
 }
 
 .notesEditor {
+  display: block;
   min-height: 280px;
   border-radius: 20px;
   border: 1px solid rgba(255, 255, 255, 0.08);
@@ -506,13 +507,28 @@
   outline: none;
   direction: ltr;
   text-align: left;
-  unicode-bidi: plaintext;
+  unicode-bidi: isolate;
+  writing-mode: horizontal-tb;
+  white-space: pre-wrap;
+  word-break: break-word;
+  caret-color: #f5f7ff;
 }
 
 .notesEditor :global(h1),
 .notesEditor :global(h2),
-.notesEditor :global(h3) {
+.notesEditor :global(h3),
+.notesEditor :global(p),
+.notesEditor :global(div),
+.notesEditor :global(span),
+.notesEditor :global(label),
+.notesEditor :global(li),
+.notesEditor :global(ul),
+.notesEditor :global(ol) {
   margin-top: 0;
+  direction: ltr;
+  text-align: left;
+  unicode-bidi: isolate;
+  writing-mode: horizontal-tb;
 }
 
 .emptyState,

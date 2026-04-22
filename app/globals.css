@@ -4649,13 +4649,13 @@ li + li {
 
   .zentrixa-brandmark {
     flex: 0 0 auto;
-    min-height: 44px;
-    min-width: 132px;
+    min-height: 50px;
+    min-width: 156px;
   }
 
   .zentrixa-brand-image-full {
-    max-width: 140px !important;
-    max-height: 44px;
+    max-width: 164px !important;
+    max-height: 50px;
     width: auto;
     height: auto;
   }
@@ -4732,8 +4732,8 @@ li + li {
   }
 
   .zentrixa-brand-image-full {
-    max-width: 132px !important;
-    max-height: 42px;
+    max-width: 150px !important;
+    max-height: 48px;
   }
 
   .zentrixa-nav-cta .zentrixa-button {

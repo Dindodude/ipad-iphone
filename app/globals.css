@@ -3017,20 +3017,22 @@ li + li {
   align-items: center;
   justify-content: space-between;
   gap: 18px;
-  padding: 12px 0 36px;
+  padding: 12px 0 28px;
 }
 
 .zentrixa-brandmark {
   display: inline-flex;
   align-items: center;
   flex: 0 0 auto;
+  min-width: 210px;
 }
 
 .zentrixa-brandmark img,
 .auth-logo {
   width: auto;
-  height: auto;
+  height: 64px;
   max-width: 100%;
+  object-fit: contain;
 }
 
 .zentrixa-nav-actions,
@@ -4647,12 +4649,13 @@ li + li {
 
   .zentrixa-brandmark {
     flex: 0 0 auto;
-    min-height: 36px;
+    min-height: 44px;
+    min-width: 132px;
   }
 
   .zentrixa-brand-image-full {
-    max-width: 132px !important;
-    max-height: 36px;
+    max-width: 140px !important;
+    max-height: 44px;
     width: auto;
     height: auto;
   }
@@ -4729,8 +4732,8 @@ li + li {
   }
 
   .zentrixa-brand-image-full {
-    max-width: 120px !important;
-    max-height: 36px;
+    max-width: 132px !important;
+    max-height: 42px;
   }
 
   .zentrixa-nav-cta .zentrixa-button {

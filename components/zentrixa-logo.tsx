@@ -28,11 +28,11 @@ export function ZentrixaLogo({
     <Image
       src={src}
       alt={alt}
-      width={variant === "icon" ? 82 : 140}
-      height={variant === "icon" ? 82 : 45}
+      width={variant === "icon" ? 82 : 320}
+      height={variant === "icon" ? 82 : 104}
       className={className}
       priority={priority}
-      style={variant === "icon" ? undefined : { height: "36px", width: "auto", objectFit: "contain" }}
+      style={variant === "icon" ? undefined : { width: "auto", height: "auto", objectFit: "contain" }}
       onError={() => setFailed(true)}
     />
   );

@@ -3029,7 +3029,7 @@ li + li {
 .zentrixa-brandmark img,
 .auth-logo {
   width: auto;
-  height: auto;
+  height: 100px;
   max-width: 100%;
 }
 
@@ -3150,8 +3150,13 @@ li + li {
 .zentrixa-growth-points {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
+  gap: 12px;
   margin-top: 18px;
+  padding-bottom: 24px;
+}
+
+.zentrixa-growth-points > :last-child {
+  margin-bottom: 16px;
 }
 
 .zentrixa-growth-point {
@@ -4365,8 +4370,9 @@ li + li {
 
   .zentrixa-growth-points {
     grid-template-columns: 1fr;
-    gap: 8px;
+    gap: 12px;
     margin-top: 14px;
+    padding-bottom: 24px;
   }
 
   .zentrixa-growth-point {
@@ -4616,5 +4622,128 @@ li + li {
 
   .zentrixa-section {
     padding-bottom: 30px;
+  }
+}
+
+@media (max-width: 720px) {
+  body {
+    overflow-x: hidden;
+  }
+
+  .zentrixa-public-wrap {
+    padding-inline: 20px !important;
+  }
+
+  .zentrixa-nav {
+    display: flex !important;
+    grid-template-columns: none !important;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+    gap: 10px;
+    padding-inline: 20px !important;
+    margin-inline: -20px !important;
+  }
+
+  .zentrixa-brandmark {
+    flex: 0 0 auto;
+    min-height: 36px;
+  }
+
+  .zentrixa-brand-image-full {
+    max-width: 132px !important;
+    max-height: 36px;
+    width: auto;
+    height: auto;
+  }
+
+  .zentrixa-nav-actions,
+  .zentrixa-nav-cta {
+    width: auto !important;
+    display: flex !important;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    flex-wrap: nowrap;
+    margin-left: auto;
+  }
+
+  .zentrixa-nav-cta .zentrixa-button {
+    width: auto !important;
+    min-height: 48px !important;
+    padding-inline: 14px;
+    font-size: 0.78rem;
+    white-space: nowrap;
+  }
+
+  .zentrixa-hero {
+    padding-top: 14px;
+  }
+
+  .zentrixa-hero-card {
+    padding: 20px !important;
+  }
+
+  .zentrixa-hero-copy h1 {
+    font-size: clamp(1.8rem, 5vw, 3.2rem) !important;
+    line-height: 1.2 !important;
+    letter-spacing: -0.04em;
+    max-width: 12ch;
+  }
+
+  .zentrixa-hero-copy p,
+  .zentrixa-growth-point,
+  .zentrixa-mid-cta p,
+  .zentrixa-cta-band p {
+    line-height: 1.6;
+  }
+
+  .zentrixa-hero-actions {
+    gap: 12px !important;
+  }
+
+  .zentrixa-hero-actions .zentrixa-button,
+  .zentrixa-mid-cta .zentrixa-button,
+  .zentrixa-cta-band .zentrixa-button {
+    min-height: 48px !important;
+  }
+
+  .zentrixa-growth-points {
+    margin-bottom: 24px !important;
+  }
+
+  .zentrixa-section h2 {
+    font-size: clamp(1.4rem, 4vw, 2.2rem) !important;
+    line-height: 1.2 !important;
+  }
+}
+
+@media (max-width: 420px) {
+  .zentrixa-public-wrap {
+    padding-inline: 20px !important;
+  }
+
+  .zentrixa-nav {
+    padding-inline: 20px !important;
+    margin-inline: -20px !important;
+  }
+
+  .zentrixa-brand-image-full {
+    max-width: 120px !important;
+    max-height: 36px;
+  }
+
+  .zentrixa-nav-cta .zentrixa-button {
+    min-height: 48px !important;
+    font-size: 0.74rem;
+    padding-inline: 10px;
+  }
+
+  .zentrixa-hero-card {
+    padding: 20px !important;
+  }
+
+  .zentrixa-hero-copy h1 {
+    font-size: clamp(1.8rem, 5vw, 2.2rem) !important;
   }
 }

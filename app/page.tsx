@@ -102,11 +102,7 @@ export default function HomePage() {
         <section className="zentrixa-hero zentrixa-hero-grid">
           <div className="zentrixa-hero-copy zentrixa-hero-card">
             <span className="zentrixa-eyebrow">Done-For-You Growth</span>
-            <h1>
-              <span>We Build the Sales System{" "}</span>
-              <span>That Helps Local Businesses{" "}</span>
-              <span>Get More Customers.</span>
-            </h1>
+            <h1>We Build the System That Gets You More Customers.</h1>
             <p>We handle everything that brings you customers.</p>
             <div className="zentrixa-growth-points">
               {growthBullets.map((item) => (
@@ -119,7 +115,6 @@ export default function HomePage() {
             <div className="zentrixa-hero-actions">
               <a href="#contact" className="zentrixa-button primary">Get More Customers</a>
               <a href="tel:9055809902" className="zentrixa-button secondary">Call Us</a>
-              <a href="#contact" className="zentrixa-button subtle">Book a Call</a>
             </div>
             <div className="zentrixa-hero-microcopy">
               <span>We handle everything.</span>

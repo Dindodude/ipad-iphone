@@ -21,6 +21,19 @@
   margin-bottom: 24px;
 }
 
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 0 14px;
+  margin-bottom: 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
+  color: rgba(245, 247, 255, 0.82);
+  text-decoration: none;
+}
+
 .eyebrow {
   margin: 0 0 8px;
   text-transform: uppercase;

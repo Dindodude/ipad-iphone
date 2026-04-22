@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import styles from "./cold-call-crm.module.css";
 
@@ -464,6 +465,9 @@ export function ColdCallCRM() {
       <div className={styles.frame}>
         <header className={styles.header}>
           <div>
+            <Link href="/" className={styles.backLink}>
+              ← Back to Zentrixa
+            </Link>
             <p className={styles.eyebrow}>Zentrixa Cold Call CRM</p>
             <h1 className={styles.title}>Track every call, script, offer, and follow-up from one place.</h1>
           </div>

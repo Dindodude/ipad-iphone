@@ -286,6 +286,7 @@ export function ColdCallCRM() {
   const [detailImporting, setDetailImporting] = useState(false);
   const notesRef = useRef<HTMLDivElement | null>(null);
   const notesDraftRef = useRef("");
+  const notesSelectionRef = useRef<Range | null>(null);
 
   useEffect(() => {
     try {
@@ -499,9 +500,27 @@ export function ColdCallCRM() {
     }
   }
 
+  function saveNotesSelection() {
+    const selection = window.getSelection();
+    if (!selection || selection.rangeCount === 0 || !notesRef.current) return;
+    const range = selection.getRangeAt(0);
+    if (!notesRef.current.contains(range.commonAncestorContainer)) return;
+    notesSelectionRef.current = range.cloneRange();
+  }
+
+  function restoreNotesSelection() {
+    const selection = window.getSelection();
+    const range = notesSelectionRef.current;
+    if (!selection || !range) return;
+    selection.removeAllRanges();
+    selection.addRange(range);
+  }
+
   function exec(command: string, value?: string) {
-    document.execCommand(command, false, value);
     notesRef.current?.focus();
+    restoreNotesSelection();
+    document.execCommand(command, false, value);
+    saveNotesSelection();
   }
 
   function persistNotesDraftToStorage(id: string, html: string) {
@@ -542,6 +561,11 @@ export function ColdCallCRM() {
       notesPreview: buildPreview(html),
       lastModified: nowIso()
     }));
+  }
+
+  function handleToolbarMouseDown(event: React.MouseEvent<HTMLButtonElement>) {
+    event.preventDefault();
+    restoreNotesSelection();
   }
 
   function insertChecklist() {
@@ -843,24 +867,24 @@ export function ColdCallCRM() {
                   open={sections.notes}
                   onToggle={() => toggleSection("notes")}
                 >
-                  <div className={styles.notesToolbar}>
-                    <button type="button" onClick={() => exec("bold")}>B</button>
-                    <button type="button" onClick={() => exec("italic")}>I</button>
-                    <button type="button" onClick={() => exec("underline")}>U</button>
+                  <div className={styles.notesToolbar} onMouseDown={(event) => event.preventDefault()}>
+                    <button type="button" onMouseDown={handleToolbarMouseDown} onClick={() => exec("bold")}>B</button>
+                    <button type="button" onMouseDown={handleToolbarMouseDown} onClick={() => exec("italic")}>I</button>
+                    <button type="button" onMouseDown={handleToolbarMouseDown} onClick={() => exec("underline")}>U</button>
                     <button type="button" onClick={() => exec("insertUnorderedList")}>• List</button>
-                    <button type="button" onClick={() => exec("insertOrderedList")}>1. List</button>
-                    <button type="button" onClick={() => exec("formatBlock", "<h1>")}>H1</button>
-                    <button type="button" onClick={() => exec("formatBlock", "<h2>")}>H2</button>
-                    <button type="button" onClick={() => exec("formatBlock", "<h3>")}>H3</button>
-                    <button type="button" onClick={() => exec("hiliteColor", "yellow")}>Highlight</button>
-                    <button type="button" onClick={insertDivider}>Divider</button>
-                    <button type="button" onClick={insertChecklist}>Checklist</button>
-                    <button type="button" onClick={() => exec("foreColor", "#f0f4f6")}>White</button>
-                    <button type="button" onClick={() => exec("foreColor", "#ff5c80")}>Red</button>
-                    <button type="button" onClick={() => exec("foreColor", "#58d68d")}>Green</button>
-                    <button type="button" onClick={() => exec("foreColor", "#ffd166")}>Yellow</button>
-                    <button type="button" onClick={() => exec("foreColor", "#8b94a7")}>Grey</button>
-                    <button type="button" onClick={clearFormatting}>Clear</button>
+                    <button type="button" onMouseDown={handleToolbarMouseDown} onClick={() => exec("insertOrderedList")}>1. List</button>
+                    <button type="button" onMouseDown={handleToolbarMouseDown} onClick={() => exec("formatBlock", "<h1>")}>H1</button>
+                    <button type="button" onMouseDown={handleToolbarMouseDown} onClick={() => exec("formatBlock", "<h2>")}>H2</button>
+                    <button type="button" onMouseDown={handleToolbarMouseDown} onClick={() => exec("formatBlock", "<h3>")}>H3</button>
+                    <button type="button" onMouseDown={handleToolbarMouseDown} onClick={() => exec("hiliteColor", "yellow")}>Highlight</button>
+                    <button type="button" onMouseDown={handleToolbarMouseDown} onClick={insertDivider}>Divider</button>
+                    <button type="button" onMouseDown={handleToolbarMouseDown} onClick={insertChecklist}>Checklist</button>
+                    <button type="button" onMouseDown={handleToolbarMouseDown} onClick={() => exec("foreColor", "#f0f4f6")}>White</button>
+                    <button type="button" onMouseDown={handleToolbarMouseDown} onClick={() => exec("foreColor", "#ff5c80")}>Red</button>
+                    <button type="button" onMouseDown={handleToolbarMouseDown} onClick={() => exec("foreColor", "#58d68d")}>Green</button>
+                    <button type="button" onMouseDown={handleToolbarMouseDown} onClick={() => exec("foreColor", "#ffd166")}>Yellow</button>
+                    <button type="button" onMouseDown={handleToolbarMouseDown} onClick={() => exec("foreColor", "#8b94a7")}>Grey</button>
+                    <button type="button" onMouseDown={handleToolbarMouseDown} onClick={clearFormatting}>Clear</button>
                   </div>
                   <div className={styles.notesMeta}>Auto-saves on every keystroke. {savedStamp}</div>
                   <div
@@ -871,6 +895,9 @@ export function ColdCallCRM() {
                     spellCheck
                     contentEditable
                     suppressContentEditableWarning
+                    onFocus={saveNotesSelection}
+                    onKeyUp={saveNotesSelection}
+                    onMouseUp={saveNotesSelection}
                     onInput={handleNotesInput}
                     onBlur={handleNotesBlur}
                   />

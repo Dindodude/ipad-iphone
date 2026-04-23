@@ -285,6 +285,7 @@ export function ColdCallCRM() {
   const [createImporting, setCreateImporting] = useState(false);
   const [detailImporting, setDetailImporting] = useState(false);
   const notesRef = useRef<HTMLDivElement | null>(null);
+  const notesDraftRef = useRef("");
 
   useEffect(() => {
     try {
@@ -317,6 +318,7 @@ export function ColdCallCRM() {
   useEffect(() => {
     if (notesRef.current && selectedLead) {
       notesRef.current.innerHTML = selectedLead.notesHtml || "";
+      notesDraftRef.current = selectedLead.notesHtml || "";
     }
   }, [selectedLeadId, selectedLead?.notesHtml, hydrated]);
 
@@ -502,9 +504,38 @@ export function ColdCallCRM() {
     notesRef.current?.focus();
   }
 
+  function persistNotesDraftToStorage(id: string, html: string) {
+    try {
+      const raw = window.localStorage.getItem(STORAGE_KEY);
+      const parsed = raw ? (JSON.parse(raw) as LeadCard[]) : leads;
+      const nextLeads = (Array.isArray(parsed) ? parsed : leads).map((lead) =>
+        lead.id === id
+          ? {
+              ...lead,
+              notesHtml: html,
+              notesPreview: buildPreview(html),
+              lastModified: lead.lastModified
+            }
+          : lead
+      );
+      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(nextLeads));
+      setSavedStamp(`Saved ${new Date().toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}`);
+    } catch {
+      // ignore storage write failures during typing
+    }
+  }
+
   function handleNotesInput() {
     if (!selectedLead || !notesRef.current) return;
     const html = notesRef.current.innerHTML;
+    notesDraftRef.current = html;
+    persistNotesDraftToStorage(selectedLead.id, html);
+  }
+
+  function handleNotesBlur() {
+    if (!selectedLead || !notesRef.current) return;
+    const html = notesRef.current.innerHTML;
+    notesDraftRef.current = html;
     updateLead(selectedLead.id, (lead) => ({
       ...lead,
       notesHtml: html,
@@ -841,6 +872,7 @@ export function ColdCallCRM() {
                     contentEditable
                     suppressContentEditableWarning
                     onInput={handleNotesInput}
+                    onBlur={handleNotesBlur}
                   />
                 </DetailSection>
               </>

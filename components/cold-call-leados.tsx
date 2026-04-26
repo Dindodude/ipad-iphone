@@ -49,7 +49,14 @@ type Lead = {
   email: string;
   category: string;
   address: string;
+  street: string;
   city: string;
+  postalCode: string;
+  state: string;
+  countryCode: string;
+  latitude: string;
+  longitude: string;
+  plusCode: string;
   googleRating: number;
   reviewCount: number;
   websiteStatus: WebsiteStatus;
@@ -217,7 +224,14 @@ function normalizeLead(lead: Partial<Lead>): Lead {
     email: lead.email ?? "",
     category: lead.category ?? "Local Business",
     address: lead.address ?? "",
+    street: lead.street ?? "",
     city: lead.city ?? "Ontario",
+    postalCode: lead.postalCode ?? "",
+    state: lead.state ?? "",
+    countryCode: lead.countryCode ?? "",
+    latitude: lead.latitude ?? "",
+    longitude: lead.longitude ?? "",
+    plusCode: lead.plusCode ?? "",
     googleRating: Number(lead.googleRating ?? 0),
     reviewCount: Number(lead.reviewCount ?? 0),
     websiteStatus: lead.websiteStatus ?? "Unknown",
@@ -429,7 +443,8 @@ function parseCsv(text: string) {
     const city = pick(item, ["city", "neighborhood"]);
     const state = pick(item, ["state", "province"]);
     const postalCode = pick(item, ["postalCode", "postal code", "zip"]);
-    const address = pick(item, ["address"]) || [pick(item, ["street"]), city, state, postalCode].filter(Boolean).join(", ");
+    const street = pick(item, ["street"]);
+    const address = pick(item, ["address"]) || [street, city, state, postalCode].filter(Boolean).join(", ");
     const rating = pick(item, ["rating", "googleRating", "google rating", "stars"]);
     const reviews = pick(item, ["reviews", "reviewCount", "review count", "number of reviews"]);
 
@@ -440,7 +455,14 @@ function parseCsv(text: string) {
       email: pick(item, ["emails", "email"]),
       category,
       address,
+      street,
       city: city || state || "Ontario",
+      postalCode,
+      state,
+      countryCode: pick(item, ["countryCode", "country code", "country"]),
+      latitude: pick(item, ["location/lat", "lat", "latitude"]),
+      longitude: pick(item, ["location/lng", "lng", "longitude"]),
+      plusCode: pick(item, ["plusCode", "plus code"]),
       googleRating: Number(rating || 0),
       reviewCount: Number(reviews || 0),
       websiteStatus: website ? detectWebsiteStatus(pick(item, ["website status", "site status"]), website) : "No Website",
@@ -467,6 +489,16 @@ function statusClass(value: string) {
   return value.toLowerCase().replace(/[^a-z0-9]+/g, "-");
 }
 
+function mapsUrlForLead(lead: Lead) {
+  const query = [lead.businessName, lead.address, lead.city, lead.state, lead.postalCode, lead.countryCode].filter(Boolean).join(" ");
+  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
+}
+
+function websiteUrl(url: string) {
+  if (!url) return "";
+  return /^https?:\/\//i.test(url) ? url : `https://${url}`;
+}
+
 export function ColdCallLeadOS({ view, leadId }: Props) {
   const [leads, setLeads] = useState<Lead[]>(seedLeads);
   const [settings, setSettings] = useState<LeadOSSettings>(defaultSettings);
@@ -488,6 +520,7 @@ export function ColdCallLeadOS({ view, leadId }: Props) {
   const [scriptHold, setScriptHold] = useState(0);
   const [sessionStartedAt, setSessionStartedAt] = useState("");
   const [nowTick, setNowTick] = useState(Date.now());
+  const [expandedCallId, setExpandedCallId] = useState("");
 
   useEffect(() => {
     const saved = localStorage.getItem(STORAGE_KEY);
@@ -623,6 +656,11 @@ export function ColdCallLeadOS({ view, leadId }: Props) {
         updatedAt: new Date().toISOString()
       };
     });
+  }
+
+  function logCallQueueOutcome(id: string, outcome: CallStatus) {
+    logOutcome(id, outcome);
+    setExpandedCallId("");
   }
 
   function unlockCallMode() {
@@ -998,13 +1036,20 @@ export function ColdCallLeadOS({ view, leadId }: Props) {
           <section className={styles.panel}>
             <p className={styles.kicker}>Business profile</p>
             <div className={styles.infoList}>
-              <Info label="Contact" value={lead.contactName || "Unknown"} />
-              <Info label="Phone" value={lead.phone || "-"} />
-              <Info label="Email" value={lead.email || "-"} />
-              <Info label="Website" value={lead.websiteUrl || "-"} />
-              <Info label="Social" value={lead.socialUrl || "-"} />
-              <Info label="Address" value={lead.address || "-"} />
-              <Info label="Estimated value" value={`$${lead.estimatedDealValue}`} />
+              <Info label="Business" value={lead.businessName} />
+              <Info label="Category" value={lead.category || "-"} />
+              <Info label="Phone" value={lead.phone || "-"} href={lead.phone ? `tel:${lead.phone.replace(/[^\d+]/g, "")}` : ""} action="Call" />
+              <Info label="Website" value={lead.websiteUrl || "No website in CSV"} href={lead.websiteUrl ? websiteUrl(lead.websiteUrl) : ""} action="Open" />
+              <Info label="Email" value={lead.email || "No email in CSV"} href={lead.email ? `mailto:${lead.email}` : ""} action="Email" />
+              <Info label="Address" value={lead.address || "-"} href={lead.address || (lead.latitude && lead.longitude) ? mapsUrlForLead(lead) : ""} action="Maps" />
+              <Info label="Street" value={lead.street || "-"} />
+              <Info label="City" value={lead.city || "-"} />
+              <Info label="Postal Code" value={lead.postalCode || "-"} />
+              <Info label="Province" value={lead.state || "-"} />
+              <Info label="Country" value={lead.countryCode || "-"} />
+              <Info label="Coordinates" value={lead.latitude && lead.longitude ? `${lead.latitude}, ${lead.longitude}` : "-"} href={lead.latitude && lead.longitude ? mapsUrlForLead(lead) : ""} action="Maps" />
+              <Info label="Plus Code" value={lead.plusCode || "-"} />
+              <Info label="Source" value={lead.source || "-"} />
             </div>
           </section>
           <section className={styles.panel}>
@@ -1054,7 +1099,7 @@ export function ColdCallLeadOS({ view, leadId }: Props) {
         </section>
         <section className={styles.queueGrid}>
           {sortedLeads.filter((lead) => !["Closed Won", "Closed Lost", "Not Fit"].includes(lead.stage)).map((lead) => (
-            <article key={lead.id} className={styles.queueCard}>
+            <article key={lead.id} className={`${styles.queueCard} ${expandedCallId === lead.id ? styles.expandedQueueCard : ""}`}>
               <div className={styles.cardTop}>
                 <div>
                   <h3>{lead.businessName}</h3>
@@ -1069,11 +1114,48 @@ export function ColdCallLeadOS({ view, leadId }: Props) {
               </div>
               <p className={styles.scriptHint}>{pitchAngle(lead)}</p>
               <div className={styles.quickActions}>
-                <a className={styles.primaryButton} href={lead.phone ? `tel:${lead.phone.replace(/[^\d+]/g, "")}` : "#"}>Call</a>
-                <button className={styles.secondaryButton} onClick={() => logOutcome(lead.id, "Called - No Answer")}>No Answer</button>
-                <button className={styles.secondaryButton} onClick={() => logOutcome(lead.id, "Called - Interested")}>Interested</button>
-                <button className={styles.secondaryButton} onClick={() => logOutcome(lead.id, "Call Back Later")}>Call Back</button>
+                <button className={styles.primaryButton} type="button" onClick={() => setExpandedCallId(expandedCallId === lead.id ? "" : lead.id)}>Call</button>
+                {lead.websiteUrl ? (
+                  <a className={styles.secondaryButton} href={websiteUrl(lead.websiteUrl)} target="_blank" rel="noreferrer">Website</a>
+                ) : (
+                  <button className={styles.secondaryButton} type="button" disabled>No Website</button>
+                )}
+                <a className={styles.secondaryButton} href={mapsUrlForLead(lead)} target="_blank" rel="noreferrer">Map</a>
+                <Link className={styles.secondaryButton} href={`/app/leads/${lead.id}`}>View</Link>
               </div>
+              {expandedCallId === lead.id ? (
+                <div className={styles.callPrepPanel}>
+                  <div className={styles.callPrepTop}>
+                    <div>
+                      <p className={styles.kicker}>Call prep</p>
+                      <h4>{lead.phone || "No phone in CSV"}</h4>
+                    </div>
+                    {lead.phone ? <a className={styles.primaryButton} href={`tel:${lead.phone.replace(/[^\d+]/g, "")}`}>Dial now</a> : null}
+                  </div>
+                  <div className={styles.pricingGrid}>
+                    <div><strong>Website Setup</strong><span>Starting at $299</span></div>
+                    <div><strong>Monthly Content</strong><span>From $79/month</span></div>
+                    <div><strong>Content + Ads</strong><span>From $150/month</span></div>
+                  </div>
+                  <div className={styles.callScriptGrid}>
+                    {scriptLibrary.slice(0, 3).map((script) => (
+                      <section key={script.title}>
+                        <span>{script.category}</span>
+                        <strong>{script.title}</strong>
+                        <p>{script.body}</p>
+                      </section>
+                    ))}
+                  </div>
+                  <div className={styles.callOutcomeBar}>
+                    <span>How did the call go?</span>
+                    <button className={styles.secondaryButton} type="button" onClick={() => logCallQueueOutcome(lead.id, "Called - No Answer")}>No Answer</button>
+                    <button className={styles.secondaryButton} type="button" onClick={() => logCallQueueOutcome(lead.id, "Called - Interested")}>Interested</button>
+                    <button className={styles.secondaryButton} type="button" onClick={() => logCallQueueOutcome(lead.id, "Booked Meeting")}>Booked</button>
+                    <button className={styles.secondaryButton} type="button" onClick={() => logCallQueueOutcome(lead.id, "Called - Not Interested")}>Not Interested</button>
+                    <button className={styles.secondaryButton} type="button" onClick={() => logCallQueueOutcome(lead.id, "Call Back Later")}>Call Back</button>
+                  </div>
+                </div>
+              ) : null}
             </article>
           ))}
         </section>
@@ -1355,13 +1437,24 @@ function Badge({ value }: { value: string }) {
   return <span className={`${styles.badge} ${styles[statusClass(value)] ?? ""}`}>{value}</span>;
 }
 
-function Info({ label, value }: { label: string; value: string }) {
-  return (
-    <div className={styles.infoItem}>
+function Info({ label, value, href, action }: { label: string; value: string; href?: string; action?: string }) {
+  const content = (
+    <>
       <span>{label}</span>
       <strong>{value}</strong>
-    </div>
+      {href && action ? <em>{action}</em> : null}
+    </>
   );
+
+  if (href) {
+    return (
+      <a className={`${styles.infoItem} ${styles.clickableInfo}`} href={href} target={href.startsWith("http") ? "_blank" : undefined} rel={href.startsWith("http") ? "noreferrer" : undefined}>
+        {content}
+      </a>
+    );
+  }
+
+  return <div className={styles.infoItem}>{content}</div>;
 }
 
 function OpportunityBreakdown({ leads }: { leads: Lead[] }) {

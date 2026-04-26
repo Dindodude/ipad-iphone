@@ -269,6 +269,31 @@
   align-items: center;
 }
 
+.clickableInfo {
+  position: relative;
+  border-color: rgba(255, 255, 255, 0.14);
+  transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+}
+
+.clickableInfo:hover {
+  transform: translateY(-1px);
+  border-color: rgba(255, 255, 255, 0.28);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.clickableInfo em {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  color: #05060a;
+  background: #f7f7f8;
+  border-radius: 999px;
+  padding: 3px 8px;
+  font-size: 0.68rem;
+  font-style: normal;
+  font-weight: 900;
+}
+
 .compactItem b,
 .scorePill,
 .scoreRing {
@@ -546,6 +571,14 @@
   padding: 16px;
 }
 
+.expandedQueueCard {
+  grid-column: span 2;
+  border-color: rgba(255, 255, 255, 0.22);
+  background:
+    radial-gradient(circle at 100% 0%, rgba(143, 134, 255, 0.16), transparent 38%),
+    rgba(5, 7, 10, 0.96);
+}
+
 .queueCard h3 {
   margin: 0;
   font-size: 1.05rem;
@@ -553,6 +586,69 @@
 
 .scriptHint {
   min-height: 74px;
+}
+
+.callPrepPanel {
+  display: grid;
+  gap: 12px;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.09);
+}
+
+.callPrepTop,
+.callOutcomeBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.callPrepTop h4 {
+  margin: 0;
+  font-size: 1.35rem;
+}
+
+.pricingGrid,
+.callScriptGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.pricingGrid div,
+.callScriptGrid section {
+  display: grid;
+  gap: 6px;
+  padding: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.pricingGrid span,
+.callScriptGrid span,
+.callOutcomeBar span {
+  color: rgba(247, 247, 248, 0.56);
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.callScriptGrid p {
+  margin: 0;
+  color: rgba(247, 247, 248, 0.7);
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.callOutcomeBar {
+  padding: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.035);
 }
 
 .pipeline {
@@ -819,5 +915,14 @@
 
   .pipeline {
     grid-auto-columns: minmax(238px, 82vw);
+  }
+
+  .expandedQueueCard {
+    grid-column: span 1;
+  }
+
+  .pricingGrid,
+  .callScriptGrid {
+    grid-template-columns: 1fr;
   }
 }

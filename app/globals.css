@@ -3410,6 +3410,7 @@ li + li {
 }
 
 .zentrixa-field input,
+.zentrixa-field select,
 .zentrixa-field textarea,
 .auth-field input {
   width: 100%;
@@ -3419,6 +3420,19 @@ li + li {
   border: 1px solid rgba(255, 255, 255, 0.12);
   background: rgba(255, 255, 255, 0.03);
   color: #f0f4f6;
+}
+
+.zentrixa-field select {
+  appearance: none;
+  background:
+    linear-gradient(45deg, transparent 50%, rgba(240, 244, 246, 0.8) 50%) right 1rem center / 0.42rem 0.42rem no-repeat,
+    linear-gradient(135deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.02));
+  color: #f0f4f6;
+}
+
+.zentrixa-field select option {
+  color: #08090d;
+  background: #f7f8ff;
 }
 
 .zentrixa-field textarea {
@@ -4505,6 +4519,16 @@ li + li {
     line-height: 1.35;
   }
 
+  .zentrixa-section-problem .zentrixa-section-head {
+    max-width: 100%;
+  }
+
+  .zentrixa-section-problem .zentrixa-section-head h2 {
+    max-width: 11ch;
+    font-size: 1.9rem !important;
+    line-height: 1.08 !important;
+  }
+
   .zentrixa-section-why {
     position: relative;
   }
@@ -4784,5 +4808,527 @@ li + li {
 
   .zentrixa-hero-copy h1 {
     font-size: clamp(1.8rem, 5vw, 2.2rem) !important;
+  }
+}
+
+/* Zentrixa public landing page refinement pass */
+.zentrixa-site {
+  isolation: isolate;
+  background:
+    radial-gradient(circle at 50% -8%, rgba(255, 255, 255, 0.12), transparent 22rem),
+    radial-gradient(circle at 18% 18%, rgba(91, 194, 255, 0.1), transparent 18rem),
+    radial-gradient(circle at 82% 34%, rgba(132, 92, 255, 0.12), transparent 20rem),
+    linear-gradient(180deg, #020205 0%, #05060a 34%, #020306 68%, #000 100%);
+}
+
+.zentrixa-site::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.26;
+  background:
+    linear-gradient(120deg, transparent 0 42%, rgba(255, 255, 255, 0.07) 48%, transparent 54% 100%),
+    radial-gradient(circle at 50% 10%, rgba(255, 255, 255, 0.08), transparent 24rem);
+  background-size: 220% 100%, 100% 100%;
+  animation: zentrixaLightSweep 16s ease-in-out infinite;
+}
+
+.zentrixa-hero-shell {
+  min-height: min(820px, 94svh);
+  display: grid;
+  align-content: start;
+  position: relative;
+}
+
+.zentrixa-hero-shell::before {
+  content: "";
+  position: absolute;
+  inset: 5rem -4rem auto;
+  height: 22rem;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent),
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.06) 0 1px, transparent 1px 5.5rem);
+  mask-image: radial-gradient(ellipse at center, black 12%, transparent 72%);
+  opacity: 0.55;
+  transform: translateZ(0);
+  animation: zentrixaGridDrift 18s linear infinite;
+}
+
+.zentrixa-nav {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+}
+
+.zentrixa-nav::before {
+  content: "";
+  position: absolute;
+  left: -1.25rem;
+  right: -1.25rem;
+  bottom: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.16), transparent);
+  opacity: 0.8;
+}
+
+.zentrixa-hero-card,
+.zentrixa-system-card,
+.zentrixa-mid-cta,
+.zentrixa-cta-band.premium {
+  border-color: rgba(255, 255, 255, 0.14);
+  box-shadow:
+    0 24px 80px rgba(0, 0, 0, 0.48),
+    0 0 48px rgba(91, 194, 255, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.zentrixa-hero-card {
+  background:
+    radial-gradient(circle at 84% 14%, rgba(255, 255, 255, 0.1), transparent 13rem),
+    radial-gradient(circle at 10% 100%, rgba(91, 194, 255, 0.1), transparent 16rem),
+    linear-gradient(145deg, rgba(15, 15, 20, 0.98), rgba(4, 5, 8, 0.99));
+}
+
+.zentrixa-hero-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+  transform: translateX(-120%);
+  animation: zentrixaPanelSheen 7s ease-in-out infinite;
+}
+
+.zentrixa-hero-copy > * {
+  position: relative;
+  z-index: 1;
+}
+
+.zentrixa-system-card {
+  transform-style: preserve-3d;
+}
+
+.zentrixa-flow-item {
+  overflow: hidden;
+  transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+}
+
+.zentrixa-flow-item:hover {
+  transform: translateX(4px);
+  border-color: rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.065);
+}
+
+.zentrixa-flow-badge,
+.zentrixa-icon-chip,
+.zentrixa-founder-badge {
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.zentrixa-flow-item:hover .zentrixa-flow-badge,
+.why-card:hover .zentrixa-icon-chip,
+.zentrixa-founder-card:hover .zentrixa-founder-badge {
+  transform: translateY(-1px) scale(1.04);
+  box-shadow: 0 0 34px rgba(91, 194, 255, 0.2);
+}
+
+.zentrixa-section {
+  position: relative;
+}
+
+.zentrixa-section::before {
+  content: "";
+  position: absolute;
+  left: 1.25rem;
+  right: 1.25rem;
+  top: -1.7rem;
+  height: 1px;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+}
+
+.zentrixa-section-problem,
+.zentrixa-section-pricing {
+  padding-top: 2rem;
+}
+
+.zentrixa-section-problem .zentrixa-section-head {
+  max-width: 36rem;
+}
+
+.zentrixa-section-problem .zentrixa-section-head h2 {
+  max-width: 15ch;
+  font-size: 2.45rem;
+  line-height: 1.05;
+  font-weight: 800;
+  letter-spacing: 0;
+}
+
+.zentrixa-section-problem .zentrixa-problem-card h3 {
+  font-size: 0.98rem;
+  font-weight: 700;
+}
+
+.zentrixa-section-problem::after,
+.zentrixa-section-pricing::after {
+  content: "";
+  position: absolute;
+  inset: 0 -2rem;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 18% 20%, rgba(255, 255, 255, 0.045), transparent 18rem),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.018), transparent 72%);
+}
+
+.zentrixa-section-why::after,
+.zentrixa-section-process::after {
+  content: "";
+  position: absolute;
+  inset: 1rem -2rem;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    linear-gradient(135deg, rgba(91, 194, 255, 0.035), transparent 45%),
+    radial-gradient(circle at 80% 22%, rgba(132, 92, 255, 0.08), transparent 18rem);
+  border-radius: 2rem;
+}
+
+.zentrixa-surface-card,
+.zentrixa-process-card,
+.zentrixa-pricing-card,
+.zentrixa-founder-card,
+.zentrixa-form-card,
+.zentrixa-contact-card {
+  border-radius: 18px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.045), transparent 0.01rem),
+    rgba(10, 11, 15, 0.92);
+}
+
+.zentrixa-surface-card:hover,
+.zentrixa-process-card:hover,
+.zentrixa-pricing-card:hover,
+.zentrixa-contact-card:hover,
+.zentrixa-system-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.zentrixa-pricing-card.highlighted {
+  position: relative;
+}
+
+.zentrixa-pricing-card.highlighted::before {
+  content: "Most popular";
+  justify-self: start;
+  display: inline-flex;
+  min-height: 1.8rem;
+  align-items: center;
+  padding: 0 0.75rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(240, 244, 246, 0.84);
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+.zentrixa-button.primary {
+  animation: zentrixaCtaPulse 3.8s ease-in-out infinite;
+}
+
+.zentrixa-button:hover {
+  transform: translateY(-2px);
+}
+
+.zentrixa-button:active {
+  transform: translateY(0);
+}
+
+.zentrixa-reveal {
+  opacity: 0;
+  filter: blur(10px);
+  transform: translate3d(0, 22px, 0) scale(0.985);
+  transition:
+    opacity 0.6s cubic-bezier(0.2, 0.8, 0.2, 1),
+    filter 0.6s cubic-bezier(0.2, 0.8, 0.2, 1),
+    transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+  transition-delay: calc(var(--reveal-index, 0) * 55ms);
+}
+
+.zentrixa-reveal.is-visible {
+  opacity: 1;
+  filter: blur(0);
+  transform: translate3d(0, 0, 0) scale(1);
+}
+
+.zentrixa-hero-card.zentrixa-reveal {
+  transform: translate3d(-14px, 18px, 0) scale(0.985);
+}
+
+.zentrixa-system-card.zentrixa-reveal {
+  transform: translate3d(14px, 18px, 0) scale(0.985);
+}
+
+.zentrixa-hero-card.zentrixa-reveal.is-visible,
+.zentrixa-system-card.zentrixa-reveal.is-visible {
+  transform: translate3d(0, 0, 0) scale(1);
+}
+
+@keyframes zentrixaLightSweep {
+  0%, 100% {
+    background-position: 0% 0, center;
+    opacity: 0.18;
+  }
+  50% {
+    background-position: 100% 0, center;
+    opacity: 0.32;
+  }
+}
+
+@keyframes zentrixaGridDrift {
+  from {
+    transform: translate3d(-1.5rem, 0, 0);
+  }
+  to {
+    transform: translate3d(1.5rem, 0, 0);
+  }
+}
+
+@keyframes zentrixaPanelSheen {
+  0%, 70%, 100% {
+    transform: translateX(-120%);
+    opacity: 0;
+  }
+  82% {
+    opacity: 0.7;
+  }
+  96% {
+    transform: translateX(120%);
+    opacity: 0;
+  }
+}
+
+@keyframes zentrixaCtaPulse {
+  0%, 100% {
+    box-shadow: 0 12px 32px rgba(255, 255, 255, 0.12), 0 0 28px rgba(117, 94, 255, 0.15);
+  }
+  50% {
+    box-shadow: 0 14px 36px rgba(255, 255, 255, 0.16), 0 0 42px rgba(91, 194, 255, 0.18);
+  }
+}
+
+@media (max-width: 720px) {
+  .zentrixa-hero-shell {
+    min-height: auto;
+    padding-top: 0;
+  }
+
+  .zentrixa-public-wrap {
+    padding-inline: 16px !important;
+  }
+
+  .zentrixa-nav {
+    padding: 0.55rem 16px 0.6rem !important;
+    margin-inline: -16px !important;
+  }
+
+  .zentrixa-brandmark {
+    min-width: 7.8rem;
+    min-height: 2.5rem;
+  }
+
+  .zentrixa-brand-image-full {
+    max-width: 7.4rem !important;
+    max-height: 2.5rem;
+  }
+
+  .zentrixa-nav-cta {
+    gap: 0.45rem;
+  }
+
+  .zentrixa-nav-cta .zentrixa-button {
+    min-height: 2.55rem !important;
+    padding-inline: 0.7rem;
+    border-radius: 0.7rem;
+    font-size: 0.76rem;
+  }
+
+  .zentrixa-nav-cta .zentrixa-nav-primary {
+    max-width: 10.5rem;
+  }
+
+  .zentrixa-hero {
+    gap: 0.8rem;
+    padding-top: 0.85rem;
+  }
+
+  .zentrixa-hero-card {
+    padding: 1rem !important;
+    border-radius: 1.1rem;
+  }
+
+  .zentrixa-hero-copy h1 {
+    max-width: 11ch;
+    font-size: 2.05rem !important;
+    line-height: 1.05 !important;
+    letter-spacing: 0 !important;
+  }
+
+  .zentrixa-hero-copy p {
+    max-width: 30ch;
+    margin-top: 0.35rem;
+    font-size: 0.92rem;
+  }
+
+  .zentrixa-growth-points {
+    gap: 0.55rem;
+    margin-top: 0.75rem;
+    margin-bottom: 0.9rem !important;
+    padding-bottom: 0 !important;
+  }
+
+  .zentrixa-growth-points > :last-child {
+    margin-bottom: 0;
+  }
+
+  .zentrixa-growth-point {
+    min-height: 2.35rem;
+    padding: 0.6rem 0.7rem;
+    border-radius: 0.8rem;
+  }
+
+  .zentrixa-hero-actions {
+    gap: 0.55rem !important;
+  }
+
+  .zentrixa-hero-actions .zentrixa-button {
+    min-height: 2.9rem !important;
+    border-radius: 0.85rem;
+  }
+
+  .zentrixa-system-card {
+    padding: 0.9rem;
+    border-radius: 1.1rem;
+  }
+
+  .zentrixa-flow-item {
+    border-radius: 0.85rem;
+    grid-template-columns: 2.35rem minmax(0, 1fr);
+  }
+
+  .zentrixa-flow-badge {
+    width: 2.35rem;
+    height: 2.35rem;
+  }
+
+  .zentrixa-section {
+    padding-bottom: 2rem;
+  }
+
+  .zentrixa-section::before {
+    left: 1rem;
+    right: 1rem;
+  }
+
+  .zentrixa-section h2 {
+    font-size: 1.65rem !important;
+    letter-spacing: 0 !important;
+  }
+
+  .zentrixa-card-grid.three,
+  .zentrixa-card-grid.four {
+    gap: 0.65rem;
+  }
+
+  .zentrixa-section-why .zentrixa-tight-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .zentrixa-section-why .why-card {
+    padding: 0.75rem;
+  }
+
+  .zentrixa-section-why .why-card h3 {
+    font-size: 0.82rem;
+  }
+
+  .zentrixa-mid-cta,
+  .zentrixa-cta-tight,
+  .zentrixa-founder-tight,
+  .zentrixa-form-card.compact,
+  .zentrixa-contact-card.compact,
+  .zentrixa-pricing-card {
+    border-radius: 1.1rem;
+  }
+
+  .zentrixa-field input,
+  .zentrixa-field select,
+  .zentrixa-field textarea {
+    min-height: 2.85rem;
+    border-radius: 0.9rem;
+  }
+
+  .zentrixa-field textarea {
+    min-height: 5.8rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .zentrixa-public-wrap {
+    padding-inline: 12px !important;
+  }
+
+  .zentrixa-nav {
+    margin-inline: -12px !important;
+    padding-inline: 12px !important;
+  }
+
+  .zentrixa-brandmark {
+    min-width: 6.3rem;
+  }
+
+  .zentrixa-brand-image-full {
+    max-width: 6.25rem !important;
+  }
+
+  .zentrixa-nav-cta .zentrixa-button {
+    min-height: 2.35rem !important;
+    padding-inline: 0.55rem;
+    font-size: 0.7rem;
+  }
+
+  .zentrixa-hero-copy h1 {
+    font-size: 1.85rem !important;
+  }
+
+  .zentrixa-hero-microcopy {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .zentrixa-site::after,
+  .zentrixa-hero-shell::before,
+  .zentrixa-hero-card::before,
+  .zentrixa-hero-card::after,
+  .zentrixa-system-card::after,
+  .zentrixa-button.primary,
+  .zentrixa-reveal {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .zentrixa-reveal {
+    opacity: 1;
+    filter: none;
+    transform: none;
   }
 }

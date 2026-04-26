@@ -6,6 +6,9 @@ const contactSchema = z.object({
   name: z.string().trim().min(1, "Name is required."),
   phone: z.string().trim().min(1, "Phone number is required."),
   business: z.string().trim().min(1, "Tell us what your business is."),
+  monthlyAdBudget: z.string().trim().min(1, "Select your monthly ad budget."),
+  timeline: z.string().trim().min(1, "Select when you want to start."),
+  currentWebsite: z.string().trim().min(1, "Tell us if you have a website."),
   help: z.string().trim().optional()
 });
 
@@ -25,7 +28,15 @@ export async function POST(request: Request) {
     phone: parsed.data.phone,
     website: "",
     instagram: "",
-    message: `Business: ${parsed.data.business}${parsed.data.help ? `\nNeed help with: ${parsed.data.help}` : ""}`,
+    message: [
+      `Business: ${parsed.data.business}`,
+      `Monthly ad budget: ${parsed.data.monthlyAdBudget}`,
+      `Timeline: ${parsed.data.timeline}`,
+      `Current website: ${parsed.data.currentWebsite}`,
+      parsed.data.help ? `Need help with: ${parsed.data.help}` : ""
+    ]
+      .filter(Boolean)
+      .join("\n"),
     source: "zentrixa-public-site"
   };
 

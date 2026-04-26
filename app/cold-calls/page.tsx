@@ -1,5 +1,5 @@
-import { ColdCallCRM } from "@/components/cold-call-crm";
+import { redirect } from "next/navigation";
 
 export default function ColdCallsPage() {
-  return <ColdCallCRM />;
+  redirect("/client-builder");
 }

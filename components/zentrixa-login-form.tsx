@@ -5,7 +5,15 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { ZentrixaLogo } from "@/components/zentrixa-logo";
 
-export function ZentrixaLoginForm({ next = "/app" }: { next?: string }) {
+export function ZentrixaLoginForm({
+  next = "/app",
+  title = "Secure access to the internal LeadOS dashboard.",
+  description = "Login is separate from the public Zentrixa site and only unlocks the protected internal workspace."
+}: {
+  next?: string;
+  title?: string;
+  description?: string;
+}) {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -45,8 +53,8 @@ export function ZentrixaLoginForm({ next = "/app" }: { next?: string }) {
         </Link>
         <div className="auth-copy">
           <span className="auth-eyebrow">Private Access</span>
-          <h1>Secure access to the internal LeadOS dashboard.</h1>
-          <p>Login is separate from the public Zentrixa site and only unlocks the protected internal workspace.</p>
+          <h1>{title}</h1>
+          <p>{description}</p>
         </div>
         <form className="auth-form" onSubmit={handleSubmit}>
           <label className="auth-field">

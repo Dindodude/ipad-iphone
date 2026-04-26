@@ -5,15 +5,13 @@ import { usePathname } from "next/navigation";
 
 const navItems = [
   { href: "/app", label: "Dashboard" },
-  { href: "/app/clients", label: "Clients" },
-  { href: "/app/campaigns", label: "Campaigns" },
+  { href: "/app/leads", label: "Leads" },
+  { href: "/app/call-queue", label: "Call Queue" },
   { href: "/app/pipeline", label: "Pipeline" },
   { href: "/app/scripts", label: "Scripts" },
-  { href: "/app/ai", label: "AI" },
-  { href: "/app/forms", label: "Forms" },
+  { href: "/app/follow-ups", label: "Follow-Ups" },
   { href: "/app/analytics", label: "Analytics" },
-  { href: "/app/settings", label: "Settings" },
-  { href: "/app/legacy", label: "Legacy" }
+  { href: "/app/settings", label: "Settings" }
 ];
 
 export function Sidebar() {
@@ -25,7 +23,7 @@ export function Sidebar() {
         <div className="brand-badge">L</div>
         <div>
           <div className="brand-title">LeadOS</div>
-          <div className="brand-subtitle">WhatsApp-first agency command center</div>
+          <div className="brand-subtitle">Cold-call command center</div>
         </div>
       </div>
 
@@ -46,10 +44,10 @@ export function Sidebar() {
       <div className="sidebar-section">
         <div className="sidebar-label">Operating logic</div>
         <div className="text-list compact-list">
-          <div className="text-list-item">Client first</div>
-          <div className="text-list-item">Campaign second</div>
-          <div className="text-list-item">WhatsApp before outreach</div>
-          <div className="text-list-item">AI as copilot, not fluff</div>
+          <div className="text-list-item">Call priority first</div>
+          <div className="text-list-item">Website gaps matter</div>
+          <div className="text-list-item">Log every outcome</div>
+          <div className="text-list-item">Follow up on time</div>
         </div>
       </div>
     </aside>

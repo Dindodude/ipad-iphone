@@ -14,6 +14,10 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/app", request.url));
   }
 
+  if ((pathname === "/client-builder/login" || pathname.startsWith("/client-builder/login/")) && authenticated) {
+    return NextResponse.redirect(new URL("/client-builder", request.url));
+  }
+
   if (
     pathname === "/app"
     || pathname.startsWith("/app/")
@@ -21,9 +25,11 @@ export function middleware(request: NextRequest) {
     || pathname.startsWith("/dashboard/")
     || pathname === "/cold-calls"
     || pathname.startsWith("/cold-calls/")
+    || (pathname.startsWith("/client-builder") && pathname !== "/client-builder/login" && !pathname.startsWith("/client-builder/login/"))
   ) {
     if (!authenticated) {
-      const loginUrl = new URL("/login", request.url);
+      const loginPath = pathname.startsWith("/client-builder") ? "/client-builder/login" : "/login";
+      const loginUrl = new URL(loginPath, request.url);
       const nextValue = pathname === "/dashboard" ? "/app" : `${pathname}${search}`;
       loginUrl.searchParams.set("next", nextValue);
       return NextResponse.redirect(loginUrl);
@@ -34,5 +40,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/app/:path*", "/dashboard/:path*", "/cold-calls", "/cold-calls/:path*", "/login"]
+  matcher: ["/app/:path*", "/dashboard/:path*", "/cold-calls", "/cold-calls/:path*", "/client-builder/:path*", "/login"]
 };

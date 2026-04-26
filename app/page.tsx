@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ZentrixaContactForm } from "@/components/zentrixa-contact-form";
 import { ZentrixaLogo } from "@/components/zentrixa-logo";
+import { ZentrixaScrollAnimator } from "@/components/zentrixa-scroll-animator";
 
 const problems = [
   "Bad websites waste attention.",
@@ -88,6 +89,7 @@ const process = [
 export default function HomePage() {
   return (
     <main className="zentrixa-site">
+      <ZentrixaScrollAnimator />
       <section className="zentrixa-hero-shell zentrixa-public-wrap">
         <header className="zentrixa-nav">
           <Link href="/" className="zentrixa-brandmark" aria-label="Zentrixa home">
@@ -147,7 +149,7 @@ export default function HomePage() {
       <section className="zentrixa-section zentrixa-public-wrap zentrixa-section-problem">
         <div className="zentrixa-section-head compact">
           <span className="zentrixa-eyebrow">The Problem</span>
-          <h2>Too many businesses lose customers because the system behind them is weak.</h2>
+          <h2>Good attention gets wasted without a system.</h2>
         </div>
         <div className="zentrixa-card-grid four compact zentrixa-tight-grid">
           {problems.map((item) => (
@@ -296,7 +298,7 @@ export default function HomePage() {
           <span>&copy; Zentrixa</span>
           <div className="zentrixa-footer-links">
             <Link href="/app">LeadOS</Link>
-            <Link href="/cold-calls">Cold Calls</Link>
+            <Link href="/client-builder">Client Builder</Link>
             <Link href="/login">Login</Link>
           </div>
         </div>

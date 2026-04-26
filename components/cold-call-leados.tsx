@@ -412,6 +412,7 @@ export function ColdCallLeadOS({ view, leadId }: Props) {
   const [draftNote, setDraftNote] = useState("");
   const [csvOpen, setCsvOpen] = useState(false);
   const [csvText, setCsvText] = useState("");
+  const [csvImportMessage, setCsvImportMessage] = useState("");
   const [newLeadOpen, setNewLeadOpen] = useState(false);
   const [newLead, setNewLead] = useState<Partial<Lead>>({ businessName: "", phone: "", category: "", city: "", websiteStatus: "Unknown" });
   const [preCallUnlocked, setPreCallUnlocked] = useState(false);
@@ -600,10 +601,35 @@ export function ColdCallLeadOS({ view, leadId }: Props) {
 
   function importCsv() {
     const imported = parseCsv(csvText);
-    if (!imported.length) return;
+    if (!imported.length) {
+      setCsvImportMessage("No valid rows found yet. Upload a CSV file or paste CSV rows first.");
+      return;
+    }
     setLeads((current) => [...imported, ...current]);
     setCsvText("");
     setCsvOpen(false);
+    setCsvImportMessage(`Imported ${imported.length} lead${imported.length === 1 ? "" : "s"} into Need to Call.`);
+  }
+
+  async function handleCsvFile(file?: File) {
+    if (!file) return;
+    if (!file.name.toLowerCase().endsWith(".csv")) {
+      setCsvImportMessage("Please choose a .csv file.");
+      return;
+    }
+
+    const text = await file.text();
+    const imported = parseCsv(text);
+
+    if (!imported.length) {
+      setCsvImportMessage("That CSV did not include readable lead rows.");
+      return;
+    }
+
+    setLeads((current) => [...imported, ...current]);
+    setCsvText("");
+    setCsvOpen(false);
+    setCsvImportMessage(`Imported ${imported.length} lead${imported.length === 1 ? "" : "s"} from ${file.name}.`);
   }
 
   function deleteLead(id: string) {
@@ -655,6 +681,15 @@ export function ColdCallLeadOS({ view, leadId }: Props) {
             </div>
             <span>Auto scores and moves into Need to Call</span>
           </div>
+          <label className={styles.fileImport}>
+            <span>Upload CSV file</span>
+            <input
+              type="file"
+              accept=".csv,text/csv"
+              onChange={(event) => handleCsvFile(event.target.files?.[0])}
+            />
+          </label>
+          <div className={styles.importDivider}>or paste CSV rows</div>
           <textarea
             className={styles.textarea}
             value={csvText}
@@ -666,6 +701,8 @@ export function ColdCallLeadOS({ view, leadId }: Props) {
           </button>
         </section>
       ) : null}
+
+      {csvImportMessage ? <div className={styles.importToast}>{csvImportMessage}</div> : null}
 
       {newLeadOpen ? (
         <section className={styles.panel}>

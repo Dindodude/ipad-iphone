@@ -357,6 +357,49 @@
   box-shadow: 0 0 0 3px rgba(143, 134, 255, 0.12);
 }
 
+.fileImport {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 12px;
+  padding: 14px;
+  border: 1px dashed rgba(255, 255, 255, 0.18);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.035);
+  color: rgba(247, 247, 248, 0.72);
+  font-weight: 800;
+}
+
+.fileImport input {
+  width: 100%;
+  min-height: 42px;
+  color: rgba(247, 247, 248, 0.78);
+  font: inherit;
+}
+
+.importDivider {
+  margin: 8px 0 12px;
+  color: rgba(247, 247, 248, 0.42);
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.importToast {
+  position: sticky;
+  top: 10px;
+  z-index: 12;
+  width: fit-content;
+  max-width: 100%;
+  padding: 10px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  background: #f7f7f8;
+  color: #05060a;
+  font-weight: 900;
+  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.3);
+}
+
 .filterRow {
   overflow-x: auto;
   padding-bottom: 4px;

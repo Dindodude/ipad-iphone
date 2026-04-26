@@ -362,27 +362,91 @@ function stageForOutcome(outcome: CallStatus): PipelineStage {
   return "Contacted";
 }
 
+function parseCsvRows(text: string) {
+  const rows: string[][] = [];
+  let row: string[] = [];
+  let cell = "";
+  let quoted = false;
+
+  for (let index = 0; index < text.length; index += 1) {
+    const char = text[index];
+    const next = text[index + 1];
+
+    if (char === "\"" && quoted && next === "\"") {
+      cell += "\"";
+      index += 1;
+      continue;
+    }
+
+    if (char === "\"") {
+      quoted = !quoted;
+      continue;
+    }
+
+    if (char === "," && !quoted) {
+      row.push(cell.trim());
+      cell = "";
+      continue;
+    }
+
+    if ((char === "\n" || char === "\r") && !quoted) {
+      if (char === "\r" && next === "\n") index += 1;
+      row.push(cell.trim());
+      if (row.some(Boolean)) rows.push(row);
+      row = [];
+      cell = "";
+      continue;
+    }
+
+    cell += char;
+  }
+
+  row.push(cell.trim());
+  if (row.some(Boolean)) rows.push(row);
+  return rows;
+}
+
+function pick(item: Record<string, string>, keys: string[]) {
+  for (const key of keys) {
+    const value = item[key.toLowerCase()];
+    if (value) return value;
+  }
+  return "";
+}
+
 function parseCsv(text: string) {
-  const rows = text.split(/\r?\n/).filter(Boolean).map((row) => row.split(",").map((cell) => cell.trim().replace(/^"|"$/g, "")));
-  const headers = rows.shift()?.map((header) => header.toLowerCase()) ?? [];
+  const rows = parseCsvRows(text);
+  const headers = rows.shift()?.map((header) => header.trim().toLowerCase()) ?? [];
+
   return rows.map((row) => {
     const item: Record<string, string> = {};
     headers.forEach((header, index) => {
       item[header] = row[index] ?? "";
     });
+
+    const website = pick(item, ["website", "websiteUrl", "url"]);
+    const category = pick(item, ["categoryName", "category", "industry", "categories/0"]) || "Local Business";
+    const city = pick(item, ["city", "neighborhood"]);
+    const state = pick(item, ["state", "province"]);
+    const postalCode = pick(item, ["postalCode", "postal code", "zip"]);
+    const address = pick(item, ["address"]) || [pick(item, ["street"]), city, state, postalCode].filter(Boolean).join(", ");
+    const rating = pick(item, ["rating", "googleRating", "google rating", "stars"]);
+    const reviews = pick(item, ["reviews", "reviewCount", "review count", "number of reviews"]);
+
     return normalizeLead({
-      businessName: item["business name"] || item["company"] || item["name"] || "Imported Lead",
-      contactName: item["contact"] || item["owner"] || "",
-      phone: item["phone"] || item["phone number"] || "",
-      email: item["email"] || "",
-      category: item["category"] || item["industry"] || "Local Business",
-      address: item["address"] || "",
-      city: item["city"] || "",
-      googleRating: Number(item["rating"] || item["google rating"] || 0),
-      reviewCount: Number(item["reviews"] || item["number of reviews"] || 0),
-      websiteStatus: detectWebsiteStatus(item["website status"], item["website"]),
-      websiteUrl: item["website"] || item["website url"] || "",
-      source: item["source"] || "CSV Import"
+      businessName: pick(item, ["title", "business name", "company", "name"]) || "Imported Lead",
+      contactName: pick(item, ["contact", "owner", "owner name", "contact name"]),
+      phone: pick(item, ["phone", "phoneUnformatted", "phone unformatted", "phone number"]),
+      email: pick(item, ["emails", "email"]),
+      category,
+      address,
+      city: city || state || "Ontario",
+      googleRating: Number(rating || 0),
+      reviewCount: Number(reviews || 0),
+      websiteStatus: website ? detectWebsiteStatus(pick(item, ["website status", "site status"]), website) : "No Website",
+      websiteUrl: website,
+      socialUrl: pick(item, ["instagram", "facebook", "social", "socialUrl", "social url"]),
+      source: pick(item, ["source"]) || "Google Places CSV"
     });
   });
 }
@@ -390,6 +454,7 @@ function parseCsv(text: string) {
 function detectWebsiteStatus(raw?: string, website?: string): WebsiteStatus {
   const value = `${raw ?? ""} ${website ?? ""}`.toLowerCase();
   if (!website && !raw) return "Unknown";
+  if (!website && raw) return "No Website";
   if (value.includes("no website") || value === "") return "No Website";
   if (value.includes("expired")) return "Website Expired";
   if (value.includes("down")) return "Website Down";
@@ -635,6 +700,25 @@ export function ColdCallLeadOS({ view, leadId }: Props) {
   function deleteLead(id: string) {
     if (!window.confirm("Delete this lead and its call history?")) return;
     setLeads((current) => current.filter((lead) => lead.id !== id));
+  }
+
+  function resetLeadOSData() {
+    const confirmed = window.confirm(
+      "Delete ALL LeadOS leads, call history, notes, follow-ups, and reset call settings? This cannot be undone."
+    );
+
+    if (!confirmed) return;
+
+    localStorage.removeItem(STORAGE_KEY);
+    localStorage.removeItem(SETTINGS_KEY);
+    setLeads([]);
+    setSettings(defaultSettings);
+    setSelectedId("");
+    setDraftNote("");
+    setCsvText("");
+    setCsvOpen(false);
+    setCsvImportMessage("LeadOS has been reset. All leads and call data were deleted.");
+    resetPreCallLock();
   }
 
   const stats = useMemo(() => {
@@ -1097,6 +1181,14 @@ export function ColdCallLeadOS({ view, leadId }: Props) {
               </select>
             </label>
           </div>
+        </article>
+        <article className={`${styles.panel} ${styles.dangerPanel}`}>
+          <p className={styles.kicker}>Danger zone</p>
+          <h2>Reset LeadOS</h2>
+          <p>Delete every imported lead, note, call log, follow-up, saved queue state, and reset call settings back to default.</p>
+          <button className={styles.dangerButton} type="button" onClick={resetLeadOSData}>
+            Delete all leads and reset everything
+          </button>
         </article>
         <SettingsCard title="Scoring rules" items={["No website +25", "Expired/down website +30", "High reviews +12", "Follow-up due +10", "Not contacted +7"]} />
         <SettingsCard title="Call outcomes" items={callStatuses} />

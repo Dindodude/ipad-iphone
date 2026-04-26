@@ -160,6 +160,17 @@
   color: #ff8ea0;
 }
 
+.dangerPanel {
+  border-color: rgba(255, 71, 98, 0.22);
+  background:
+    radial-gradient(circle at 100% 0%, rgba(255, 71, 98, 0.12), transparent 38%),
+    rgba(5, 7, 10, 0.94);
+}
+
+.dangerPanel p {
+  margin-bottom: 14px;
+}
+
 .iconButton {
   width: 38px;
   height: 38px;

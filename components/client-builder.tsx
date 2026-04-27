@@ -166,24 +166,87 @@ export function ClientBuilder({ view, clientId }: Props) {
   const [input, setInput] = useState<ClientInput>(emptyInput);
   const [generating, setGenerating] = useState(false);
   const [message, setMessage] = useState("");
+  const [cloudLoaded, setCloudLoaded] = useState(false);
+  const [cloudStatus, setCloudStatus] = useState("Cloud sync starting...");
   const [portalLeadDraft, setPortalLeadDraft] = useState<Omit<PortalLeadEntry, "id" | "dateSubmitted">>({ name: "", phone: "", email: "", source: "Manual", status: "New", notes: "" });
   const [portalUpdateDraft, setPortalUpdateDraft] = useState("");
 
   useEffect(() => {
+    let cancelled = false;
     const saved = localStorage.getItem(STORAGE_KEY);
+    let localClients: ClientProfile[] = [];
     if (saved) {
       try {
-        setClients(JSON.parse(saved));
+        localClients = JSON.parse(saved);
+        setClients(localClients);
       } catch {
         setClients([]);
       }
     }
     setReady(true);
+
+    fetch("/api/client-builder-data", { cache: "no-store" })
+      .then(async (response) => {
+        const result = await response.json().catch(() => null);
+        if (cancelled) return;
+
+        if (!response.ok || !result?.ok) {
+          setCloudStatus(result?.configured === false ? "Supabase not configured. Saving locally." : "Cloud load unavailable. Saving locally.");
+          setCloudLoaded(true);
+          return;
+        }
+
+        if (Array.isArray(result.clients) && result.clients.length > 0) {
+          setClients(result.clients);
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(result.clients));
+        } else if (localClients.length > 0) {
+          setCloudStatus("Cloud ready. Local clients will sync on the next save.");
+        } else {
+          setCloudStatus("Cloud ready. No saved clients yet.");
+        }
+
+        if (result.updatedAt) {
+          setCloudStatus(`Cloud loaded. Last synced ${new Date(result.updatedAt).toLocaleString()}.`);
+        }
+        setCloudLoaded(true);
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setCloudStatus("Cloud load unavailable. Saving locally.");
+          setCloudLoaded(true);
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   useEffect(() => {
     if (ready) localStorage.setItem(STORAGE_KEY, JSON.stringify(clients));
   }, [clients, ready]);
+
+  useEffect(() => {
+    if (!ready || !cloudLoaded) return;
+    const syncTimer = window.setTimeout(() => {
+      fetch("/api/client-builder-data", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ clients })
+      })
+        .then(async (response) => {
+          const result = await response.json().catch(() => null);
+          if (response.ok && result?.ok) {
+            setCloudStatus(`Cloud synced ${new Date(result.updatedAt).toLocaleTimeString()}.`);
+            return;
+          }
+          setCloudStatus(result?.error || "Cloud sync failed. Local save still works.");
+        })
+        .catch(() => setCloudStatus("Cloud sync failed. Local save still works."));
+    }, 900);
+
+    return () => window.clearTimeout(syncTimer);
+  }, [clients, cloudLoaded, ready]);
 
   const selectedClient = clients.find((client) => client.id === clientId) ?? clients[0];
   const stats = useMemo(() => ({
@@ -410,6 +473,41 @@ export function ClientBuilder({ view, clientId }: Props) {
     setMessage("Copied.");
   }
 
+  async function saveCloudNow() {
+    const response = await fetch("/api/client-builder-data", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ clients })
+    });
+    const result = await response.json().catch(() => null);
+
+    if (response.ok && result?.ok) {
+      setCloudStatus(`Cloud synced ${new Date(result.updatedAt).toLocaleString()}.`);
+      setMessage("Client Builder saved to Supabase.");
+      return;
+    }
+
+    setCloudStatus(result?.error || "Cloud save failed.");
+    setMessage(result?.error || "Cloud save failed.");
+  }
+
+  async function loadCloudNow() {
+    const response = await fetch("/api/client-builder-data", { cache: "no-store" });
+    const result = await response.json().catch(() => null);
+
+    if (response.ok && result?.ok) {
+      const loadedClients = Array.isArray(result.clients) ? result.clients : [];
+      setClients(loadedClients);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(loadedClients));
+      setCloudStatus(result.updatedAt ? `Cloud loaded ${new Date(result.updatedAt).toLocaleString()}.` : "Cloud loaded. No saved data yet.");
+      setMessage("Client Builder loaded from Supabase.");
+      return;
+    }
+
+    setCloudStatus(result?.error || "Cloud load failed.");
+    setMessage(result?.error || "Cloud load failed.");
+  }
+
   function downloadMarkdown(client: ClientProfile) {
     const md = `# ${client.input.businessName} Onboarding Package\n\n${client.outputs.welcomeDocument}\n\n${client.outputs.websitePlan}\n\n${client.outputs.contentPlan}\n\n${client.outputs.leadSystemPlan}`;
     const url = URL.createObjectURL(new Blob([md], { type: "text/markdown" }));
@@ -439,11 +537,19 @@ export function ClientBuilder({ view, clientId }: Props) {
           <Link href="/client-builder">Overview</Link>
           <Link href="/client-builder/new">New Client</Link>
           <Link href="/client-builder/clients">Clients</Link>
+          <Link href="/client-login">Client Login</Link>
           <Link href="/app">LeadOS</Link>
         </nav>
       </header>
 
       {message ? <div className={styles.toast}>{message}</div> : null}
+      <div className={styles.cloudBar}>
+        <span>{cloudStatus}</span>
+        <div>
+          <button className={styles.secondary} type="button" onClick={saveCloudNow}>Save to Supabase</button>
+          <button className={styles.secondary} type="button" onClick={loadCloudNow}>Load from Supabase</button>
+        </div>
+      </div>
 
       {view === "home" ? (
         <>

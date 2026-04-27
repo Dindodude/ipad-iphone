@@ -260,6 +260,28 @@ export function ClientBuilder({ view, clientId }: Props) {
     setInput((current) => ({ ...current, [field]: value }));
   }
 
+  function persistClients(nextClients: ClientProfile[]) {
+    setClients(nextClients);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(nextClients));
+  }
+
+  async function saveClientsToCloud(nextClients: ClientProfile[]) {
+    const response = await fetch("/api/client-builder-data", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ clients: nextClients })
+    });
+    const result = await response.json().catch(() => null);
+
+    if (response.ok && result?.ok) {
+      setCloudStatus(`Cloud synced ${new Date(result.updatedAt).toLocaleString()}.`);
+      return true;
+    }
+
+    setCloudStatus(result?.error || "Cloud sync failed. Local save still works.");
+    return false;
+  }
+
   async function generateOutputs(data: ClientInput) {
     setGenerating(true);
     setMessage("");
@@ -309,7 +331,9 @@ export function ClientBuilder({ view, clientId }: Props) {
         updates: [{ id: uid(), message: "Client portal created.", date: new Date().toISOString().slice(0, 10) }]
       }
     };
-    setClients((current) => [profile, ...current]);
+    const nextClients = [profile, ...clients];
+    persistClients(nextClients);
+    await saveClientsToCloud(nextClients);
     setInput(emptyInput);
     setStep(0);
     window.location.href = `/client-builder/clients/${profile.id}`;
@@ -317,15 +341,17 @@ export function ClientBuilder({ view, clientId }: Props) {
 
   async function regenerateSection(client: ClientProfile, section: keyof ClientOutputs) {
     const outputs = await generateOutputs(client.input);
-    setClients((current) => current.map((item) => item.id === client.id ? {
+    const nextClients = clients.map((item) => item.id === client.id ? {
       ...item,
       outputs: { ...item.outputs, [section]: outputs[section] },
       updatedAt: new Date().toISOString()
-    } : item));
+    } : item);
+    persistClients(nextClients);
   }
 
   function updateClient(client: ClientProfile, patch: Partial<ClientProfile>) {
-    setClients((current) => current.map((item) => item.id === client.id ? { ...item, ...patch, updatedAt: new Date().toISOString() } : item));
+    const nextClients = clients.map((item) => item.id === client.id ? { ...item, ...patch, updatedAt: new Date().toISOString() } : item);
+    persistClients(nextClients);
   }
 
   function updatePortal(client: ClientProfile, patch: Partial<NonNullable<ClientProfile["portal"]>>) {
@@ -474,21 +500,12 @@ export function ClientBuilder({ view, clientId }: Props) {
   }
 
   async function saveCloudNow() {
-    const response = await fetch("/api/client-builder-data", {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ clients })
-    });
-    const result = await response.json().catch(() => null);
-
-    if (response.ok && result?.ok) {
-      setCloudStatus(`Cloud synced ${new Date(result.updatedAt).toLocaleString()}.`);
+    const saved = await saveClientsToCloud(clients);
+    if (saved) {
       setMessage("Client Builder saved to Supabase.");
       return;
     }
-
-    setCloudStatus(result?.error || "Cloud save failed.");
-    setMessage(result?.error || "Cloud save failed.");
+    setMessage("Cloud save failed. Local save still works.");
   }
 
   async function loadCloudNow() {

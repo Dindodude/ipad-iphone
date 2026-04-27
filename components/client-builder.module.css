@@ -251,6 +251,83 @@
   line-height: 1.6;
 }
 
+.portalBox {
+  display: grid;
+  gap: 10px;
+  margin-top: 16px;
+  padding: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 10px;
+  background:
+    radial-gradient(circle at 100% 0%, rgba(143, 134, 255, 0.12), transparent 42%),
+    rgba(255, 255, 255, 0.035);
+}
+
+.mutedLine {
+  margin: 0;
+  color: rgba(246, 246, 247, 0.56);
+  font-size: 0.9rem;
+  overflow-wrap: anywhere;
+}
+
+.miniStats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.miniStats span,
+.portalListItem {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.miniStats span {
+  display: grid;
+  gap: 2px;
+  padding: 10px;
+  color: rgba(246, 246, 247, 0.58);
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.miniStats strong {
+  color: #f6f6f7;
+  font-size: 1.2rem;
+}
+
+.portalList {
+  display: grid;
+  gap: 8px;
+}
+
+.portalListItem {
+  display: grid;
+  gap: 4px;
+  padding: 10px;
+  color: rgba(246, 246, 247, 0.72);
+}
+
+.portalListItem strong {
+  color: #f6f6f7;
+}
+
+.portalListItem span {
+  color: rgba(246, 246, 247, 0.58);
+  line-height: 1.45;
+}
+
+.portalListItem select {
+  min-height: 38px;
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.055);
+  color: #f6f6f7;
+  font: inherit;
+  padding: 0 10px;
+}
+
 .toast {
   position: fixed;
   right: 18px;
@@ -276,7 +353,8 @@
   .metrics,
   .clientGrid,
   .formGrid,
-  .detailGrid {
+  .detailGrid,
+  .miniStats {
     grid-template-columns: 1fr;
   }
 

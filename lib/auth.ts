@@ -2,8 +2,8 @@ export const AUTH_COOKIE_NAME = "zentrixa_session";
 
 export function getAuthCredentials() {
   return {
-    email: process.env.ZENTRIXA_ADMIN_EMAIL || "admin@zentrixa.local",
-    password: process.env.ZENTRIXA_ADMIN_PASSWORD || "zentrixa-admin"
+    email: process.env.ZENTRIXA_ADMIN_EMAIL || "idreesrah0@gmail.com",
+    password: process.env.ZENTRIXA_ADMIN_PASSWORD || "Fariha84!"
   };
 }
 

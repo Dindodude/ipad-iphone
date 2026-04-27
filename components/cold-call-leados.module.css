@@ -73,6 +73,19 @@
   line-height: 1.55;
 }
 
+.cloudStatus {
+  display: inline-flex;
+  width: fit-content;
+  margin-top: 12px;
+  padding: 7px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(247, 247, 248, 0.68);
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
 .kicker {
   margin: 0 0 8px !important;
   color: rgba(255, 255, 255, 0.52) !important;
@@ -439,6 +452,12 @@
 .filterRow {
   overflow-x: auto;
   padding-bottom: 4px;
+}
+
+.queueTabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
 .filterButton,
@@ -824,6 +843,41 @@
   margin-top: 12px;
 }
 
+.syncGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.inlineFileButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  color: #f7f7f8;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.inlineFileButton input {
+  display: none;
+}
+
+.syncMessage {
+  margin: 12px 0 0;
+  color: rgba(247, 247, 248, 0.7);
+}
+
+.syncExplainer {
+  margin: 0;
+  color: rgba(247, 247, 248, 0.58);
+  line-height: 1.45;
+}
+
 .settingList label {
   display: grid;
   grid-template-columns: auto 1fr;
@@ -922,7 +976,8 @@
   }
 
   .pricingGrid,
-  .callScriptGrid {
+  .callScriptGrid,
+  .syncGrid {
     grid-template-columns: 1fr;
   }
 }

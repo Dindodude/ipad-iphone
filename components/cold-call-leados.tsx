@@ -521,6 +521,11 @@ export function ColdCallLeadOS({ view, leadId }: Props) {
   const [sessionStartedAt, setSessionStartedAt] = useState("");
   const [nowTick, setNowTick] = useState(Date.now());
   const [expandedCallId, setExpandedCallId] = useState("");
+  const [callQueueCategory, setCallQueueCategory] = useState<"Active" | "Follow Up" | "No Website">("Active");
+  const [syncCode, setSyncCode] = useState("");
+  const [syncMessage, setSyncMessage] = useState("");
+  const [cloudStatus, setCloudStatus] = useState("Local save ready.");
+  const [cloudReady, setCloudReady] = useState(false);
 
   useEffect(() => {
     const saved = localStorage.getItem(STORAGE_KEY);
@@ -540,6 +545,30 @@ export function ColdCallLeadOS({ view, leadId }: Props) {
       }
     }
     setReady(true);
+    fetch("/api/leados-data")
+      .then((response) => response.json())
+      .then((result) => {
+        if (!result?.ok) {
+          setCloudStatus(result?.configured === false ? "Supabase not configured. Saving locally." : "Cloud load unavailable. Saving locally.");
+          setCloudReady(false);
+          return;
+        }
+
+        setCloudReady(true);
+        setCloudStatus(result.updatedAt ? `Cloud loaded. Last synced ${new Date(result.updatedAt).toLocaleString()}.` : "Cloud ready. No saved workspace yet.");
+
+        if (Array.isArray(result.leads) && result.leads.length) {
+          setLeads(result.leads.map(normalizeLead));
+        }
+
+        if (result.settings) {
+          setSettings({ ...defaultSettings, ...result.settings });
+        }
+      })
+      .catch(() => {
+        setCloudReady(false);
+        setCloudStatus("Cloud load unavailable. Saving locally.");
+      });
   }, []);
 
   useEffect(() => {
@@ -549,6 +578,28 @@ export function ColdCallLeadOS({ view, leadId }: Props) {
   useEffect(() => {
     if (ready) localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
   }, [settings, ready]);
+
+  useEffect(() => {
+    if (!ready || !cloudReady) return;
+    const id = window.setTimeout(() => {
+      fetch("/api/leados-data", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ leads, settings })
+      })
+        .then((response) => response.json())
+        .then((result) => {
+          if (result?.ok) {
+            setCloudStatus(`Cloud synced ${new Date(result.updatedAt).toLocaleTimeString()}.`);
+            return;
+          }
+          setCloudStatus(result?.error || "Cloud sync failed. Local save still works.");
+        })
+        .catch(() => setCloudStatus("Cloud sync failed. Local save still works."));
+    }, 900);
+
+    return () => window.clearTimeout(id);
+  }, [cloudReady, leads, ready, settings]);
 
   useEffect(() => {
     if (settings.preCallLockEnabled || preCallUnlocked) return;
@@ -749,14 +800,111 @@ export function ColdCallLeadOS({ view, leadId }: Props) {
 
     localStorage.removeItem(STORAGE_KEY);
     localStorage.removeItem(SETTINGS_KEY);
+    localStorage.removeItem("zentrixa-leados-sync-code");
     setLeads([]);
     setSettings(defaultSettings);
+    setSyncCode("");
+    setSyncMessage("");
     setSelectedId("");
     setDraftNote("");
     setCsvText("");
     setCsvOpen(false);
     setCsvImportMessage("LeadOS has been reset. All leads and call data were deleted.");
     resetPreCallLock();
+  }
+
+  function downloadLeadOSData() {
+    const payload = {
+      version: 1,
+      exportedAt: new Date().toISOString(),
+      leads,
+      settings
+    };
+    const url = URL.createObjectURL(new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" }));
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `leados-backup-${new Date().toISOString().slice(0, 10)}.json`;
+    link.click();
+    URL.revokeObjectURL(url);
+  }
+
+  async function uploadLeadOSData(file?: File) {
+    if (!file) return;
+    try {
+      const data = JSON.parse(await file.text());
+      if (!Array.isArray(data.leads)) {
+        setSyncMessage("Backup file did not include leads.");
+        return;
+      }
+      setLeads(data.leads.map(normalizeLead));
+      setSettings({ ...defaultSettings, ...(data.settings ?? {}) });
+      setSyncMessage(`Uploaded ${data.leads.length} lead${data.leads.length === 1 ? "" : "s"} from backup.`);
+    } catch {
+      setSyncMessage("Could not read that backup file.");
+    }
+  }
+
+  async function pushSync() {
+    const code = syncCode || localStorage.getItem("zentrixa-leados-sync-code") || "";
+    const response = await fetch("/api/leados-sync", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ code, leads, settings })
+    });
+    const result = await response.json().catch(() => null);
+    if (!response.ok || !result?.ok) {
+      setSyncMessage(result?.error || "Sync failed.");
+      return;
+    }
+    localStorage.setItem("zentrixa-leados-sync-code", result.code);
+    setSyncCode(result.code);
+    setSyncMessage(`Synced. Use code ${result.code} on another device while this app is running.`);
+  }
+
+  async function pullSync() {
+    const code = syncCode.trim();
+    if (!code) {
+      setSyncMessage("Enter a sync code first.");
+      return;
+    }
+    const response = await fetch(`/api/leados-sync?code=${encodeURIComponent(code)}`);
+    const result = await response.json().catch(() => null);
+    if (!response.ok || !result?.ok) {
+      setSyncMessage(result?.error || "No sync data found for that code.");
+      return;
+    }
+    setLeads(result.leads.map(normalizeLead));
+    setSettings({ ...defaultSettings, ...(result.settings ?? {}) });
+    localStorage.setItem("zentrixa-leados-sync-code", code);
+    setSyncMessage(`Pulled ${result.leads.length} lead${result.leads.length === 1 ? "" : "s"} from code ${code}.`);
+  }
+
+  async function saveCloudNow() {
+    const response = await fetch("/api/leados-data", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ leads, settings })
+    });
+    const result = await response.json().catch(() => null);
+    if (result?.ok) {
+      setCloudReady(true);
+      setCloudStatus(`Cloud synced ${new Date(result.updatedAt).toLocaleString()}.`);
+      return;
+    }
+    setCloudStatus(result?.error || "Cloud save failed.");
+  }
+
+  async function loadCloudNow() {
+    const response = await fetch("/api/leados-data");
+    const result = await response.json().catch(() => null);
+    if (result?.ok) {
+      setCloudReady(true);
+      setLeads(Array.isArray(result.leads) ? result.leads.map(normalizeLead) : []);
+      setSettings({ ...defaultSettings, ...(result.settings ?? {}) });
+      setCloudStatus(result.updatedAt ? `Cloud loaded ${new Date(result.updatedAt).toLocaleString()}.` : "Cloud loaded. No saved data yet.");
+      return;
+    }
+    setCloudStatus(result?.error || "Cloud load failed.");
   }
 
   const stats = useMemo(() => {
@@ -783,6 +931,7 @@ export function ColdCallLeadOS({ view, leadId }: Props) {
           <p className={styles.kicker}>Zentrixa LeadOS</p>
           <h1>{titleFor(view)}</h1>
           <p>{subtitleFor(view)}</p>
+          <div className={styles.cloudStatus}>{cloudStatus}</div>
         </div>
         <div className={styles.headerActions}>
           <button className={styles.secondaryButton} type="button" onClick={() => setCsvOpen((value) => !value)}>
@@ -1083,6 +1232,13 @@ export function ColdCallLeadOS({ view, leadId }: Props) {
     const sessionMeetings = sessionStartedAt
       ? leads.filter((lead) => lead.callHistory.some((call) => new Date(call.at) >= new Date(sessionStartedAt) && call.outcome === "Booked Meeting")).length
       : 0;
+    const callQueueLeads = sortedLeads.filter((lead) => {
+      const openStage = !["Closed Won", "Closed Lost", "Not Fit"].includes(lead.stage);
+      if (!openStage) return false;
+      if (callQueueCategory === "Follow Up") return isDue(lead.nextFollowUpDate);
+      if (callQueueCategory === "No Website") return lead.websiteStatus === "No Website" && lead.callStatus === "Not Called";
+      return lead.callStatus === "Not Called" || !lead.callHistory.length;
+    });
 
     return (
       <div className={styles.callSession}>
@@ -1097,8 +1253,20 @@ export function ColdCallLeadOS({ view, leadId }: Props) {
           <Metric label="Meetings" value={sessionMeetings} />
           <button className={styles.secondaryButton} type="button" onClick={resetPreCallLock}>Reset lock</button>
         </section>
+        <section className={styles.queueTabs}>
+          {(["Active", "Follow Up", "No Website"] as const).map((category) => (
+            <button
+              key={category}
+              className={callQueueCategory === category ? styles.activeFilter : styles.filterButton}
+              type="button"
+              onClick={() => setCallQueueCategory(category)}
+            >
+              {category}
+            </button>
+          ))}
+        </section>
         <section className={styles.queueGrid}>
-          {sortedLeads.filter((lead) => !["Closed Won", "Closed Lost", "Not Fit"].includes(lead.stage)).map((lead) => (
+          {callQueueLeads.map((lead) => (
             <article key={lead.id} className={`${styles.queueCard} ${expandedCallId === lead.id ? styles.expandedQueueCard : ""}`}>
               <div className={styles.cardTop}>
                 <div>
@@ -1158,6 +1326,7 @@ export function ColdCallLeadOS({ view, leadId }: Props) {
               ) : null}
             </article>
           ))}
+          {!callQueueLeads.length ? <div className={styles.empty}>No leads in {callQueueCategory}. Pick another category or import more leads.</div> : null}
         </section>
       </div>
     );
@@ -1271,6 +1440,28 @@ export function ColdCallLeadOS({ view, leadId }: Props) {
           <button className={styles.dangerButton} type="button" onClick={resetLeadOSData}>
             Delete all leads and reset everything
           </button>
+        </article>
+        <article className={styles.panel}>
+          <p className={styles.kicker}>Cloud sync and backup</p>
+          <h2>Move LeadOS data</h2>
+          <p>Supabase sync uses your login as the workspace. Download/upload is still here for manual backups.</p>
+          <div className={styles.syncGrid}>
+            <button className={styles.primaryButton} type="button" onClick={saveCloudNow}>Save to Supabase</button>
+            <button className={styles.secondaryButton} type="button" onClick={loadCloudNow}>Load from Supabase</button>
+            <button className={styles.secondaryButton} type="button" onClick={downloadLeadOSData}>Download data</button>
+            <label className={styles.inlineFileButton}>
+              Upload data
+              <input type="file" accept="application/json,.json" onChange={(event) => uploadLeadOSData(event.target.files?.[0])} />
+            </label>
+          </div>
+          <p className={styles.syncMessage}>{cloudStatus}</p>
+          <div className={styles.syncGrid}>
+            <p className={styles.syncExplainer}>Temporary sync codes still work while the local server is running, but Supabase is the permanent sync path.</p>
+            <input className={styles.input} value={syncCode} onChange={(event) => setSyncCode(event.target.value.replace(/\D/g, "").slice(0, 6))} placeholder="Sync code" />
+            <button className={styles.primaryButton} type="button" onClick={pushSync}>Sync / create code</button>
+            <button className={styles.secondaryButton} type="button" onClick={pullSync}>Pull from code</button>
+          </div>
+          {syncMessage ? <p className={styles.syncMessage}>{syncMessage}</p> : null}
         </article>
         <SettingsCard title="Scoring rules" items={["No website +25", "Expired/down website +30", "High reviews +12", "Follow-up due +10", "Not contacted +7"]} />
         <SettingsCard title="Call outcomes" items={callStatuses} />

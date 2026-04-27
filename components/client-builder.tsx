@@ -6,6 +6,12 @@ import styles from "./client-builder.module.css";
 
 type BuilderView = "home" | "new" | "clients" | "detail";
 type ClientStatus = "New" | "Onboarding" | "In Progress" | "Waiting for Client" | "Completed";
+type PortalProjectStatus = "New" | "Onboarding" | "Website Build" | "Content Setup" | "Ads Setup" | "Waiting for Client" | "Live" | "Completed";
+type PortalAccessStatus = "Active" | "Disabled";
+type PortalStepStatus = "Not started" | "In progress" | "Waiting for client" | "Completed";
+type PortalTaskStatus = "Pending" | "Submitted" | "Approved";
+type PortalLeadStatus = "New" | "Contacted" | "Booked" | "Closed";
+type PortalLeadSource = "Meta Form" | "Website Form" | "Instagram" | "Manual";
 
 type ClientInput = {
   businessName: string;
@@ -37,6 +43,33 @@ type ClientOutputs = {
   leadSystemPlan: string;
 };
 
+type PortalLeadEntry = {
+  id: string;
+  name: string;
+  phone: string;
+  email: string;
+  source: PortalLeadSource;
+  dateSubmitted: string;
+  status: PortalLeadStatus;
+  notes: string;
+};
+
+type PortalUpdate = {
+  id: string;
+  message: string;
+  date: string;
+};
+
+type PortalProgressStep = {
+  label: string;
+  status: PortalStepStatus;
+};
+
+type PortalChecklistItem = {
+  label: string;
+  status: PortalTaskStatus;
+};
+
 type ClientProfile = {
   id: string;
   createdAt: string;
@@ -48,6 +81,20 @@ type ClientProfile = {
   requestedAssets: string[];
   approvalChecklist: string[];
   notes: string;
+  portal?: {
+    id?: string;
+    loginIdentifier: string;
+    temporaryPassword: string;
+    accessStatus: PortalAccessStatus;
+    projectStatus: PortalProjectStatus;
+    currentPhase: string;
+    leads: PortalLeadEntry[];
+    progress: PortalProgressStep[];
+    tasks: PortalChecklistItem[];
+    approvals: PortalChecklistItem[];
+    updates: PortalUpdate[];
+    lastPublishedAt?: string;
+  };
 };
 
 type Props = {
@@ -56,6 +103,12 @@ type Props = {
 };
 
 const STORAGE_KEY = "zentrixa-client-builder-v1";
+const PORTAL_PROGRESS_STEPS = ["Onboarding", "Website Draft", "Content Plan", "Lead System Setup", "Launch", "Growth Tracking"];
+const PORTAL_PROJECT_STATUSES: PortalProjectStatus[] = ["New", "Onboarding", "Website Build", "Content Setup", "Ads Setup", "Waiting for Client", "Live", "Completed"];
+const PORTAL_STEP_STATUSES: PortalStepStatus[] = ["Not started", "In progress", "Waiting for client", "Completed"];
+const PORTAL_TASK_STATUSES: PortalTaskStatus[] = ["Pending", "Submitted", "Approved"];
+const PORTAL_LEAD_SOURCES: PortalLeadSource[] = ["Meta Form", "Website Form", "Instagram", "Manual"];
+const PORTAL_LEAD_STATUSES: PortalLeadStatus[] = ["New", "Contacted", "Booked", "Closed"];
 
 const emptyInput: ClientInput = {
   businessName: "",
@@ -113,6 +166,8 @@ export function ClientBuilder({ view, clientId }: Props) {
   const [input, setInput] = useState<ClientInput>(emptyInput);
   const [generating, setGenerating] = useState(false);
   const [message, setMessage] = useState("");
+  const [portalLeadDraft, setPortalLeadDraft] = useState<Omit<PortalLeadEntry, "id" | "dateSubmitted">>({ name: "", phone: "", email: "", source: "Manual", status: "New", notes: "" });
+  const [portalUpdateDraft, setPortalUpdateDraft] = useState("");
 
   useEffect(() => {
     const saved = localStorage.getItem(STORAGE_KEY);
@@ -177,7 +232,19 @@ export function ClientBuilder({ view, clientId }: Props) {
       tasks: ["Confirm project details", "Collect assets", "Build first draft", "Review with client", "Launch"],
       requestedAssets: ["Logo", "Brand colors", "Service photos", "Business hours", "Service/pricing details"],
       approvalChecklist: ["Welcome document approved", "Website plan approved", "Content direction approved", "Lead follow-up approved"],
-      notes: ""
+      notes: "",
+      portal: {
+        loginIdentifier: input.email || `${input.businessName.toLowerCase().replace(/[^a-z0-9]+/g, "-")}@client`,
+        temporaryPassword: makeTempPassword(),
+        accessStatus: "Active",
+        projectStatus: "New",
+        currentPhase: "Onboarding",
+        leads: [],
+        progress: makeDefaultProgress(),
+        tasks: ["logo", "brand photos", "service list", "pricing", "business hours", "social media access", "ad account access", "domain access"].map((label) => ({ label, status: "Pending" })),
+        approvals: ["Website copy approved", "Website design approved", "Content plan approved", "Ads setup approved", "Launch approved"].map((label) => ({ label, status: "Pending" })),
+        updates: [{ id: uid(), message: "Client portal created.", date: new Date().toISOString().slice(0, 10) }]
+      }
     };
     setClients((current) => [profile, ...current]);
     setInput(emptyInput);
@@ -198,6 +265,146 @@ export function ClientBuilder({ view, clientId }: Props) {
     setClients((current) => current.map((item) => item.id === client.id ? { ...item, ...patch, updatedAt: new Date().toISOString() } : item));
   }
 
+  function updatePortal(client: ClientProfile, patch: Partial<NonNullable<ClientProfile["portal"]>>) {
+    const currentPortal: NonNullable<ClientProfile["portal"]> = client.portal || {
+      loginIdentifier: client.input.email || `${client.input.businessName.toLowerCase().replace(/[^a-z0-9]+/g, "-")}@client`,
+      temporaryPassword: makeTempPassword(),
+      accessStatus: "Active",
+      projectStatus: "New",
+      currentPhase: "Onboarding",
+      leads: [],
+      progress: makeDefaultProgress(),
+      tasks: client.requestedAssets.map((label) => ({ label, status: "Pending" })),
+      approvals: client.approvalChecklist.map((label) => ({ label, status: "Pending" })),
+      updates: []
+    };
+    updateClient(client, { portal: { ...currentPortal, ...patch } });
+  }
+
+  function getPortal(client: ClientProfile): NonNullable<ClientProfile["portal"]> {
+    const fallback: NonNullable<ClientProfile["portal"]> = {
+      loginIdentifier: client.input.email || `${client.input.businessName.toLowerCase().replace(/[^a-z0-9]+/g, "-")}@client`,
+      temporaryPassword: makeTempPassword(),
+      accessStatus: "Active",
+      projectStatus: "New",
+      currentPhase: "Onboarding",
+      leads: [],
+      progress: makeDefaultProgress(),
+      tasks: client.requestedAssets.map((label) => ({ label, status: "Pending" })),
+      approvals: client.approvalChecklist.map((label) => ({ label, status: "Pending" })),
+      updates: []
+    };
+    if (!client.portal) return fallback;
+    return {
+      ...fallback,
+      ...client.portal,
+      projectStatus: client.portal.projectStatus || fallback.projectStatus,
+      progress: client.portal.progress?.length ? client.portal.progress : fallback.progress,
+      tasks: client.portal.tasks?.length ? client.portal.tasks : fallback.tasks,
+      approvals: client.portal.approvals?.length ? client.portal.approvals : fallback.approvals,
+      leads: client.portal.leads || [],
+      updates: client.portal.updates || []
+    };
+  }
+
+  function portalData(client: ClientProfile) {
+    const portal = getPortal(client);
+    return {
+      input: client.input,
+      outputs: client.outputs,
+      status: portal.projectStatus,
+      packageSelected: client.input.packageSelected,
+      currentPhase: portal.currentPhase || "Onboarding",
+      startedAt: client.createdAt,
+      leads: portal.leads,
+      progress: portal.progress?.length ? portal.progress : makeDefaultProgress(),
+      tasks: portal.tasks?.length ? portal.tasks : client.requestedAssets.map((label) => ({ label, status: "Pending" })),
+      approvals: portal.approvals?.length ? portal.approvals : client.approvalChecklist.map((label) => ({ label, status: "Pending" })),
+      updates: portal.updates
+    };
+  }
+
+  async function publishPortal(client: ClientProfile, portalOverride?: NonNullable<ClientProfile["portal"]>) {
+    const portal = portalOverride || getPortal(client);
+    if (!portal.loginIdentifier) {
+      setMessage("Add a client login email or username first.");
+      return;
+    }
+
+    const response = await fetch("/api/client-portals", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        portalId: portal.id,
+        businessName: client.input.businessName,
+        loginIdentifier: portal.loginIdentifier,
+        password: portal.temporaryPassword,
+        accessStatus: portal.accessStatus,
+        portalData: portalData({ ...client, portal })
+      })
+    });
+    const result = await response.json().catch(() => null);
+
+    if (!response.ok || !result?.ok) {
+      setMessage(result?.error || "Could not publish portal.");
+      return;
+    }
+
+    updatePortal(client, { ...portal, id: result.portal.id, lastPublishedAt: new Date().toISOString() });
+    setMessage("Client portal published.");
+  }
+
+  async function resetPortalPassword(client: ClientProfile) {
+    const portal = { ...getPortal(client), temporaryPassword: makeTempPassword() };
+    updatePortal(client, portal);
+    await publishPortal(client, portal);
+  }
+
+  function updatePortalProgress(client: ClientProfile, index: number, status: PortalStepStatus) {
+    const portal = getPortal(client);
+    updatePortal(client, {
+      progress: portal.progress.map((step, stepIndex) => stepIndex === index ? { ...step, status } : step)
+    });
+  }
+
+  function updatePortalTask(client: ClientProfile, index: number, status: PortalTaskStatus) {
+    const portal = getPortal(client);
+    updatePortal(client, {
+      tasks: portal.tasks.map((task, taskIndex) => taskIndex === index ? { ...task, status } : task)
+    });
+  }
+
+  function updatePortalApproval(client: ClientProfile, index: number, status: PortalTaskStatus) {
+    const portal = getPortal(client);
+    updatePortal(client, {
+      approvals: portal.approvals.map((approval, approvalIndex) => approvalIndex === index ? { ...approval, status } : approval)
+    });
+  }
+
+  function addPortalLead(client: ClientProfile) {
+    if (!portalLeadDraft.name.trim()) {
+      setMessage("Lead name is required.");
+      return;
+    }
+    const current = getPortal(client).leads;
+    updatePortal(client, {
+      leads: [{
+        id: uid(),
+        ...portalLeadDraft,
+        dateSubmitted: new Date().toISOString().slice(0, 10)
+      }, ...current]
+    });
+    setPortalLeadDraft({ name: "", phone: "", email: "", source: "Manual", status: "New", notes: "" });
+  }
+
+  function addPortalUpdate(client: ClientProfile) {
+    if (!portalUpdateDraft.trim()) return;
+    updatePortal(client, {
+      updates: [{ id: uid(), message: portalUpdateDraft.trim(), date: new Date().toISOString().slice(0, 10) }, ...getPortal(client).updates]
+    });
+    setPortalUpdateDraft("");
+  }
+
   function copy(text: string) {
     navigator.clipboard?.writeText(text);
     setMessage("Copied.");
@@ -211,6 +418,17 @@ export function ClientBuilder({ view, clientId }: Props) {
     link.download = `${client.input.businessName || "client"}-onboarding.md`;
     link.click();
     URL.revokeObjectURL(url);
+  }
+
+  function makeTempPassword() {
+    return `Zentrixa-${Math.floor(1000 + Math.random() * 9000)}`;
+  }
+
+  function makeDefaultProgress(): PortalProgressStep[] {
+    return PORTAL_PROGRESS_STEPS.map((label, index) => ({
+      label,
+      status: index === 0 ? "In progress" : "Not started"
+    }));
   }
 
   return (
@@ -312,6 +530,8 @@ export function ClientBuilder({ view, clientId }: Props) {
 
   function renderDetail(client?: ClientProfile) {
     if (!client) return <section className={styles.empty}>No client found yet. Create your first onboarding package.</section>;
+    const portal = getPortal(client);
+    const portalUrl = portal.id ? `${typeof location !== "undefined" ? location.origin : ""}/client-portal/${portal.id}` : "";
     return (
       <section className={styles.detailGrid}>
         <aside className={styles.panel}>
@@ -331,6 +551,103 @@ export function ClientBuilder({ view, clientId }: Props) {
           <h3>Approval checklist</h3>
           <Checklist items={client.approvalChecklist} />
           <button className={styles.secondary} type="button" onClick={() => downloadMarkdown(client)}>Export markdown</button>
+          <div className={styles.portalBox}>
+            <p className={styles.kicker}>Client Login Access</p>
+            <label className={styles.field}><span>Email or username</span><input value={portal.loginIdentifier} onChange={(event) => updatePortal(client, { loginIdentifier: event.target.value })} /></label>
+            <label className={styles.field}><span>Temporary password</span><input value={portal.temporaryPassword} onChange={(event) => updatePortal(client, { temporaryPassword: event.target.value })} /></label>
+            <select className={styles.input} value={portal.accessStatus} onChange={(event) => updatePortal(client, { accessStatus: event.target.value as PortalAccessStatus })}>
+              <option>Active</option>
+              <option>Disabled</option>
+            </select>
+            <SelectField label="Project status" value={portal.projectStatus} options={PORTAL_PROJECT_STATUSES} onChange={(value) => updatePortal(client, { projectStatus: value as PortalProjectStatus })} />
+            <label className={styles.field}><span>Current phase</span><input value={portal.currentPhase} onChange={(event) => updatePortal(client, { currentPhase: event.target.value })} /></label>
+            {portal.id ? <p className={styles.mutedLine}>Portal URL: {portalUrl}</p> : <p className={styles.mutedLine}>Publish once to create this client's private portal URL.</p>}
+            {portal.lastPublishedAt ? <p className={styles.mutedLine}>Last published: {new Date(portal.lastPublishedAt).toLocaleString()}</p> : null}
+            <div className={styles.actions}>
+              <button className={styles.primary} type="button" onClick={() => publishPortal(client)}>Publish/update portal</button>
+              <button className={styles.secondary} type="button" onClick={() => resetPortalPassword(client)}>Reset password</button>
+              {portal.id ? <Link className={styles.secondary} href={`/client-portal/${portal.id}`}>Open portal</Link> : null}
+              <button className={styles.secondary} type="button" onClick={() => copy(`Portal login: ${location.origin}/client-login\nLogin: ${portal.loginIdentifier}\nPassword: ${portal.temporaryPassword}${portalUrl ? `\nPortal URL: ${portalUrl}` : ""}`)}>Copy login details</button>
+            </div>
+          </div>
+          <div className={styles.portalBox}>
+            <p className={styles.kicker}>Manual Lead Entry</p>
+            <div className={styles.miniStats}>
+              <span><strong>{portal.leads.length}</strong> Leads</span>
+              <span><strong>{portal.leads.filter((lead) => lead.source === "Website Form").length}</strong> Forms</span>
+              <span><strong>{portal.leads.filter((lead) => lead.status === "Booked").length}</strong> Booked</span>
+              <span><strong>{portal.leads.filter((lead) => lead.status === "Closed").length}</strong> Closed</span>
+            </div>
+            <div className={styles.formGrid}>
+              <Field label="Lead name" value={portalLeadDraft.name} onChange={(value) => setPortalLeadDraft((draft) => ({ ...draft, name: value }))} />
+              <Field label="Phone" value={portalLeadDraft.phone} onChange={(value) => setPortalLeadDraft((draft) => ({ ...draft, phone: value }))} />
+              <Field label="Email" value={portalLeadDraft.email} onChange={(value) => setPortalLeadDraft((draft) => ({ ...draft, email: value }))} />
+              <SelectField label="Source" value={portalLeadDraft.source} options={PORTAL_LEAD_SOURCES} onChange={(value) => setPortalLeadDraft((draft) => ({ ...draft, source: value as PortalLeadSource }))} />
+              <SelectField label="Status" value={portalLeadDraft.status} options={PORTAL_LEAD_STATUSES} onChange={(value) => setPortalLeadDraft((draft) => ({ ...draft, status: value as PortalLeadStatus }))} />
+              <Field label="Notes" value={portalLeadDraft.notes} onChange={(value) => setPortalLeadDraft((draft) => ({ ...draft, notes: value }))} />
+            </div>
+            <button className={styles.secondary} type="button" onClick={() => addPortalLead(client)}>Add lead to portal</button>
+            <div className={styles.portalList}>
+              {portal.leads.slice(0, 5).map((lead, index) => (
+                <article key={lead.id || `${lead.name}-${index}`} className={styles.portalListItem}>
+                  <strong>{lead.name}</strong>
+                  <span>{lead.source} - {lead.status} - {lead.dateSubmitted}</span>
+                </article>
+              ))}
+            </div>
+          </div>
+          <div className={styles.portalBox}>
+            <p className={styles.kicker}>Project Progress</p>
+            <div className={styles.portalList}>
+              {portal.progress.map((step, index) => (
+                <label key={step.label} className={styles.portalListItem}>
+                  <strong>{index + 1}. {step.label}</strong>
+                  <select value={step.status} onChange={(event) => updatePortalProgress(client, index, event.target.value as PortalStepStatus)}>
+                    {PORTAL_STEP_STATUSES.map((status) => <option key={status}>{status}</option>)}
+                  </select>
+                </label>
+              ))}
+            </div>
+          </div>
+          <div className={styles.portalBox}>
+            <p className={styles.kicker}>Client Action Items</p>
+            <div className={styles.portalList}>
+              {portal.tasks.map((task, index) => (
+                <label key={`${task.label}-${index}`} className={styles.portalListItem}>
+                  <strong>{task.label}</strong>
+                  <select value={task.status} onChange={(event) => updatePortalTask(client, index, event.target.value as PortalTaskStatus)}>
+                    {PORTAL_TASK_STATUSES.map((status) => <option key={status}>{status}</option>)}
+                  </select>
+                </label>
+              ))}
+            </div>
+          </div>
+          <div className={styles.portalBox}>
+            <p className={styles.kicker}>Approval Checklist</p>
+            <div className={styles.portalList}>
+              {portal.approvals.map((approval, index) => (
+                <label key={`${approval.label}-${index}`} className={styles.portalListItem}>
+                  <strong>{approval.label}</strong>
+                  <select value={approval.status} onChange={(event) => updatePortalApproval(client, index, event.target.value as PortalTaskStatus)}>
+                    {PORTAL_TASK_STATUSES.map((status) => <option key={status}>{status}</option>)}
+                  </select>
+                </label>
+              ))}
+            </div>
+          </div>
+          <div className={styles.portalBox}>
+            <p className={styles.kicker}>Progress Updates</p>
+            <label className={styles.field}><span>New update</span><input value={portalUpdateDraft} onChange={(event) => setPortalUpdateDraft(event.target.value)} placeholder="Website homepage draft started" /></label>
+            <button className={styles.secondary} type="button" onClick={() => addPortalUpdate(client)}>Post update</button>
+            <div className={styles.portalList}>
+              {portal.updates.slice(0, 5).map((update, index) => (
+                <article key={update.id || `${update.date}-${index}`} className={styles.portalListItem}>
+                  <strong>{update.date}</strong>
+                  <span>{update.message}</span>
+                </article>
+              ))}
+            </div>
+          </div>
         </aside>
         <div className={styles.stack}>
           <OutputCard title="Welcome Document" text={client.outputs.welcomeDocument} onCopy={copy} onRegenerate={() => regenerateSection(client, "welcomeDocument")} />
@@ -367,6 +684,17 @@ function Field({ label, value, onChange }: { label: string; value: string; onCha
 
 function Area({ label, value, onChange }: { label: string; value: string; onChange: (value: string) => void }) {
   return <label className={styles.field}><span>{label}</span><textarea value={value} onChange={(event) => onChange(event.target.value)} /></label>;
+}
+
+function SelectField({ label, value, options, onChange }: { label: string; value: string; options: string[]; onChange: (value: string) => void }) {
+  return (
+    <label className={styles.field}>
+      <span>{label}</span>
+      <select className={styles.input} value={value} onChange={(event) => onChange(event.target.value)}>
+        {options.map((option) => <option key={option}>{option}</option>)}
+      </select>
+    </label>
+  );
 }
 
 function Checklist({ items }: { items: string[] }) {

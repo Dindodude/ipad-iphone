@@ -3,6 +3,15 @@
 import { useEffect } from "react";
 
 const REVEAL_SELECTOR = [
+  ".zx-hero-copy",
+  ".zx-hero-card",
+  ".zx-flow-step",
+  ".zx-section-head",
+  ".zx-list span",
+  ".zx-card-grid article",
+  ".zx-pricing-grid article",
+  ".zx-mid-cta",
+  ".zx-lead-form",
   ".zentrixa-hero-card",
   ".zentrixa-system-card",
   ".zentrixa-section-head",

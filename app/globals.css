@@ -5332,3 +5332,446 @@ li + li {
     transform: none;
   }
 }
+
+/* v95 Zentrixa conversion landing page */
+.zentrixa-conversion-site {
+  min-height: 100svh;
+  color: #f7f8fb;
+  background:
+    radial-gradient(circle at 18% 0%, rgba(118, 106, 255, 0.18), transparent 25rem),
+    radial-gradient(circle at 82% 18%, rgba(82, 190, 255, 0.12), transparent 22rem),
+    linear-gradient(180deg, #020204 0%, #05060b 45%, #000 100%);
+}
+
+.zentrixa-conversion-site .zentrixa-public-wrap {
+  width: min(1140px, 100%);
+  margin-inline: auto;
+  padding-inline: 22px;
+}
+
+.zx-nav {
+  position: sticky;
+  top: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding-block: 18px;
+  backdrop-filter: blur(22px) saturate(160%);
+}
+
+.zx-wordmark {
+  color: #fff;
+  font-size: 1.05rem;
+  font-weight: 900;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.zx-nav nav {
+  display: flex;
+  gap: 18px;
+}
+
+.zx-nav nav a {
+  color: rgba(247, 248, 251, 0.7);
+  font-weight: 800;
+  text-decoration: none;
+  transition: color 0.18s ease;
+}
+
+.zx-nav nav a:hover {
+  color: #fff;
+}
+
+.zx-hero {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 0.44fr);
+  gap: 22px;
+  align-items: stretch;
+  min-height: clamp(520px, 72svh, 720px);
+  padding-block: 64px 46px;
+}
+
+.zx-glow {
+  position: absolute;
+  inset: 8% 4% auto auto;
+  width: min(38rem, 65vw);
+  height: min(38rem, 65vw);
+  pointer-events: none;
+  border-radius: 999px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.12), rgba(118, 106, 255, 0.1) 36%, transparent 68%);
+  filter: blur(18px);
+  animation: zentrixaFloatGlow 10s ease-in-out infinite;
+}
+
+.zx-hero-copy,
+.zx-hero-card,
+.zx-flow-step,
+.zx-section,
+.zx-mid-cta,
+.zx-lead-form {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(10, 11, 16, 0.78);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(22px);
+}
+
+.zx-hero-copy {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  align-content: center;
+  justify-items: start;
+  padding: clamp(30px, 6vw, 68px);
+  border-radius: 30px;
+}
+
+.zx-hero-copy h1 {
+  max-width: 14ch;
+  margin: 14px 0 0;
+  font-size: clamp(3rem, 7.8vw, 6.6rem);
+  line-height: 0.92;
+  letter-spacing: -0.075em;
+}
+
+.zx-hero-copy p {
+  max-width: 50ch;
+  margin: 18px 0 0;
+  color: rgba(247, 248, 251, 0.76);
+  font-size: clamp(1rem, 1.5vw, 1.2rem);
+  line-height: 1.6;
+}
+
+.zx-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 28px;
+}
+
+.zx-hero-card {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  align-content: center;
+  gap: 14px;
+  padding: 26px;
+  border-radius: 30px;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at top right, rgba(118, 106, 255, 0.2), transparent 18rem),
+    rgba(10, 11, 16, 0.82);
+}
+
+.zx-hero-card span,
+.zx-hero-card b,
+.zx-hero-card strong,
+.zx-hero-card em {
+  display: block;
+  padding: 18px 20px;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.025));
+  color: #fff;
+  font-style: normal;
+  font-weight: 900;
+}
+
+.zx-flow {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  padding-bottom: 46px;
+}
+
+.zx-flow-step {
+  display: grid;
+  gap: 8px;
+  padding: 18px;
+  border-radius: 20px;
+  transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.zx-flow-step:hover,
+.zx-card-grid article:hover,
+.zx-pricing-grid article:hover {
+  transform: translateY(-3px);
+  border-color: rgba(255, 255, 255, 0.18);
+  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.42), 0 0 34px rgba(118, 106, 255, 0.08);
+}
+
+.zx-icon {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #fff, #dcd8ff);
+  color: #050509;
+  font-weight: 950;
+}
+
+.zx-flow-step h3,
+.zx-card-grid article,
+.zx-pricing-grid h3 {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.zx-flow-step p,
+.zx-section p,
+.zx-pricing-grid p {
+  margin: 0;
+  color: rgba(247, 248, 251, 0.68);
+  line-height: 1.55;
+}
+
+.zx-section {
+  margin-bottom: 42px;
+  padding: clamp(22px, 4vw, 36px);
+  border-radius: 28px;
+}
+
+.zx-split,
+.zx-contact {
+  display: grid;
+  grid-template-columns: minmax(0, 0.78fr) minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+
+.zx-section h2,
+.zx-mid-cta h2 {
+  margin: 12px 0 0;
+  max-width: 14ch;
+  font-size: clamp(2rem, 5vw, 4.2rem);
+  line-height: 0.98;
+  letter-spacing: -0.055em;
+}
+
+.zx-section-head {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.zx-list {
+  display: grid;
+  gap: 10px;
+}
+
+.zx-list span,
+.zx-card-grid article,
+.zx-pricing-grid article,
+.zx-call-card {
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.zx-list span {
+  padding: 14px 16px;
+  color: rgba(247, 248, 251, 0.88);
+  font-weight: 850;
+}
+
+.zx-card-grid,
+.zx-pricing-grid {
+  display: grid;
+  gap: 12px;
+}
+
+.zx-card-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.zx-card-grid.three,
+.zx-pricing-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.zx-card-grid article,
+.zx-pricing-grid article {
+  padding: 18px;
+  color: #fff;
+  font-weight: 900;
+  transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.zx-pricing-grid article {
+  display: grid;
+  gap: 12px;
+  align-content: start;
+  font-weight: 700;
+}
+
+.zx-pricing-grid article.featured {
+  background:
+    radial-gradient(circle at top right, rgba(118, 106, 255, 0.18), transparent 12rem),
+    rgba(255, 255, 255, 0.055);
+  border-color: rgba(255, 255, 255, 0.18);
+}
+
+.zx-pricing-grid strong {
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.zx-limited {
+  margin-top: 16px;
+  color: rgba(247, 248, 251, 0.72);
+  font-weight: 850;
+  text-align: center;
+}
+
+.zx-mid-cta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 42px;
+  padding-block: 30px;
+  border-radius: 28px;
+}
+
+.zx-mid-cta h2 {
+  margin: 0;
+}
+
+.zx-contact p {
+  max-width: 34ch;
+  margin-top: 14px;
+}
+
+.zx-call-card {
+  display: inline-flex;
+  margin-top: 20px;
+  padding: 14px 16px;
+  color: #fff;
+  font-weight: 900;
+  text-decoration: none;
+}
+
+.zx-lead-form {
+  padding: 22px;
+  border-radius: 24px;
+}
+
+.zx-lead-form .zentrixa-button {
+  width: 100%;
+}
+
+.zx-sticky-call {
+  position: fixed;
+  right: 18px;
+  bottom: max(18px, env(safe-area-inset-bottom));
+  z-index: 80;
+  display: none;
+  min-height: 48px;
+  align-items: center;
+  justify-content: center;
+  padding: 0 18px;
+  border-radius: 999px;
+  background: #fff;
+  color: #050509;
+  font-weight: 950;
+  text-decoration: none;
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.45), 0 0 28px rgba(118, 106, 255, 0.22);
+}
+
+@media (max-width: 900px) {
+  .zx-hero,
+  .zx-split,
+  .zx-contact,
+  .zx-flow,
+  .zx-card-grid,
+  .zx-card-grid.three,
+  .zx-pricing-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .zx-hero {
+    min-height: auto;
+    padding-block: 28px 30px;
+  }
+
+  .zx-hero-copy h1 {
+    max-width: 12ch;
+    font-size: clamp(2.55rem, 12vw, 4.6rem);
+    line-height: 0.95;
+  }
+
+  .zx-mid-cta {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .zx-sticky-call {
+    display: inline-flex;
+  }
+}
+
+@media (max-width: 560px) {
+  .zentrixa-conversion-site .zentrixa-public-wrap {
+    padding-inline: 16px !important;
+  }
+
+  .zx-nav {
+    padding-block: 12px;
+  }
+
+  .zx-nav nav {
+    gap: 12px;
+    font-size: 0.82rem;
+  }
+
+  .zx-wordmark {
+    font-size: 0.86rem;
+    letter-spacing: 0.12em;
+  }
+
+  .zx-hero-copy,
+  .zx-hero-card,
+  .zx-section,
+  .zx-mid-cta,
+  .zx-lead-form {
+    border-radius: 20px;
+  }
+
+  .zx-hero-copy {
+    padding: 24px 18px;
+  }
+
+  .zx-hero-copy h1 {
+    font-size: clamp(2.35rem, 12vw, 3.35rem) !important;
+    letter-spacing: -0.055em !important;
+  }
+
+  .zx-actions {
+    width: 100%;
+    display: grid;
+    gap: 10px;
+  }
+
+  .zx-actions .zentrixa-button {
+    width: 100%;
+  }
+
+  .zx-section h2,
+  .zx-mid-cta h2 {
+    font-size: clamp(1.75rem, 8vw, 2.65rem) !important;
+  }
+
+  .zx-hero-card {
+    display: none;
+  }
+
+  .zx-sticky-call {
+    left: 16px;
+    right: 16px;
+  }
+}

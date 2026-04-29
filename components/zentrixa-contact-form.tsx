@@ -46,9 +46,7 @@ export function ZentrixaContactForm() {
 
     const response = await fetch("/api/contact", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(form)
     });
 
@@ -60,13 +58,13 @@ export function ZentrixaContactForm() {
       return;
     }
 
-    setSuccess(result.message || "Thanks, we'll be in touch shortly.");
+    setSuccess(result.message || "We'll reach out shortly.");
     setForm(EMPTY_FORM);
     setSubmitting(false);
   }
 
   return (
-    <form className="zentrixa-form-card compact" onSubmit={handleSubmit}>
+    <form className="zentrixa-form-card compact zx-lead-form" onSubmit={handleSubmit}>
       <div className="zentrixa-form-grid compact">
         <label className="zentrixa-field">
           <span>Name</span>
@@ -86,11 +84,7 @@ export function ZentrixaContactForm() {
           <span>Monthly ad budget</span>
           <select required value={form.monthlyAdBudget} onChange={(event) => setField("monthlyAdBudget", event.target.value)}>
             <option value="">Select range</option>
-            {AD_BUDGET_OPTIONS.map((option) => (
-              <option key={option} value={option}>
-                {option}
-              </option>
-            ))}
+            {AD_BUDGET_OPTIONS.map((option) => <option key={option} value={option}>{option}</option>)}
           </select>
         </label>
       </div>
@@ -99,22 +93,14 @@ export function ZentrixaContactForm() {
           <span>When do you want to start?</span>
           <select required value={form.timeline} onChange={(event) => setField("timeline", event.target.value)}>
             <option value="">Select timeline</option>
-            {TIMELINE_OPTIONS.map((option) => (
-              <option key={option} value={option}>
-                {option}
-              </option>
-            ))}
+            {TIMELINE_OPTIONS.map((option) => <option key={option} value={option}>{option}</option>)}
           </select>
         </label>
         <label className="zentrixa-field">
           <span>Do you have a website?</span>
           <select required value={form.currentWebsite} onChange={(event) => setField("currentWebsite", event.target.value)}>
             <option value="">Select one</option>
-            {WEBSITE_OPTIONS.map((option) => (
-              <option key={option} value={option}>
-                {option}
-              </option>
-            ))}
+            {WEBSITE_OPTIONS.map((option) => <option key={option} value={option}>{option}</option>)}
           </select>
         </label>
       </div>

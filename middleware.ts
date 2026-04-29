@@ -11,7 +11,7 @@ export function middleware(request: NextRequest) {
   const authenticated = isAuthenticated(request);
 
   if ((pathname === "/login" || pathname.startsWith("/login/")) && authenticated) {
-    return NextResponse.redirect(new URL("/app", request.url));
+    return NextResponse.redirect(new URL("/admin-portal", request.url));
   }
 
   if ((pathname === "/client-builder/login" || pathname.startsWith("/client-builder/login/")) && authenticated) {
@@ -21,6 +21,8 @@ export function middleware(request: NextRequest) {
   if (
     pathname === "/app"
     || pathname.startsWith("/app/")
+    || pathname === "/admin-portal"
+    || pathname.startsWith("/admin-portal/")
     || pathname === "/dashboard"
     || pathname.startsWith("/dashboard/")
     || pathname === "/cold-calls"
@@ -40,5 +42,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/app/:path*", "/dashboard/:path*", "/cold-calls", "/cold-calls/:path*", "/client-builder/:path*", "/login"]
+  matcher: ["/app/:path*", "/admin-portal/:path*", "/dashboard/:path*", "/cold-calls", "/cold-calls/:path*", "/client-builder/:path*", "/login"]
 };

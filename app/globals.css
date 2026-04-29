@@ -3523,6 +3523,64 @@ li + li {
   flex-wrap: wrap;
 }
 
+.admin-portal-shell {
+  min-height: 100svh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background:
+    radial-gradient(circle at top center, rgba(255, 255, 255, 0.06), transparent 24%),
+    #000;
+}
+
+.admin-portal-panel {
+  width: min(860px, 100%);
+  display: grid;
+  gap: 24px;
+  padding: clamp(24px, 4vw, 36px);
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(10, 10, 10, 0.92);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.admin-portal-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.admin-portal-card {
+  min-height: 190px;
+  display: grid;
+  align-content: space-between;
+  gap: 20px;
+  padding: 22px;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background:
+    radial-gradient(circle at top right, rgba(118, 106, 255, 0.14), transparent 12rem),
+    rgba(255, 255, 255, 0.035);
+}
+
+.admin-portal-card span {
+  color: #fff;
+  font-size: 1.22rem;
+  font-weight: 900;
+}
+
+.admin-portal-card p {
+  margin: 0;
+  color: rgba(240, 244, 246, 0.72);
+  line-height: 1.6;
+}
+
+.admin-portal-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.34), 0 0 30px rgba(118, 106, 255, 0.1);
+}
+
 .testimonial p {
   margin: 0 0 14px;
 }
@@ -3540,6 +3598,10 @@ li + li {
   .zentrixa-cta-band {
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  .admin-portal-grid {
+    grid-template-columns: 1fr;
   }
 }
 
